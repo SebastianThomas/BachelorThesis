@@ -1,8 +1,6 @@
-
-***** About *****
+# ***** About *****
 
 This LaTeX template was adapted from the template provided by the Integrated Systems Laboratory (IIS).
-
 
 ***** Quick Start (as taken from IIS) *****
 
@@ -35,7 +33,7 @@ which might be useful for you.
 *) More information about the LaTeX framework for reports can be found
 on the DZ Wiki at:
 
-   http://eda.ee.ethz.ch/index.php/Latex
+   <http://eda.ee.ethz.ch/index.php/Latex>
 
 *) Feel free to modify the whole framework according to your
 wishes. Happy TeXing!!

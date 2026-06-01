@@ -28,66 +28,21 @@ The fixed rate simulations serve as baseline, while the \lstinline{exp} ones ena
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}
-\begin{axis}[
-    xlabel={Time (ms)},
-    ylabel={Depth (m)}
-]
-    \addplot table[
-    col sep=comma,
-    x=time_ms,
-    y=depth_m,
-    row predicate/.code={
-        \pgfmathparse{mod(\coordindex,10)}
-        \ifnum\pgfmathresult=0\relax\else\pgfplotstableuserowfalse\fi
-    }
-] {figures/results/profile_20m.csv};
-\end{axis}
-\end{tikzpicture}
+\includegraphics[width=0.9\textwidth]{figures/results/profile_20m.pdf}
 \caption{Depth of 20m profile}
 \label{fig:profile_20m}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}
-\begin{axis}[
-    xlabel={Time (ms)},
-    ylabel={Depth (m)}
-]
-    \addplot table[
-    col sep=comma,
-    x=time_ms,
-    y=depth_m,
-    row predicate/.code={
-        \pgfmathparse{mod(\coordindex,10)}
-        \ifnum\pgfmathresult=0\relax\else\pgfplotstableuserowfalse\fi
-    }
-] {figures/results/profile_50m.csv};
-\end{axis}
-\end{tikzpicture}
+\includegraphics[width=0.9\textwidth]{figures/results/profile_50m.pdf}
 \caption{Depth of 50m profile}
 \label{fig:profile_50m}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}
-\begin{axis}[
-    xlabel={Time (ms)},
-    ylabel={Depth (m)}
-]
-    \addplot table[
-    col sep=comma,
-    x=time_ms,
-    y=depth_m,
-    row predicate/.code={
-        \pgfmathparse{mod(\coordindex,10)}
-        \ifnum\pgfmathresult=0\relax\else\pgfplotstableuserowfalse\fi
-    }
-] {figures/results/profile_90m.csv};
-\end{axis}
-\end{tikzpicture}
+\includegraphics[width=0.9\textwidth]{figures/results/profile_90m.pdf}
 \caption{Depth of 90m profile}
 \label{fig:profile_90m}
 \end{figure}

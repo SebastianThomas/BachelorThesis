@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrrrrrr}
+\toprule
+Configuration & Profile & Samples & Avg cycles & Avg [\si{\micro\second}] & Median cycles & Median [\si{\micro\second}] & Min cycles & Min [\si{\micro\second}] & Max cycles & Max [\si{\micro\second}] \\
+\midrule
+Baseline fixed & 20m & 53 & 268 & 16.8 & 268 & 16.8 & 268 & 16.8 & 268 & 16.8 \\
+Baseline fixed & 50m & 153 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 \\
+Baseline fixed & 90m & 230 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 \\
+Exponential & 20m & 4 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 \\
+Exponential & 50m & 73 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 \\
+Exponential & 90m & 130 & 267 & 16.7 & 267 & 16.7 & 267 & 16.7 & 267 & 16.7 \\
+Linear-exponential & 20m & 2 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 \\
+Linear-exponential & 50m & 89 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 \\
+Linear-exponential & 90m & 136 & 264 & 16.5 & 264 & 16.5 & 264 & 16.5 & 264 & 16.5 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{O\textsubscript{2} toxicity computation time across profiles and configurations}
+\label{tab:timing_o2tox}
+\end{table}

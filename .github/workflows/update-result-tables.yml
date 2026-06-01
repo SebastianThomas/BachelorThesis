@@ -1,0 +1,52 @@
+name: Update result tables
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "figures/results/**/*.csv"
+      - "scripts/generate_decision_summary.py"
+      - "scripts/generate_timing_summary.py"
+      - ".github/workflows/update-result-tables.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-tables:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Generate decision summary tables
+        run: python scripts/generate_decision_summary.py
+
+      - name: Generate timing summary tables
+        run: python scripts/generate_timing_summary.py
+
+      - name: Commit updated tables
+        run: |
+          git add content/generated/
+
+          if git diff --cached --quiet -- content/generated/; then
+            echo "No table changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          TRIGGER_SHA=$(git rev-parse --short HEAD)
+          TRIGGER_MSG=$(git log -1 --format='%s')
+          git commit -m "Regenerate result tables (${TRIGGER_SHA}: ${TRIGGER_MSG})"
+          git push

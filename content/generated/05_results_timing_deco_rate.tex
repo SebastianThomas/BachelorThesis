@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrrrrr}
+\toprule
+Configuration & Profile & Samples & Avg cycles & Avg [\si{\micro\second}] & Min cycles & Min [\si{\micro\second}] & Max cycles & Max [\si{\micro\second}] \\
+\midrule
+Baseline fixed & 20m & 1858 & 218 & 13.6 & 218 & 13.6 & 218 & 13.6 \\
+Baseline fixed & 50m & 7505 & 218 & 13.6 & 218 & 13.6 & 218 & 13.6 \\
+Baseline fixed & 90m & 13604 & 219 & 13.7 & 219 & 13.7 & 219 & 13.7 \\
+Exponential & 20m & 1857 & 1809 & 113.1 & 1232 & 77.0 & 1950 & 121.9 \\
+Exponential & 50m & 8879 & 1875 & 117.2 & 1231 & 76.9 & 1950 & 121.9 \\
+Exponential & 90m & 16091 & 1842 & 115.1 & 1226 & 76.6 & 1946 & 121.6 \\
+Linear-exponential & 20m & 2036 & 1810 & 113.1 & 1794 & 112.1 & 1935 & 120.9 \\
+Linear-exponential & 50m & 8698 & 1878 & 117.4 & 1413 & 88.3 & 1952 & 122.0 \\
+Linear-exponential & 90m & 14296 & 1837 & 114.8 & 1222 & 76.4 & 1941 & 121.3 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Decompression rate-algorithm execution time across profiles and configurations}
+\label{tab:timing_deco_rate}
+\end{table}

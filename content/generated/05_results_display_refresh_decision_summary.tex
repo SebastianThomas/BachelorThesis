@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrr}
+\toprule
+Configuration & Profile & Decisions & Due & Not due & Avg skipped [s] & Max skipped [s] \\
+\midrule
+Baseline fixed & 20m & 181 & 142 & 39 & 10.570 & 25.504 \\
+Baseline fixed & 50m & 896 & 547 & 349 & 8.167 & 61.225 \\
+Baseline fixed & 90m & 1528 & 920 & 608 & 8.247 & 40.800 \\
+Exponential & 20m & 66 & 47 & 19 & 35.984 & 90.580 \\
+Exponential & 50m & 717 & 568 & 149 & 9.421 & 75.759 \\
+Exponential & 90m & 841 & 563 & 278 & 16.305 & 106.488 \\
+Linear-exponential & 20m & 138 & 79 & 59 & 45.098 & 231.586 \\
+Linear-exponential & 50m & 631 & 467 & 164 & 13.723 & 110.247 \\
+Linear-exponential & 90m & 830 & 504 & 326 & 21.570 & 271.728 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Display refresh decision summary across profiles and configurations}
+\label{tab:display_refresh_decision_summary}
+\end{table}

@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrr}
+\toprule
+Configuration & Profile & Decisions & Due & Not due & Avg skipped [s] & Max skipped [s] \\
+\midrule
+Baseline fixed & 20m & 575 & 520 & 55 & 2.096 & 5.111 \\
+Baseline fixed & 50m & 5114 & 2410 & 2704 & 2.002 & 5.139 \\
+Baseline fixed & 90m & 9742 & 4316 & 5426 & 2.027 & 5.112 \\
+Exponential & 20m & 150 & 98 & 52 & 10.905 & 29.988 \\
+Exponential & 50m & 4962 & 1957 & 3005 & 2.832 & 32.465 \\
+Exponential & 90m & 8258 & 2371 & 5887 & 4.392 & 30.194 \\
+Linear-exponential & 20m & 144 & 88 & 56 & 10.983 & 30.196 \\
+Linear-exponential & 50m & 4657 & 1805 & 2852 & 2.875 & 30.192 \\
+Linear-exponential & 90m & 7786 & 2021 & 5765 & 4.477 & 30.192 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Exponential decompression decision summary across profiles and configurations}
+\label{tab:exponential_decision_summary}
+\end{table}

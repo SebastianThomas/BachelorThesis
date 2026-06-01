@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrr}
+\toprule
+Configuration & Profile & Decisions & Due & Not due & Avg skipped [s] & Max skipped [s] \\
+\midrule
+Baseline fixed & 20m & 64 & 2 & 62 & 0.000 & 0.000 \\
+Baseline fixed & 50m & 1830 & 34 & 1796 & 68.003 & 436.622 \\
+Baseline fixed & 90m & 3694 & 75 & 3619 & 75.609 & 485.716 \\
+Exponential & 20m & 58 & 0 & 58 & 0.000 & 0.000 \\
+Exponential & 50m & 2035 & 22 & 2013 & 72.002 & 400.345 \\
+Exponential & 90m & 3927 & 11 & 3916 & 324.365 & 808.407 \\
+Linear-exponential & 20m & 80 & 0 & 80 & 0.000 & 0.000 \\
+Linear-exponential & 50m & 1996 & 28 & 1968 & 30.083 & 102.204 \\
+Linear-exponential & 90m & 3581 & 19 & 3562 & 327.080 & 866.119 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{O2Tox decision summary across profiles and configurations}
+\label{tab:o2tox_decision_summary}
+\end{table}

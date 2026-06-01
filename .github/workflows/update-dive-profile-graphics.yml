@@ -44,5 +44,8 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -m "Update dive profile graphics"
+
+          TRIGGER_SHA=$(git rev-parse --short HEAD)
+          TRIGGER_MSG=$(git log -1 --format='%s')
+          git commit -m "Update dive profile graphics (${TRIGGER_SHA}: ${TRIGGER_MSG})"
           git push

@@ -1,0 +1,73 @@
+% Based on Template from IIS, ETHz
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%                                                                 %
+%%%%%     <file_name>.tex                                             %
+%%%%%                                                                 %
+%%%%% Author:      <author>                                           %
+%%%%% Created:     <date>                                             %
+%%%%% Description: <description>                                      %
+%%%%%                                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\chapter{Background}
+\section{Embedded Systems}
+\begin{definition}[Embedded System] An embedded system (or embedded device) is an information processing or specialized computing system for a dedicated task embedded into a larger product, typically under constraints such as real-time behavior, limited resources, and low power consumption.
+\end{definition}
+Most embedded systems are built around a \gls{mcu}, which exist in different package sizes, differ in clock frequency, memory, and flash size, and are produced by multiple manufacturers, the most common families include the STM32 and ESP32. 
+Most \gls{mcu}s include high and low speed (\gls{rtc}) clocks, and to increase accuracy, the option of attaching an external crystal or oscillator is provided.
+
+While some embedded systems execute one or more tasks in response to external stimuli, others schedule tasks at regular or quasi-periodic intervals. 
+Embedded systems also differ based on which they are integrated: for example, airplanes and automobiles contain dozens or even hundreds of individual devices that interoperate with one another, each controlling and accessing different peripherals, whereas small embedded devices often perform a single task and operate in isolation, controlling all peripherals.
+
+\subsection{Low Power Consumption in Battery-powered devices}
+Power Consumption is often a limiting factor for embedded systems, especially when running off a battery, which should provide sufficient runtime for the device's application. 
+
+Firstly, embedded devices are not comparable to general-purpose computer systems in that their hardware and software are fixed before production, increasing usage predictability and allowing for accurate simulations. 
+Usually, only a single or small set of fixed tasks have to be run and scheduled, typical specs for an \gls{mcu} include RAM and flash on the order of dozens of kilobytes to a few megabytes, a CPU clock frequency (usually fixed but software-configurable) on the order of single-digit to hundreds of megahertz, and only the minimum required peripherals and components. 
+Special compute power like floating point units and crypto hardware acceleration may be included in some units, while others do not incorporate them.
+
+From a hardware standpoint, component selection can significantly impact battery life, and choosing high-quality low-loss components designed for low voltage and current is usually desirable.
+
+The software also influences battery life, mainly through the efficiency of the algorithms implemented, the definition and usage of provided of sleep modes and interrupt/wakeup handling, and the scheduling overhead of tasks. 
+The interrupt controller is a central part of each \gls{mcu}, and the number of available interrupts (internal to the processing unit or external, exposed via \gls{gpio}) differs between packages and units.
+
+\subsubsection{Low-power Modes}
+ST Microelectronics provides \href{https://wiki.st.com/stm32mcu/wiki/Getting_started_with_PWR}{multiple low-power modes} in their \gls{mcu}s, which differ in their power consumption and wake-up behavior. 
+
+In sleep, low-power run and sleep and STOP modes, SRAM and peripherals (excluding clocks in STOP modes) remain initialized and are lost the Standby and Shutdown modes, the main power regulator is turned off in all STOP1, STOP2, Standby and Shutdown, and the modes have different available wakeup sources. 
+When not running any tasks for some amount of time, lower power consumption and higher wakeup latency can be selected by choosing a deeper sleep mode, depending on the project requirements.
+
+\subsection{Variable-rate scheduling}
+As noted above, some embedded systems only react to external events and interrupts, while others need to schedule tasks periodically. 
+To save in power consumption, it has been shown to decrease power consumption to schedule tasks at varying rates
+
+\section{Diving and Humans in Hyperbaric Environments}
+Due to the increase in pressure of $\SI{1}{\bar}$ for every $10$ meters of seawater, the total pressure of the inhaled gas also increases with depth. The gas mixtures used in scuba diving consist of oxygen, nitrogen, optionally helium, and traces of other gasses, which are present only in negligible quantities. Oxygen is the only of these gasses used in the body; the other gasses are referred to as inert. When breathed at a \gls{pp} exceeding the current saturation, the body tissues begin to saturate with that inert gas until they reach environmental pressure and desaturate when the breathed \gls{pp} is less than the tissue's pressure of that gas. This is not an instant process; it takes some time for a tissue to saturate and desaturate to the inhaled \gls{pp}.
+
+While working in mines or on bridges starting in the 1840s, workers started reporting symptoms, some becoming paralyzed, that were later classified as \gls{dcs}, and air embolisms were determined to be the cause. Later, symptoms were significantly reduced by gradually reducing the surrounding pressure instead of immediately ascending to surface pressure \cite{prev-dci-1908}. 
+During the second world war, the German, British, and American Armies simultaneously, but secretly, reproduced the observed symptoms using hyperbaric chambers and developed tables for saturation pressure and time and the corresponding required decompression time and pressure/depth schedule \cite{chamber-divers-2024}. 
+Whilst these tables are still taught by agencies and used by divers to perform safe dives, requiring only a timer and a depth gauge to track exposure time and maximum depth, dive computers have become mainstream, allowing for multi-level profiles, by knowing not only the maximum depth and total dive time, but exact time spent at each depth, which is used to model tissue pressure, increasing allowed dive time within the \gls{ndl}.
+
+Tissues in the body ongas and offgas different gasses at different rates, tissue-based algorithms model multiple tissues with halftimes of $\SI{5}{\min}$ up to multiple hours (e.g., $\SI{635}{\min}$ or $\SI{720}{\min}$ in Bühlmann-16, respectively) to keep the modeled supersaturation within experimentally developed tissue-dependent limits, while bubble models aim to limit bubble growth \cite{overview-dci-2024}. These algorithms cannot prevent \gls{dcs} from occurring, as exact physiological factors and processes are not fully determined nor can all required parameters be measured while diving, but by adhering to the limits given by tables and computers, incidence is reduced. 
+
+Oxygen is not an inert gas and is thus not ongassed in body tissues. 
+However, there are two risks when increasing and decreasing \gls{fo2} of a gas: hypoxia and hyperoxia. 
+The first term represents the lack of oxygen, which for humans occurs at a \gls{po2} of around $.16$, and divers are recommended to breathe gas with a \gls{po2} greater than $.18$ to avoid passing out. 
+Oxygen also becomes toxic at high \gls{po2} due to its chemical reactivity, and this effect has been experimentally shown to be more exposed when submerged, which is why the upper \gls{po2} limits for diving are $1.6$ during decompression and $1.4$ or less while working. 
+The higher \gls{po2} and the longer the exposures, the higher both risks of \gls{cns} and pulmonary oxygen toxicity, and it can lead to serious short- and long-term medical complications, seizures, and death.
+Limits for multiple cases have been experimentally developed and published, among others, by the US Navy and NOAA, in tables and the so-called "\gls{cns} clock".
+
+Keeping track of oxygen intake and \gls{pp} is also a primary function of dive computers and will also be presented in this project. 
+Although CNS clock limits are more restrictive than the way most technical divers manage risk and new recommendations have recently been published \cite{RevisedO2Tox2025}, these well-established methods have been implemented in most modern dive computers and will serve as a starting point in this project.
+
+Dive computers not only track single-dive exposures; divers are decompressing for hours after a dive is completed, and repetitive dives (i.e. multiple dives within 48 hours) require the tracking of offgassing time even after the dive is complete.
+This is why dive computers are almost never completely shut down, as the real-time clock has to run to track inert gas offgassing and \gls{o2} toxicity reduction at surface pressure over time.
+
+Next, we turn our focus to the hardware and software system.
+In low power applications, a \gls{mcu} often serves as the computational heart, combining a number of (mostly digital) inputs, outputs, processing power, memory and flash in one chip with low power consumption, often with the possibility of reducing power consumption while running by employing the use of low energy STOP and Standby modes, \gls{dfvs}, disabling GPIO banks, 
+
+To achieve high-reliability and verifiability, real-time operating systems are often used, which are able to provably schedule periodic and aperiodic tasks (sometimes called jobs) according to a deadline, provided that such a scheduling is feasible within the given constraints.
+

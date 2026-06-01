@@ -1,0 +1,30 @@
+% Based on Template from IIS, ETHz
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%                                                                 %
+%%%%%     <file_name>.tex                                             %
+%%%%%                                                                 %
+%%%%% Author:      <author>                                           %
+%%%%% Created:     <date>                                             %
+%%%%% Description: <description>                                      %
+%%%%%                                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Discussion}
+% Draw your conclusions from the results you achieved and summarize your
+% contributions. Comparisons (e.g., of hardware figures) with related
+% work are also appropriate here. Point out things that could or need to
+% be investigated further.
+
+\section{Limitations}
+\begin{itemize}
+    \item Algorithms not yet optimized for performance 
+    \item Consumed energy dominated by display, LEDs in this case
+    \item => no energy comparison measurement or calculation
+    \item \gls{mcu} running around 2.3-2.5V due to missing resistor in I2C Level Shifter usage on \gls{pcb}
+    \item Core Frequency impact not measured (though cycle count should be accurate, just variation in idle cycle count expected)
+    \item No standard libraries, algorithm implementations, rate algorithms used
+\end{itemize}
+
+Although some divers started to experiment with hydrogen for dives below $\SI{200}{\m}$, as is done in saturation diving, the number of scuba divers employing hydrogen-based mixtures remains negligible, and the currently available scientific literature is too limited to justify including hydrogen in the scope of this thesis project.

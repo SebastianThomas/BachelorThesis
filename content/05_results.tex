@@ -1,0 +1,100 @@
+% Based on Template from IIS, ETHz
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%                                                                 %
+%%%%%     <file_name>.tex                                             %
+%%%%%                                                                 %
+%%%%% Author:      <author>                                           %
+%%%%% Created:     <date>                                             %
+%%%%% Description: <description>                                      %
+%%%%%                                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Results}
+% First describe your measurement setup and settings (so it could be reproduced) and afterwards describe the results you got from your experiments. Putting results in perspective and interpretation do not belong in this chapter (put that into the discussion)
+
+Although cycle counting and timing are possible on external hardware, the most accurate results can be obtained by simulating fixed dive profiles to compare the different algorithms. 
+A fixed-voltage DC Power Supply that has been set to output $\SI{3.7}{\volt}$ is used to provide power to the \gls{pcb}.
+The software is programmed onto the MCU using the 6-pin JTAG connector \emph{J1} via a STLink V3SET.
+
+The software can be configured using the Rust Build System \lstinline{cargo}'s \lstinline{feature} flags, which can be used for conditional compilation. 
+To simplify interaction with different setups, a \lstinline{Justfile} is provided for the \lstinline{just} command runner. 
+The standard dive computer application can be flashed using \lstinline{just embed}, while live simulation and result extraction can be obtained by running \lstinline{just embed-live-sim-log-DEPTH(-FEATURE)}, where \lstinline{DEPTH} can be one of \lstinline{20m}, \lstinline{50m} and \lstinline{90m} and \lstinline{FEATURE} is optional, may be \lstinline{exp} or \lstinline{fixed-rate}.
+
+The fixed rate simulations serve as baseline, while the \lstinline{exp} ones enable the exponential and the recipes without \lstinline{FEATURE} run the linear-exponential algorithm.
+
+\section{\gls{o2tox} Algorithm results}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel={Time (ms)},
+    ylabel={Depth (m)}
+]
+    \addplot table[
+    col sep=comma,
+    x=time_ms,
+    y=depth_m,
+    row predicate/.code={
+        \pgfmathparse{mod(\coordindex,10)}
+        \ifnum\pgfmathresult=0\relax\else\pgfplotstableuserowfalse\fi
+    }
+] {figures/results/profile_20m.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{Depth of 20m profile}
+\label{fig:profile_20m}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel={Time (ms)},
+    ylabel={Depth (m)}
+]
+    \addplot table[
+    col sep=comma,
+    x=time_ms,
+    y=depth_m,
+    row predicate/.code={
+        \pgfmathparse{mod(\coordindex,10)}
+        \ifnum\pgfmathresult=0\relax\else\pgfplotstableuserowfalse\fi
+    }
+] {figures/results/profile_50m.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{Depth of 50m profile}
+\label{fig:profile_50m}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel={Time (ms)},
+    ylabel={Depth (m)}
+]
+    \addplot table[
+    col sep=comma,
+    x=time_ms,
+    y=depth_m,
+    row predicate/.code={
+        \pgfmathparse{mod(\coordindex,10)}
+        \ifnum\pgfmathresult=0\relax\else\pgfplotstableuserowfalse\fi
+    }
+] {figures/results/profile_90m.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{Depth of 90m profile}
+\label{fig:profile_90m}
+\end{figure}
+
+\section{Exponential Decompression Algorithm results}
+
+\section{Linear-Exponential Decompression Algorithm results}
+
+\section{Display Refresh results}
+

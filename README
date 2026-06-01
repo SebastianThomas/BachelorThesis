@@ -1,0 +1,41 @@
+
+***** About *****
+
+This LaTeX template was adapted from the template provided by the Integrated Systems Laboratory (IIS).
+
+
+***** Quick Start (as taken from IIS) *****
+
+*) If you are interested in what the present LaTeX report results in,
+just take a look at the PDF file in the root directory of the
+framework:
+
+   > acroread report_template.pdf
+
+*) Next, you should test whether you can compile the provided
+framework using the following command:
+
+   > make all
+
+This will re-build the whole output files (incl. some intermediate
+files).
+
+*) If you only want to (re-)build the PDF, run the following command:
+
+   > make pdf
+
+*) Actually - THAT'S IT! The report contains a recommended chapter
+structure and some general comments concerning the contents of each
+chapter.
+
+*) You may want to take a look at the appendix of the output file,
+since there you can find some tips on LaTeX and writing in general,
+which might be useful for you.
+
+*) More information about the LaTeX framework for reports can be found
+on the DZ Wiki at:
+
+   http://eda.ee.ethz.ch/index.php/Latex
+
+*) Feel free to modify the whole framework according to your
+wishes. Happy TeXing!!

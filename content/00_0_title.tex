@@ -1,0 +1,73 @@
+% Based on Template from IIS, ETHz
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%                                                                 %
+%%%%%     <file_name>.tex                                             %
+%%%%%                                                                 %
+%%%%% Author:      <author>                                           %
+%%%%% Created:     <date>                                             %
+%%%%% Description: <description>                                      %
+%%%%%                                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\newgeometry{margin = \@titlepagemargin}
+\begin{titlepage}
+
+ % Remove the page number in the footer.
+ \thispagestyle{empty}
+
+ \begin{center}
+   \vspace{0pt}	
+   \includegraphics[height=12mm]{./figures/eth_logo} \hfill    \includegraphics[height=12mm]{./figures/pbl_logo}\\
+  \vspace{0.1cm}
+
+  \hspace*{0.15cm}\rule{0.985\textwidth}{0.4pt}
+
+  \vspace{0.5cm}
+
+  {\Large\textsc{Department of Information Technology and \\Electrical Engineering}}
+
+  \vspace{0.2cm}
+
+  \show@semester
+
+  \vfill
+
+  \begin{spacing}{2.0}
+  {\Huge\textbf{\@title}}
+  \end{spacing}
+
+  \vspace{0.2cm}
+
+  \show@reporttype
+
+  \vfill
+  
+  \ifx\@titlelogo\@empty
+   \relax
+  \else
+   \includegraphics[height = \@logoheight]{\@titlelogo}
+  \fi
+    
+  \vfill
+
+  {\Large \@author}\\
+  {\@email}
+  
+  \vfill
+  
+  \@date
+
+  \vfill
+  
+  \begin{tabular}{ll}
+   Supervisors: & \show@firstsup \\
+                & \show@secondsup \\
+   \rule{0pt}{3ex}Professor: & \show@professor \\
+  \end{tabular}
+
+ \end{center}
+\end{titlepage}
+\restoregeometry
+\makeatother

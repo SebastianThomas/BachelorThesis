@@ -1,0 +1,92 @@
+% Based on Template from IIS, ETHz
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%                                                                 %
+%%%%%     Make Glossaries                                             %
+%%%%%                                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Required to generate the index for the glossaries.
+\makeglossaries
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%                                                                %
+%%%%%     Definitions of all glossary entries which will appear in   %
+%%%%%     the default (main) glossary.                               %
+%%%%%                                                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newglossaryentry{tecdiving}{name=Technical Diving,description={
+While the exact terminology differs between technical divers and agencies, most classify technical diving as every form of scuba diving that includes a virtual or physical ceiling, like decompression ceiling, cave and wreck diving. 
+It also includes planning and executing a dive with multiple distinct gas mixes
+}}
+
+\newglossaryentry{deco}{name=Decompression,description={
+Decompression is primarily the process of releasing bound gas from the tissues through breathing a gas that has a lower \gls{pp} of that gas than currently present in some tissue.
+In a wider sense, it also includes the specific stop schedule that divers adhere to while ascending
+}}
+
+% Add all glossary entries to the glossary, even if they have not been
+% referenced.
+\glsaddall[types={main}]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%                                                                %
+%%%%%     Definitions of all acronyms which will appear in the list  %
+%%%%%     of acronyms.                                               %
+%%%%%                                                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newacronym{aimd}{AIMD}{Additive Increase, Multiplicative Decrease}
+\newacronym{bga}{BGA}{Ball Grid Array}
+\newacronym{dfn}{DFN}{Dual Flat No-Lead}
+\newacronym{qfn}{QFN}{Quad Flat No-Lead}
+\newacronym{lqfp}{LQFP}{Low Profile Quad Flat Package}
+\newacronym{x2son}{X2SON}{Extra Small Outline No-Lead}
+\newacronym{ble}{BLE}{Bluetooth Low-Energy}
+\newacronym{cdc}{CDC}{Communication Device Class}
+\newacronym{cns}{CNS}{Central Nervous System}
+\newacronym{dcs}{DCS}{Decompression Sickness}
+\newacronym{dfu}{DFU}{Device Firmware Upgrade}
+\newacronym{dfvs}{DFVS}{Dynamic Voltage / Frequency Scaling}
+\newacronym{fhe}{FHe}{Fraction of Helium (in a gas mix)}
+\newacronym{fn2}{FN2}{Fraction of Nitrogen (in a gas mix)}
+\newacronym{fo2}{FO2}{Fraction of Oxygen (in a gas mix)}
+\newacronym{gpio}{GPIO}{General Purpose Input Output}
+\newacronym{gf99}{GF99}{Gradient Factor 99}
+\newacronym{gfhigh}{GF High}{Gradient Factor High}
+\newacronym{gflow}{GF Low}{Gradient Factor Low}
+\newacronym{hal}{HAL}{Hardware Abstraction Layer}
+\newacronym{lsi}{LSI}{Low Speed Internal, real-time oscillator in STM32 MCUs}
+\newacronym{lse}{LSE}{Low Speed External, MCU connection for an external oscillator}
+\newacronym{mcu}{MCU}{Microcontroller Unit}
+\newacronym{msc}{MSC}{Mass Storage Class}
+\newacronym[description={The No Decompression Limit defines the time a diver is allowed at a certain depth without incurring a mandatory decompression ceiling}]{ndl}{NDL}{No decompression limit}
+\newacronym{o2tox}{O2 Tox}{Oxygen Toxicity}
+\newacronym{otu}{OTU}{Oxygen Toxicity Unit (percent of the CNS Clock)}
+\newacronym{oti}{OTI}{Oxygen Toxicity Index}
+\newacronym{o2}{O\textsubscript{2}}{Oxygen}
+\newacronym{oc}{OC}{Open Circuit}
+\newacronym{cc}{CC}{Closed Circuit}
+\newacronym{pcb}{PCB}{Printed Circuit Board}
+\newacronym{pp}{PP}{Partial Pressure}
+\newacronym{phe}{PHe}{PP of Helium}
+\newacronym{pn2}{PN2}{PP of Nitrogen}
+\newacronym{po2}{PO2}{PP of oxygen}
+\newacronym{rtc}{RTC}{Real-Time Clock}
+\newacronym{rtic}{RTIC}{Real-Time Interrupt-driven Concurrency}
+\newacronym{scuba}{scuba}{Self-contained underwater breathing apparatus}
+\newacronym{swd}{SWD}{Serial Wire Debug}
+\newacronym{i2c}{I2C}{Inter-Integrated Circuit}
+\newacronym{io}{I/O}{Input-Output}
+\newacronym{ic}{IC}{Integrated Circuit}
+\newacronym{pbl}{PBL}{Center for Project-Based Learning}
+\newacronym{spi}{SPI}{Serial Peripheral Interface}
+\newacronym{tbm}{TBM}{Time Between Measurements}
+\newacronym{tbe}{TBE}{Time Between Executions}
+\newacronym{uart}{UART}{Universal Asynchronous Receiver Transmitter}
+\newacronym{vpm}{VPM}{Variable Permeability Model}
+
+% Add all acronyms to the list of acronyms even if they have not been
+% referenced.
+\glsaddall[types={\acronymtype}]

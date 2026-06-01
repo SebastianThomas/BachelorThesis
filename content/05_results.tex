@@ -22,30 +22,30 @@ The software can be configured using the Rust Build System \lstinline{cargo}'s \
 To simplify interaction with different setups, a \lstinline{Justfile} is provided for the \lstinline{just} command runner. 
 The standard dive computer application can be flashed using \lstinline{just embed}, while live simulation and result extraction can be obtained by running \lstinline{just embed-live-sim-log-DEPTH(-FEATURE)}, where \lstinline{DEPTH} can be one of \lstinline{20m}, \lstinline{50m} and \lstinline{90m} and \lstinline{FEATURE} is optional, may be \lstinline{exp} or \lstinline{fixed-rate}.
 
-The fixed rate simulations serve as baseline, while the \lstinline{exp} ones enable the exponential and the recipes without \lstinline{FEATURE} run the linear-exponential algorithm.
-
-\section{\gls{o2tox} Algorithm results}
+The fixed rate simulations serve as the baseline, while the \lstinline{exp} ones enable the exponential and the recipes without \lstinline{FEATURE} run the linear-exponential algorithm.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/results/profile_20m.pdf}
-\caption{Depth of 20m profile}
+\caption{Simulated Depth of 20m profile}
 \label{fig:profile_20m}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/results/profile_50m.pdf}
-\caption{Depth of 50m profile}
+\caption{Simulated Depth of 50m profile using the lin-exp decompression algorithm}
 \label{fig:profile_50m}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/results/profile_90m.pdf}
-\caption{Depth of 90m profile}
+\caption{Simulated Depth of 90m profile using the lin-exp decompression algorithm}
 \label{fig:profile_90m}
 \end{figure}
+
+\section{\gls{o2tox} Algorithm results}
 
 \section{Exponential Decompression Algorithm results}
 

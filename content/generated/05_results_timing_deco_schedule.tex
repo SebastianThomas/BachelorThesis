@@ -3,19 +3,19 @@
 \small
 \renewcommand{\arraystretch}{1.15}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{llrrrrrrrrr}
+\begin{tabular}{llrrrrrrrrrr}
 \toprule
-Configuration & Profile & Samples & Avg cycles & Avg [\si{\milli\second}] & Median cycles & Median [\si{\milli\second}] & Min cycles & Min [\si{\milli\second}] & Max cycles & Max [\si{\milli\second}] \\
+Configuration & Profile & Samples & Avg cycles & Avg [\si{\milli\second}] & Median cycles & Median [\si{\milli\second}] & Min cycles & Min [\si{\milli\second}] & Max cycles & Max [\si{\milli\second}] & Total cycles & Total [\si{\milli\second}] \\
 \midrule
-Baseline fixed & 20m & 60 & 101839 & 6.36 & 101839 & 6.36 & 101839 & 6.36 & 101839 & 6.36 \\
-Baseline fixed & 50m & 175 & 161150 & 10.07 & 133913 & 8.37 & 101295 & 6.33 & 348221 & 21.76 \\
-Baseline fixed & 90m & 293 & 345700 & 21.61 & 256538 & 16.03 & 101811 & 6.36 & 886860 & 55.43 \\
-Exponential & 20m & 10 & 101780 & 6.36 & 101780 & 6.36 & 101780 & 6.36 & 101780 & 6.36 \\
-Exponential & 50m & 144 & 168484 & 10.53 & 134443 & 8.40 & 101678 & 6.35 & 349461 & 21.84 \\
-Exponential & 90m & 90 & 338614 & 21.16 & 149067 & 9.32 & 101358 & 6.33 & 884201 & 55.26 \\
-Linear-exponential & 20m & 9 & 101521 & 6.35 & 101521 & 6.35 & 101521 & 6.35 & 101521 & 6.35 \\
-Linear-exponential & 50m & 150 & 162292 & 10.14 & 134409 & 8.40 & 101643 & 6.35 & 349575 & 21.85 \\
-Linear-exponential & 90m & 138 & 395242 & 24.70 & 261433 & 16.34 & 101773 & 6.36 & 885810 & 55.36 \\
+Baseline fixed & 20m & 60 & 101839 & 6.36 & 101839 & 6.36 & 101839 & 6.36 & 101839 & 6.36 & 6110340 & 381.9 \\
+Baseline fixed & 50m & 175 & 161150 & 10.07 & 133913 & 8.37 & 101295 & 6.33 & 348221 & 21.76 & 28201277 & 1762.6 \\
+Baseline fixed & 90m & 293 & 345700 & 21.61 & 256538 & 16.03 & 101811 & 6.36 & 886860 & 55.43 & 101290132 & 6330.6 \\
+Exponential & 20m & 10 & 101780 & 6.36 & 101780 & 6.36 & 101780 & 6.36 & 101780 & 6.36 & 1017800 & 63.6 \\
+Exponential & 50m & 144 & 168484 & 10.53 & 134443 & 8.40 & 101678 & 6.35 & 349461 & 21.84 & 24261814 & 1516.4 \\
+Exponential & 90m & 90 & 338614 & 21.16 & 149067 & 9.32 & 101358 & 6.33 & 884201 & 55.26 & 30475343 & 1904.7 \\
+Linear-exponential & 20m & 9 & 101521 & 6.35 & 101521 & 6.35 & 101521 & 6.35 & 101521 & 6.35 & 913689 & 57.1 \\
+Linear-exponential & 50m & 150 & 162292 & 10.14 & 134409 & 8.40 & 101643 & 6.35 & 349575 & 21.85 & 24343928 & 1521.5 \\
+Linear-exponential & 90m & 138 & 395242 & 24.70 & 261433 & 16.34 & 101773 & 6.36 & 885810 & 55.36 & 54543442 & 3409.0 \\
 \bottomrule
 \end{tabular}%
 }

@@ -3,19 +3,19 @@
 \small
 \renewcommand{\arraystretch}{1.15}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{llrrrrrrrr}
+\begin{tabular}{llrrrrrrrrr}
 \toprule
-Configuration & Profile & Samples & Avg cycles & Avg [\si{\micro\second}] & Min cycles & Min [\si{\micro\second}] & Max cycles & Max [\si{\micro\second}] \\
+Configuration & Profile & Samples & Avg cycles & Avg [\si{\micro\second}] & Min cycles & Min [\si{\micro\second}] & Max cycles & Max [\si{\micro\second}] & Total cycles & Total [\si{\milli\second}] \\
 \midrule
-Baseline fixed & 20m & 1833 & 237 & 14.8 & 237 & 14.8 & 237 & 14.8 \\
-Baseline fixed & 50m & 7778 & 234 & 14.6 & 234 & 14.6 & 234 & 14.6 \\
-Baseline fixed & 90m & 13626 & 235 & 14.7 & 235 & 14.7 & 235 & 14.7 \\
-Exponential & 20m & 1649 & 1825 & 114.1 & 1124 & 70.2 & 1826 & 114.1 \\
-Exponential & 50m & 8402 & 1888 & 118.0 & 1482 & 92.6 & 1955 & 122.2 \\
-Exponential & 90m & 13279 & 1860 & 116.2 & 1120 & 70.0 & 1955 & 122.2 \\
-Linear-exponential & 20m & 1841 & 1826 & 114.1 & 1124 & 70.2 & 1842 & 115.1 \\
-Linear-exponential & 50m & 8563 & 1890 & 118.1 & 1126 & 70.4 & 1955 & 122.2 \\
-Linear-exponential & 90m & 14035 & 1854 & 115.9 & 1116 & 69.8 & 1946 & 121.6 \\
+Baseline fixed & 20m & 1833 & 237 & 14.8 & 237 & 14.8 & 237 & 14.8 & 434421 & 27.2 \\
+Baseline fixed & 50m & 7778 & 234 & 14.6 & 234 & 14.6 & 234 & 14.6 & 1820052 & 113.8 \\
+Baseline fixed & 90m & 13626 & 235 & 14.7 & 235 & 14.7 & 235 & 14.7 & 3202110 & 200.1 \\
+Exponential & 20m & 1649 & 1825 & 114.1 & 1124 & 70.2 & 1826 & 114.1 & 3010372 & 188.1 \\
+Exponential & 50m & 8402 & 1888 & 118.0 & 1482 & 92.6 & 1955 & 122.2 & 15867697 & 991.7 \\
+Exponential & 90m & 13279 & 1860 & 116.2 & 1120 & 70.0 & 1955 & 122.2 & 24706189 & 1544.1 \\
+Linear-exponential & 20m & 1841 & 1826 & 114.1 & 1124 & 70.2 & 1842 & 115.1 & 3362310 & 210.1 \\
+Linear-exponential & 50m & 8563 & 1890 & 118.1 & 1126 & 70.4 & 1955 & 122.2 & 16190905 & 1011.9 \\
+Linear-exponential & 90m & 14035 & 1854 & 115.9 & 1116 & 69.8 & 1946 & 121.6 & 26025090 & 1626.6 \\
 \bottomrule
 \end{tabular}%
 }

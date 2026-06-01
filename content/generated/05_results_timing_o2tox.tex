@@ -3,19 +3,19 @@
 \small
 \renewcommand{\arraystretch}{1.15}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{llrrrrrrrrr}
+\begin{tabular}{llrrrrrrrrrr}
 \toprule
-Configuration & Profile & Samples & Avg cycles & Avg [\si{\micro\second}] & Median cycles & Median [\si{\micro\second}] & Min cycles & Min [\si{\micro\second}] & Max cycles & Max [\si{\micro\second}] \\
+Configuration & Profile & Samples & Avg cycles & Avg [\si{\micro\second}] & Median cycles & Median [\si{\micro\second}] & Min cycles & Min [\si{\micro\second}] & Max cycles & Max [\si{\micro\second}] & Total cycles & Total [\si{\milli\second}] \\
 \midrule
-Baseline fixed & 20m & 53 & 268 & 16.8 & 268 & 16.8 & 268 & 16.8 & 268 & 16.8 \\
-Baseline fixed & 50m & 153 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 \\
-Baseline fixed & 90m & 230 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 \\
-Exponential & 20m & 4 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 \\
-Exponential & 50m & 73 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 \\
-Exponential & 90m & 130 & 267 & 16.7 & 267 & 16.7 & 267 & 16.7 & 267 & 16.7 \\
-Linear-exponential & 20m & 2 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 \\
-Linear-exponential & 50m & 89 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 \\
-Linear-exponential & 90m & 136 & 264 & 16.5 & 264 & 16.5 & 264 & 16.5 & 264 & 16.5 \\
+Baseline fixed & 20m & 53 & 268 & 16.8 & 268 & 16.8 & 268 & 16.8 & 268 & 16.8 & 14204 & 0.9 \\
+Baseline fixed & 50m & 153 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 40545 & 2.5 \\
+Baseline fixed & 90m & 230 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 & 61180 & 3.8 \\
+Exponential & 20m & 4 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 1060 & 0.1 \\
+Exponential & 50m & 73 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 19345 & 1.2 \\
+Exponential & 90m & 130 & 267 & 16.7 & 267 & 16.7 & 267 & 16.7 & 267 & 16.7 & 34710 & 2.2 \\
+Linear-exponential & 20m & 2 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 265 & 16.6 & 530 & 0.0 \\
+Linear-exponential & 50m & 89 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 & 266 & 16.6 & 23674 & 1.5 \\
+Linear-exponential & 90m & 136 & 264 & 16.5 & 264 & 16.5 & 264 & 16.5 & 264 & 16.5 & 35904 & 2.2 \\
 \bottomrule
 \end{tabular}%
 }

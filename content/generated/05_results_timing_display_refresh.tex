@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrrrrrrr}
+\toprule
+Configuration & Profile & Samples & Avg cycles & Avg [\si{\milli\second}] & Median cycles & Median [\si{\milli\second}] & Min cycles & Min [\si{\milli\second}] & Max cycles & Max [\si{\milli\second}] & Total cycles & Total [\si{\second}] \\
+\midrule
+Baseline fixed & 20m & 352 & 366769 & 22.92 & 10634 & 0.66 & 1258 & 0.08 & 3014594 & 188.41 & 129102775 & 8.069 \\
+Baseline fixed & 50m & 1256 & 239288 & 14.96 & 21896 & 1.37 & 21 & 0.00 & 1907516 & 119.22 & 300546917 & 18.784 \\
+Baseline fixed & 90m & 2060 & 283188 & 17.70 & 21992 & 1.37 & 2 & 0.00 & 3014613 & 188.41 & 583368254 & 36.461 \\
+Exponential & 20m & 143 & 289042 & 18.07 & 10520 & 0.66 & 107 & 0.01 & 3009304 & 188.08 & 41333091 & 2.583 \\
+Exponential & 50m & 781 & 344999 & 21.56 & 21978 & 1.37 & 1024 & 0.06 & 3032748 & 189.55 & 269444594 & 16.840 \\
+Exponential & 90m & 939 & 509464 & 31.84 & 21996 & 1.37 & 1559 & 0.10 & 3036208 & 189.76 & 478387060 & 29.899 \\
+Linear-exponential & 20m & 125 & 373061 & 23.32 & 10311 & 0.64 & 311 & 0.02 & 3272202 & 204.51 & 46632707 & 2.915 \\
+Linear-exponential & 50m & 891 & 268763 & 16.80 & 21930 & 1.37 & 105 & 0.01 & 3255855 & 203.49 & 239468166 & 14.967 \\
+Linear-exponential & 90m & 1134 & 458821 & 28.68 & 21989 & 1.37 & 218 & 0.01 & 3038162 & 189.89 & 520304056 & 32.519 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Display refresh execution time across profiles and configurations}
+\label{tab:timing_display_refresh}
+\end{table}

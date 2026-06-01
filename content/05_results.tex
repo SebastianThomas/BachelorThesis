@@ -22,6 +22,10 @@ The software can be configured using the Rust Build System \lstinline{cargo}'s \
 To simplify interaction with different setups, a \lstinline{Justfile} is provided for the \lstinline{just} command runner. 
 The standard dive computer application can be flashed using \lstinline{just embed}, while live simulation and result extraction can be obtained by running \lstinline{just embed-live-sim-log-DEPTH(-FEATURE)}, where \lstinline{DEPTH} can be one of \lstinline{20m}, \lstinline{50m} and \lstinline{90m} and \lstinline{FEATURE} is optional, may be \lstinline{exp} or \lstinline{fixed-rate}.
 
+The following figures are generated from the \texttt{csv} files that are output from the \texttt{extract\_\-bench\_\-tables.py} script in the project repository.
+No preprocessing steps are performed except to clean up invalid characters in the exported log.
+The figure generation scripts are available in the thesis repository and are also run automatically once a commit is pushed to GitHub via GitHub Actions, namely \texttt{generate\_\-decision\_\-summary.py}, \texttt{generate\_\-timing\_\-summary.py} and \texttt{generate\_\-dive\_\-profile\_\-graphics.py}.
+
 The fixed rate simulations serve as the baseline, while the \lstinline{exp} ones enable the exponential and the recipes without \lstinline{FEATURE} run the linear-exponential algorithm.
 
 \begin{figure}[htbp]
@@ -47,12 +51,21 @@ The fixed rate simulations serve as the baseline, while the \lstinline{exp} ones
 
 \section{\gls{o2tox} Algorithm results}
 \input{./content/generated/05_results_o2tox_decision_summary}
+\input{./content/generated/05_results_timing_o2tox}
+\input{./content/generated/05_results_timing_o2tox_rate}
 
-\section{Exponential Decompression Algorithm results}
+The implemented oxygen toxicity algorithm is only differential, running on just one new measurement, and thus very cheap. 
+The cycle count of the execution of the fixed-rate algorithm, $235 \pm 2$, is only $10\%$ smaller than the execution of \gls{o2tox} itself, which is $266 \pm 2$.
+This difference will become larger if more samples are used per-iteration.
+The variable rate algorithms are on average $12.16\times$ more expensive, $1858 \pm 32$.
+
+Compared to the fixed rate baseline, the \gls{o2tox} algorithm is executed $0.65\times$ and $0.82\times$ as often on the $\SI{50}{\meter}$ profile, $0.15\times$ and $0.25\times$ as often on the $\SI{90}{\meter}$ profile. For  the shallow $\SI{20}{\meter}$ dive, no execution is due following the variable rate algorithm.
+
+\section{Exponential \& Linear-Exponential Decompression Algorithm results}
 \input{./content/generated/05_results_exponential_decision_summary}
-
-\section{Linear-Exponential Decompression Algorithm results}
 \input{./content/generated/05_results_linear_exponential_decision_summary}
+\input{content/generated/05_results_timing_deco_rate}
+\input{content/generated/05_results_timing_deco_schedule}
 
 \section{Display Refresh results}
 \input{./content/generated/05_results_display_refresh_decision_summary}

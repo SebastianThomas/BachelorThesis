@@ -11,7 +11,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Results}
+\chapter{Results}\label{section:results}
 % First describe your measurement setup and settings (so it could be reproduced) and afterwards describe the results you got from your experiments. Putting results in perspective and interpretation do not belong in this chapter (put that into the discussion)
 
 Although cycle counting and timing are possible on external hardware, the most accurate results can be obtained by simulating fixed dive profiles to compare the different algorithms. 
@@ -26,7 +26,7 @@ The following figures are generated from the \texttt{csv} files that are output 
 No preprocessing steps are performed except to clean up invalid characters in the exported log.
 The figure generation scripts are available in the thesis repository and are also run automatically once a commit is pushed to GitHub via GitHub Actions, namely \texttt{generate\_\-decision\_\-summary.py}, \texttt{generate\_\-timing\_\-summary.py} and \texttt{generate\_\-dive\_\-profile\_\-graphics.py}.
 
-The fixed rate simulations serve as the baseline, while the \lstinline{exp} ones enable the exponential and the recipes without \lstinline{FEATURE} run the linear-exponential algorithm.
+The fixed rate simulations serve as the baseline for comparison, while the \lstinline{exp} ones enable the exponential and the recipes without \lstinline{FEATURE} run the linear-exponential algorithm.
 
 \begin{figure}[htbp]
 \centering
@@ -50,24 +50,41 @@ The fixed rate simulations serve as the baseline, while the \lstinline{exp} ones
 \end{figure}
 
 \section{\gls{o2tox} Algorithm results}
-\input{./content/generated/05_results_o2tox_decision_summary}
-\input{./content/generated/05_results_timing_o2tox}
-\input{./content/generated/05_results_timing_o2tox_rate}
-
-The implemented oxygen toxicity algorithm is only differential, running on just one new measurement, and thus very cheap. 
-The cycle count of the execution of the fixed-rate algorithm, $235 \pm 2$, is only $10\%$ smaller than the execution of \gls{o2tox} itself, which is $266 \pm 2$.
+The implemented oxygen toxicity algorithm is only differential, runs on just one new measurement, and thus is comparatively cheap. 
+The cycle count per execution of the fixed-rate algorithm, $235 \pm 2$, is only $10\%$ smaller than the execution of \gls{o2tox} itself, which is $266 \pm 2$.
 This difference will become larger if more samples are used per-iteration.
 The variable rate algorithms are on average $12.16\times$ more expensive, $1858 \pm 32$.
 
-Compared to the fixed rate baseline, the \gls{o2tox} algorithm is executed $0.65\times$ and $0.82\times$ as often on the $\SI{50}{\meter}$ profile, $0.15\times$ and $0.25\times$ as often on the $\SI{90}{\meter}$ profile. For  the shallow $\SI{20}{\meter}$ dive, no execution is due following the variable rate algorithm.
+\input{./content/generated/05_results_timing_o2tox}
+\input{./content/generated/05_results_timing_o2tox_rate}
+
+Compared to the fixed rate baseline, the \gls{o2tox} algorithm is executed $0.65\times$ and $0.82\times$ as often on the $\SI{50}{\meter}$ profile, $0.15\times$ and $0.25\times$ as often on the $\SI{90}{\meter}$ profile. For  the shallow dive to $\SI{20}{\meter}$, no execution is required following the variable rate algorithm.
+
+\input{./content/generated/05_results_o2tox_decision_summary}
 
 \section{Exponential \& Linear-Exponential Decompression Algorithm results}
-\input{./content/generated/05_results_exponential_decision_summary}
-\input{./content/generated/05_results_linear_exponential_decision_summary}
+The decompression obligation algorithms are significantly more expensive than the \gls{o2tox}, especially on dives with increased decompression obligation. 
+
+The difference between the exponential and linear-exponential is small for shallow dives, on deeper dives, the average and total cycle counts are larger for the linear-exponential algorithm, which is at least partially caused by the tendency to create more (thus deeper) stops, and with more depth changes during decompression, more executions are required.
+
+The decompression rate algorithm takes $1842 \pm^{34}_{32}$ cycles, while execution of the decompression schedule algorithm varies widely with the dive profile and current state, between $101'521$ and $886'860$ cycles, with the average close to the lower range of the spectrum on no-deco dives and $338614$ to $395242$ cycles.
+The average execution overhead of an additional rate calculation is between $\frac{1837}{395'242} = 0.0046 = 0.4\%$ and $\frac{1810}{101'521} = 0.018 = 1.8\%$.
+
 \input{content/generated/05_results_timing_deco_rate}
 \input{content/generated/05_results_timing_deco_schedule}
 
-\section{Display Refresh results}
-\input{./content/generated/05_results_display_refresh_decision_summary}
-\input{./content/generated/05_results_timing_display_refresh}
+Compared to the baseline execution count, depending on the profile, the variable rate algorithm leads to a $ 1.17\times$ to $6\times$ decrease in the execution count, which is in an almost linear relationship to the total cycle count spent on the computation of the decompression schedule. 
+In the $\SI{50}{\meter}$ profile, the algorithms perform the worst, while in shallow and deep dives, the decrease in cycles is significant.
 
+\input{./content/generated/05_results_exponential_decision_summary}
+\input{./content/generated/05_results_linear_exponential_decision_summary}
+
+ \section{Display Refresh results}
+ The display refresh is the most expensive algorithm, partially due to current implementation using SPI over a Parallel Interface for simplicity in hardware and software. 
+ Most executions update the internal state and skip the transfer to the display because the values on the display are unchanged.
+ 
+ These executions which skip the transfer use no more than a few thousand, while full runs use up to $3.5$ million cycles.
+ The display rate calculation 
+ 
+ \input{./content/generated/05_results_display_refresh_decision_summary}
+ \input{./content/generated/05_results_timing_display_refresh}

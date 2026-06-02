@@ -17,6 +17,17 @@
 % work are also appropriate here. Point out things that could or need to
 % be investigated further.
 
+The results presented in Section \ref{section:results} are reproducible on the used hardware with the given software and will be interpreted in the following subsection.
+
+\section{Impact of variable rate algorithms}
+From this data, the following conclusions can be drawn: 
+
+\begin{itemize}
+    \item With the introduction of variable-rate algorithms, the number of cycles spent on calculating decompression schedules can be reduced by a significant amount. After reviewing the differences in actual decompression schedules, no significant differences, more than a few seconds can be observed over the up to $\SI{80}{\minute}$-long decompression dives.
+    \item For less expensive algorithms like the \gls{o2tox} algorithm, the cost of running a more complex scheduling algorithm outweighs the benefit gained by running the algorithm less often.
+    \item The difference in cycle count between the linear and linear-exponential algorithm does not exceed 
+\end{itemize}
+
 \section{Limitations}
 \begin{itemize}
     \item Algorithms not yet optimized for performance 

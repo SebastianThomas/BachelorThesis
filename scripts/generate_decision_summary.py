@@ -25,16 +25,10 @@ SUMMARIES = [
         "table_label": "tab:o2tox_decision_summary",
     },
     {
-        "output_name": "05_results_exponential_decision_summary.tex",
+        "output_name": "05_results_decompression_decision_summary.tex",
         "row_label": "dive.deco_schedule.rate",
-        "caption": "Exponential decompression decision summary across profiles and configurations",
-        "table_label": "tab:exponential_decision_summary",
-    },
-    {
-        "output_name": "05_results_linear_exponential_decision_summary.tex",
-        "row_label": "dive.deco_schedule.rate",
-        "caption": "Linear-exponential decompression decision summary across profiles and configurations",
-        "table_label": "tab:linear_exponential_decision_summary",
+        "caption": "Decompression decision summary across profiles and configurations",
+        "table_label": "tab:decision_summary",
     },
     {
         "output_name": "05_results_display_refresh_decision_summary.tex",

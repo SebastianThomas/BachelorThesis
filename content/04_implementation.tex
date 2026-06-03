@@ -13,7 +13,7 @@ The screen has been determined to be at least $\SI{1.8}{''}$ large and full-colo
 
 \section{Hardware}\label{section:hardware}
 \subsection{Component Definition}\label{subsection:definition}
-The STM32L476 MCU is used as the computational center of this project, providing protocol support for \gls{i2c}, \gls{spi}, \gls{swd} and \gls{uart}. It has low power consumption, supports multiple sleep modes, and many software and help resources are available on the internet.
+The STM32L476 MCU is used as the computational center of this project, providing protocol support for \gls{i2c}, \gls{spi}, \gls{swd} and \gls{uart}. It has low power consumption, supports multiple sleep modes, and there are plenty software and help resources available on the internet.
 
 The MS5849-30BA is used as a pressure sensor, it is rated to a depth of $\SI{290}{\m}$ ($\SI{30}{\Bar}$) and provides a base accuracy of a few centimeters, provided optimal conditions. 
 To reduce pressure drift, a supply voltage of $\SI{3.3}{\volt}$ has been chosen, although the sensor would be able to run with $\SI{1.8}{\volt}$. 
@@ -44,7 +44,8 @@ All resistors and capacitors are of size 0402 (1005), LEDs 0603 (1608), two indu
 All components have been soldered by hand using pneumatic solder paste dispensers, placed with a pair of tweezers, and reflowed using a $\SI{250}{\celsius}$ heating plate. This process is not difficult, except for the display connector and the non-\gls{lqfp} components, which require more concentration and time.
 
 \section{Firmware}\label{section:firmware}
-The Firmware has been written in the Rust programming language, using the \lstinline{no-std} environment due to dynamically-allocated objects not being available without a heap, and to reduce firmware size. Multiple experimental features like \lstinline{const generics}, \lstinline{const trait implementations} and more \lstinline{const} features are used to achieve the highest performance predictability and avoid runtime overheads while multiplexing between implementations.
+The Firmware has been written in the Rust programming language, using the \lstinline{no-std} environment due to dynamically-allocated objects not being available without a heap and only uses the \lstinline{core} language features to reduce overheads introduced by the standard library, and to reduce firmware size. 
+Multiple experimental features such as \lstinline{const generics}, \lstinline{const trait implementations}, and more \lstinline{const} features are used to achieve the highest performance predictability and avoid runtime overheads while multiplexing between implementations.
 
 In Rust, an important concept is the so-called \href{https://doc.rust-lang.org/beta/embedded-book/static-guarantees/zero-cost-abstractions.html}{Zero Cost Abstraction}, originally a principle defined by Bjarne Stroustrup, creator of the C++ programming language.
 Features such as zero-size types (including custom abstractions, like the ones used for pressure units in the algorithm implementations), iterators, and more enable writing very readable code while incurring no performance loss, which is especially important in the embedded environment where every cycle counts to reduce energy.
@@ -82,7 +83,7 @@ In surface mode, the main task runs less often than in dive mode, and it is usef
 Since the chosen sleep time of $\SI{5}{\second}$ is many magnitudes higher than wakeup time from any mode, STOP2 is chosen, the lowest sleep mode in which all peripherals (except clock configuration, which is quickly reinitialized upon wakeup) and RAM are saved.
 
 After waking up from STOP2, registers, RAM and most peripherals keep their state, but it is required to reinitialize the clocks because STOP2 mode might reset the clock tree, PLL, SYSCLK and associated timers and delays. 
-To implement this, the \lstinline{unsafe} \lstinline{Peripherals::steal} functions of the \lstinline{cortex_m} and \lstinline{stm32l4xx_hal::pac} need to be used to access the hardware peripheral registers, this is safe because only \lstinline{init} uses these, which exits before \lstinline{task_mode_tick} can ever be called.
+% To implement this, the \lstinline{unsafe} \lstinline{Peripherals::steal} functions of the \lstinline{cortex_m} and \lstinline{stm32l4xx_hal::pac} need to be used to access the hardware peripheral registers, this is safe because only \lstinline{init} uses these, which exits before \lstinline{task_mode_tick} can ever be called.
 
 \subsection{\gls{hal}}\label{section:hal}
 The standard package to access abstracted peripherals on ARM Cortex-M \gls{mcu}s is the \href{https://github.com/rust-embedded/cortex-m}{\lstinline{cortex-m} (and \lstinline{cortex-m-rt})} crate, which provides wrappers around core peripherals, for example SysTick, registers like MSP and BSRR, and functionality around startup and interrupt handling, including the NVIC (Nested Vector Interrupt Controller).
@@ -122,7 +123,8 @@ Iso-probabilistic \gls{dcs} risk algorithms have been developed to model and exe
 \subsubsection{Thalmann and implemented Linear-Exponential Algorithm}
 The linear-exponential decompression algorithm in this project is based primarily on the factors mentioned above. The Thalmann Algorithm \cite{thalmann-tables-software-2010} \cite{thalmann-parameters-1.3-2020}, designed by Capt. Edward D. Thalmann, MD, US Navy, also follows these principles and is used as a reference for the parameters.  
 
-It should, though, not be assumed that the implemented algorithm is equivalent to the Thalmann algorithm; instead, it builds on the most important ideas and results from the paper and provides a simple, extendable implementation of a linear-exponential decompression algorithm that can easily be exchanged for other algorithms and provides reasonable results for the tested profiles, and can be compared with the more common purely exponential algorithms. It has not been and will not be tested in practice, as this could result in serious injury or death, and this thesis is primarily concerned with the energy-saving aspects of dive computers, not hyperbaric physiology.
+In general, it should not be assumed that the implemented algorithm is equivalent to the Thalmann algorithm, as it is only a theoretical algorithm proposition and has been implemented multiple times, though none of which serve as a reference implementation, and the original design paper describes the whole dive computer, not only the decompression algorithm. 
+Instead, it builds on the most important ideas and results from the paper and provides a simple, extendable implementation of a linear-exponential decompression algorithm that can easily be exchanged for other algorithms and provides reasonable results for the tested profiles and can be compared with the more common purely exponential algorithms.
 
 \subsection{\gls{o2} toxicity calculation}
 NOAA limits, which combine both CNS and pulmonary limits in more , are implemented using table 15-3 published in the NOAA diving manual \cite{noaa-diving-manual}. An option of extending these limits to a \gls{po2} of $1.3$ and lower is implemented after new research as suggested in \cite{RevisedO2Tox2025}.
@@ -147,7 +149,20 @@ The output in all current implementations is the \gls{tbe} in milliseconds, i.e.
 The most basic algorithm is the \lstinline{FixedRateAlgorithm}, which always returns a fixed number \gls{tbe}, i.e., the task should run at regular intervals.
 
 \subsection{\lstinline{AimdRateAlgorithm}}\label{subsection:aimd}
-All dynamic scheduling rate algorithms in this work are based on the \gls{aimd} principle, the basic \lstinline{AimdRateAlgorithm} has a number of milliseconds for additive increase, a fraction (numerator, denominator) for multiplicative decrease, and a maximum \gls{tbe} that should not be exceeded.
+All dynamic scheduling rate algorithms in this work are based on the \gls{aimd} principle, the basic \lstinline{AimdRateAlgorithm} has a number of milliseconds for additive increase, a fraction (numerator, denominator) for multiplicative decrease, and a maximum \gls{tbe} that should not be exceeded \ref{lst:aimd}.
+
+\begin{lstlisting}[caption={AIMD algorithm}, label={lst:aimd}]
+    fn next_iter(self.current: u32, change: bool) -> u32 {
+        if change
+            self.current = self.current * MD
+        else 
+            self.current = self.current.saturating_add(AI)
+        if self.current > self.max
+            self.current = self.max;
+        self.current
+    }
+\end{lstlisting}
+
 Furthermore, information on the \lstinline{current} rate is stored in every instance, as this number can change at every execution of the rate algorithm, and it is an output of the previous iteration rather than an input to the algorithm. 
 The only input to the algorithm is a \lstinline{bool} that indicates if the AI or MD branch should be executed.
 This algorithm is not used directly for any scheduling decision, but the following algorithms are based on this one.
@@ -156,9 +171,18 @@ This algorithm is not used directly for any scheduling decision, but the followi
 The algorithm \lstinline{DiffAimdRateAlgorithm} works on a fixed-size window of previous measurements, always taking into account the oldest and newest sample in the window to be able to compare larger-scale changes, as small deviations between two adjacent samples are expected, and the larger the time between the first and last measurement in the window, the more of the overreaching trend can be captured by this algorithm. 
 This means that the window cannot be too large or too small, a fixed window size of $5$ has been chosen in this case, this does not influence the working of the algorithm, only the sensitivity to change in measurements.
 
-Then, the difference between these two measurements is compared to a fixed reference, and if the change is significant, a change using MD is triggered, otherwise AI is used until the maximum is reached, as described in \ref{subsection:aimd}.
+Let $t_0$ be the first time the window and $t_n$ the last (in this example, $n = 5-1 = 4$), and $v_0$ and $v_n$ the corresponding values (\ref{align:diff_aimd_r}). 
+We first calculate the change rate per second $r$, then transform it into a number $f$ between $0$ and $1$ using a fixed reference speed $ref$ (\ref{align:diff_aimd_f}).
+\begin{align}
+    r &= (v_n - v_0) / (t_n - t_0) \label{align:diff_aimd_r} \\
+    f &= r / ref \label{align:diff_aimd_f}
+\end{align}
+
+If the change $f$ is significant (assume $>= 1$), a change is triggered to invoke the MD branch, otherwise AI is used until the maximum is reached, as described in \ref{subsection:aimd}.
 
 The fixed reference constants are properties of every instance of the algorithms, as the flash logging algorithm, \gls{deco} and \gls{o2tox} calculations require different sensitivity.
+
+The window is used as a circular buffer to save memory and prevent shifting after each iteration.
 
 \subsection{\lstinline{DynamicAimdRateAlgorithm}}
 This algorithm adds one more component compared to the previous implementation, which is an absolute threshold. 
@@ -175,7 +199,7 @@ The primary goal of data logging here is to log enough information to accurately
 To save on energy consumption and space requirements, an adaptive logging rate has been implemented, compared to most existing dive computers, which log a data point at a fixed rate. 
 Furthermore, to save space on the chip, not all data points contain all parameters, which we call the log parameter selection. 
 
-The selected flash chip has $4\si{\mega\byte}$ storage space, of which $2\si{\mega\byte}$ are reserved for firmware updates and static storage, so $2\si{\mega\byte}$ storage remain. Assuming a log width of $\si{\byte}$, $125000$ records can fit in this space, assuming a fixed log rate of one log in $5\si{\second}$, these are more than seven days of continuous logging. Since the computer will not log more than once per minute on the surface, this is a feasible configuration. Using parameter selection, we halve the space required for some log entries, but we are not dependent on reducing the log size this way, as the flash chip has enough space for the constraints of this project.
+The selected flash chip has $4\si{\mega\byte}$ storage space, of which $2\si{\mega\byte}$ are reserved for firmware updates and static storage, so $2\si{\mega\byte}$ storage remain to store dive logs. Assuming a log width of $\SI{16}{\byte}$, $125000$ records can fit in this space, assuming a fixed log rate of one log in $5\si{\second}$, these are more than seven days of continuous logging. Since the computer will not log more than once per minute on the surface, this is a practical configuration. Using parameter selection, we halve the space required for some log entries, but we are not dependent on reducing the log size this way, as the flash chip has enough space for the constraints of this project.
 
-A control data block for each dive is saved; it contains unchanged information in the dive.
+A control data block for each dive is saved; it contains information that is unchanged during the dive.
 To reconstruct the logged dive data, there is one byte that contains metadata associated with each data point \ref{tab:log-meta}, the other 7 or 15 bytes hold measured or calculated data \ref{tab:log-data}.

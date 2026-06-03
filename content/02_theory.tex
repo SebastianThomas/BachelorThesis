@@ -32,7 +32,7 @@ Power consumption is often a limiting factor for embedded systems, especially wh
 From a hardware standpoint, component selection can significantly impact battery life, and choosing high-quality low-loss components designed for low voltage and current is usually desirable.
 
 The software also influences battery life, mainly through the efficiency of the algorithms implemented, the definition and usage of provided of sleep modes and interrupt/wakeup handling, and the scheduling overhead of tasks. 
-The interrupt controller is a central part of each \gls{mcu}, and the number of available interrupts (internal to the processing unit or external, exposed via \gls{gpio}) differs between packages and units.
+The interrupt controller is a central part of each \gls{mcu}, and the number of available interrupts differs between packages and units. Interrupts can be internal to the processing unit or exposed via \gls{gpio}, available for external hardware to trigger them.
 
 \subsubsection{Low-power Modes}
 ST Microelectronics provides \href{https://wiki.st.com/stm32mcu/wiki/Getting_started_with_PWR}{multiple low-power modes} in their \gls{mcu}s, which differ in their power consumption and wake-up behavior. 

@@ -17,21 +17,24 @@
 % work are also appropriate here. Point out things that could or need to
 % be investigated further.
 
-\section{Open Source Dive Computer}
+\section{Open-source Dive Computer}
 The resulting PCB is small enough to be worn on a diver's wrist and includes all necessary components to serve as a dive computer, it is of a similar size as common dive computers, such as the Garmin Descent X50i or the Shearwater Perdix and Petrel series.
 It is solderable by hand, and only contains five components (two metric 0603 diodes and three \gls{bga} mount components) which are preferably mounted using a microscope for visual reference.
 It could be placed in a watertight enclosure with a suitable battery and does not need to be opened again, since all the charging and communication methods are wireless. 
 Only one extrusion must be present in the enclosure to connect the pressure sensor to the water, which is ready to be sealed using a standard O-Ring ($\diameter\SI{1.8}{\milli\meter}$, height $\SI{0.8}{\milli\meter}$, such as the ones used on high pressure swivels).
 
-Not all components worked in V1, but a new version is in development that will address the following errors and shortcomings.
+Not all components worked in V1, in a new version, the errors and shortcomings should be addressed as explained below.
 
 \begin{itemize}
     \item The low voltage rail is pulled up by a missing resistor on an \gls{i2c} level shifter.
     \item The display connector is inverted, pins 34-1 instead of 1-34.
-    \item There is no way to remove power from the Bluetooth module if not in use, which wastes significant current in surface mode when Bluetooth is inactive.
-    \item It is impossible to activate the Bluetooth module after the computer has been powered on, a button will be added to allow starting the Bluetooth task asynchronously.
-    \item A smaller battery connector will be used and placed more appropriately at the \gls{pcb} edge.
-    \item The display connector and pressure sensor are not placed ideally, the display connector should be rotated to fit in the middle of the long side to better match the final orientation of the display without complicating cable routing, the pressure sensor should be placed such that neither the battery nor the display collide with the vertical axis through it to simplify a connection to the outside pressure.
+    \item There is no way to remove power from the Bluetooth module if not in use, which wastes significant current in surface mode when Bluetooth is inactive. 
+    A similar Load Switch as already exists for the display should be added to cut power.
+    \item It is impossible to activate the Bluetooth module after the computer has been running for some time. A button should be added to allow starting the Bluetooth task asynchronously.
+    \item A smaller battery connector might be used and placed more appropriately at the \gls{pcb} edge to save space.
+    \item The display connector and pressure sensor are not placed ideally. 
+    The display connector should be rotated to fit in the middle of the long side to better match the final orientation of the display without complicating cable routing. 
+    The pressure sensor should be placed so that neither the battery nor the display collide with the vertical axis through it to simplify a connection to the outside pressure.
 \end{itemize}
 
 The software is modular; it is split into diving algorithms and embedded firmware that includes peripheral management. 
@@ -44,12 +47,10 @@ Recreational dive computers are commonly less feature-rich than full technical d
 
 \section{Impact of variable rate algorithms}
 The implemented variable rate algorithms use Reno's \gls{aimd}, which has already been tested in existing works, e.g. \cite{2023-eth-energy-aware}.
-The results presented in Chapter \ref{chapter:results} are reproducible on the hardware used with the given software and will be interpreted in the following section.
-From these data, the following conclusions can be drawn.
+From the data collected, the following conclusions can be drawn.
 
 \begin{itemize}
-    \item With the introduction of variable-rate algorithms, the number of cycles spent on calculating decompression schedules can be reduced by a significant amount. 
-    After reviewing the differences in actual decompression schedules, no significant differences, more than a few seconds, can be observed during up to $\SI{80}{\minute}$-long decompression dives, compared to running the same decompression algorithm at a fixed rate, with a decrease of up to $6\times$ in execution count. 
+    \item After reviewing the differences in actual decompression schedules, no significant differences, more than a few seconds, can be observed during up to $\SI{80}{\minute}$-long decompression dives, compared to running the same decompression algorithm at a fixed rate, with a decrease of up to $6\times$ in the execution count of the decompression algorithm.
     This decrease is comparable to the $2.06\times$-$8.68\times$ increase in localizations achieved by \cite{2023-eth-energy-aware} and $6.1\times$ decrease of additions in \cite{2020-dsra}, although the underlying reasons are very different and no more similar research has been found.
     \item For less expensive algorithms such as the \gls{o2tox} algorithm, the cost of running a more complex scheduling algorithm outweighs the fewer cycles spent running the algorithm less often, thus simple decision algorithms should be chosen for these.
     \item The difference in cycle count between the implementations of the linear and linear-exponential algorithm does not exceed $16\%$ during the simulated dive profiles, so the user can choose the algorithm that best suits their experience and planned dive without a major impact on the dive computer's performance.

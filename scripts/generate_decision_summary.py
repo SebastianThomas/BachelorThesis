@@ -36,6 +36,12 @@ SUMMARIES = [
         "caption": "Display refresh decision summary across profiles and configurations",
         "table_label": "tab:display_refresh_decision_summary",
     },
+    {
+        "output_name": "05_results_flash_log_decision_summary.tex",
+        "row_label": "flash.log.rate",
+        "caption": "Flash log rate decision summary across profiles and configurations",
+        "table_label": "tab:flash_log_decision_summary",
+    },
 ]
 
 

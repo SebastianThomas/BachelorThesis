@@ -50,6 +50,7 @@ def render_profile(source_name: str, target_name: str) -> None:
     axis.xaxis.set_major_formatter(FuncFormatter(format_time))
     axis.set_xlabel("Time (h:min:s)")
     axis.set_ylabel("Depth (m)")
+    axis.invert_yaxis()
     axis.grid(True, linewidth=0.4, alpha=0.35)
     axis.margins(x=0)
     figure.tight_layout()

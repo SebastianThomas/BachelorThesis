@@ -201,6 +201,14 @@ TIMING_TABLES = [
         "caption": "O\\textsubscript{2} toxicity rate-algorithm execution time across profiles and configurations",
         "table_label": "tab:timing_o2tox_rate",
     },
+    {
+        "output_name": "05_results_timing_flash_log_rate.tex",
+        "builder": build_rate_table,
+        "kwargs": {"unit": "us", "precision": 1, "total_unit": "ms"},
+        "row_label": "flash.log.rate",
+        "caption": "Flash log rate-algorithm execution time across profiles and configurations",
+        "table_label": "tab:timing_flash_log_rate",
+    },
     # --- Computation algorithm family ---
     {
         "output_name": "05_results_timing_deco_schedule.tex",

@@ -53,4 +53,4 @@ jobs:
           TRIGGER_SHA=$(git rev-parse --short HEAD)
           TRIGGER_MSG=$(git log -1 --format='%s')
           git commit -m "Regenerate result tables (${TRIGGER_SHA}: ${TRIGGER_MSG})"
-          git push
+          git pull --rebase && git push

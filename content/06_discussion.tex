@@ -45,7 +45,7 @@ The performance difference between the two implemented decompression algorithms 
 
 Recreational dive computers are commonly less feature-rich than full technical diving computers. The implementation in this work offers the most common features of technical diving computers, including the consideration of \gls{icd} and the gas density for predicted gas switching in decompression calculations, and even has the option to use the most recent recommendations to prevent oxygen toxicity presented in 2025 for \gls{otu} computations \cite{RevisedO2Tox2025}.
 
-\section{Impact of variable rate algorithms}
+\section{Impact of variable rate algorithms for \gls{deco} and \gls{o2tox} scheduling}
 The implemented variable rate algorithms use Reno's \gls{aimd}, which has already been tested in existing works, e.g. \cite{2023-eth-energy-aware}.
 From the data collected, the following conclusions can be drawn.
 
@@ -53,8 +53,17 @@ From the data collected, the following conclusions can be drawn.
     \item After reviewing the differences in actual decompression schedules, no significant differences, more than a few seconds, can be observed during up to $\SI{80}{\minute}$-long decompression dives, compared to running the same decompression algorithm at a fixed rate, with a decrease of up to $6\times$ in the execution count of the decompression algorithm.
     This decrease is comparable to the $2.06\times$-$8.68\times$ increase in localizations achieved by \cite{2023-eth-energy-aware} and $6.1\times$ decrease of additions in \cite{2020-dsra}, although the underlying reasons are very different and no more similar research has been found.
     \item For less expensive algorithms such as the \gls{o2tox} algorithm, the cost of running a more complex scheduling algorithm outweighs the fewer cycles spent running the algorithm less often, thus simple decision algorithms should be chosen for these.
-    \item The difference in cycle count between the implementations of the linear and linear-exponential algorithm does not exceed $16\%$ during the simulated dive profiles, so the user can choose the algorithm that best suits their experience and planned dive without a major impact on the dive computer's performance.
 \end{itemize}
+
+\section{Impact of variable rate algorithm for flash logging}
+The amount of flash logs was reduced by $2.18\times$ to $2.63\times$ when using a variable rate algorithm, while the error remains consistently smaller than $\SI{1}{\centi\meter}$, which is smaller than the accuracy of the pressure sensor is expected. 
+
+This is true for these ideal dive profiles, which do not include more quick depth changes and small variations, as real dive profiles and pressure measurements might produce. 
+Such changes, of a few decimeters, often do not occur at a rate greater than the fixed-rate log frequency of $\SI{5}{\second}$ selected for this work, but using a variable-rate algorithm may allow to capture or ignore exactly these small quick variations, depending on the settings. 
+The algorithm has though not been verified to produce equally good results under these conditions.
+
+\section{Linear-exponential algorithm}
+The difference in cycle count between the implementations of the linear and linear-exponential algorithm does not exceed $16\%$ during the simulated dive profiles, so the user can choose the algorithm that best suits their experience and planned dive without a major impact on the dive computer's performance.
 
 \section{Limitations}
 \subsection{Data Collection}

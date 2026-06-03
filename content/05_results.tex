@@ -26,7 +26,12 @@ The software can be configured using the Rust Build System \lstinline{cargo}'s \
 To simplify interaction with the different setups and simulations, a \lstinline{Justfile} is provided for the \lstinline{just} command runner. 
 The standard dive computer application can be flashed using \lstinline{just embed}, to enable the display and bluetooth, run \lstinline{just features=display,bluetooth embed}, while live simulation and result extraction can be obtained by running \lstinline{just embed-live-sim-log-DEPTH(-FEATURE)}, where \lstinline{DEPTH} can be one of \lstinline{20m}, \lstinline{50m} and \lstinline{90m} and \lstinline{FEATURE} is optional, may be \lstinline{exp} or \lstinline{fixed-rate}.
 
-The following figures are generated from the \texttt{csv} files that are output from the \texttt{extract\_\-bench\_\-tables.py} script in the project repository.
+Data were extracted using \lstinline{tee} to pipe the output of the VT100 RTT terminal UI created by \lstinline{cargo embed} to a file.
+This output is particularly unreliable, but the log lines have been reduced and made as machine-readable as possible to increase reliability.
+The numbers do not match exactly (e.g., see decisions due count is smaller than algorithm / flash log execution) due to missing spaces, newlines, carriage returns and other escape sequences as well as additional VT100 escape sequences that are not properly parsed when the stream is written to the file on disk.
+However, after multiple iterations yielding results with only insignificant differences, the relations between the numbers of multiple executions are considered to be preserved.
+
+The following figures and tables are generated from the \texttt{csv} files that are output from the \texttt{extract\_\-bench\_\-tables.py} script in the project repository.
 No preprocessing steps are performed except to clean up invalid characters in the exported log.
 The figure generation scripts are available in the thesis repository and are also run automatically once a commit is pushed to GitHub via GitHub Actions, namely \texttt{generate\_\-decision\_\-summary.py}, \texttt{generate\_\-timing\_\-summary.py} and \texttt{generate\_\-dive\_\-profile\_\-graphics.py}.
 
@@ -74,24 +79,17 @@ In the $\SI{50}{\meter}$ profile, which represents an average easy decompression
  % \input{./content/generated/05_results_timing_display_refresh}
 
 \section{Flash Log Rate results}
-\input{./content/generated/05_results_flash_log_decision_summary}
+The primary reason for using a variable rate algorithm for flash logging in this work is not to save cycles and energy by logging less often but to save space on the flash chip.
+
+The flash log rate algorithm (\lstinline{DiffAimdRateAlgorithm}) takes about $7.1\%$ less cycles than the \lstinline{DynamicDiffAimdRateAlgorithm} used for \gls{deco} and \gls{o2tox} calculation. 
+This additional execution time compared to logging in every iteration amounts to approximately $1/1850$ of the main loop rate (on average about $\SI{108.1}{\micro\second}$) compared to the $\SI{200}{\milli\second}$ rate), as can be derived from Table \ref{tab:timing_flash_log_rate}.
 \input{./content/generated/05_results_timing_flash_log_rate}
+
+Table \ref{tab:flash_log_decision_summary} and Figures \ref{fig:flash_profile_diff_20m}, \ref{fig:flash_profile_diff_50m}, \ref{fig:flash_profile_diff_90m} shows that the variable rate algorithm reduces the flash log points per dive by a factor of approximately $2.18\times$ to $2.63\times$.
+\input{./content/generated/05_results_flash_log_decision_summary}
+
+Finally, compare the flash log with the actual sampled (or simulated) depth at the time; the difference is referred to as the error below.
+
+The maximum signed error can be studied in Table \ref{tab:flash_profile_diff_summary}, it shows that the algorithms all limit the maximum error to a few centimeters: 
+the error in the fixed-rate algorithm tends to include individual errors up to $\SI{5.7}{\centi\meter}$, while the maximum error using the variable rate algorithms are smaller than $\SI{1}{\centi\meter}$.
 \input{content/generated/05_results_flash_profile_diff_summary}
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{figures/results/flash_profile_diff_20m.pdf}
-  \caption{Simulated $\SI{20}{\meter}$ dive profile: Difference between Flash log and actual depth}
-  \label{fig:flash_profile_diff_20m}
-\end{figure}
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{figures/results/flash_profile_diff_50m.pdf}
-  \caption{Simulated $\SI{50}{\meter}$ dive profile: Difference between Flash log and actual depth}
-  \label{fig:flash_profile_diff_50m}
-\end{figure}
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{figures/results/flash_profile_diff_90m.pdf}
-  \caption{Simulated $\SI{90}{\meter}$ dive profile: Difference between Flash log and actual depth}
-  \label{fig:flash_profile_diff_90m}
-\end{figure}

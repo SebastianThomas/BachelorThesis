@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrrrrrr}
+\toprule
+Configuration & Profile & Samples & Avg cycles & Avg [\si{\micro\second}] & Min cycles & Min [\si{\micro\second}] & Max cycles & Max [\si{\micro\second}] & Total cycles & Total [\si{\milli\second}] \\
+\midrule
+Baseline fixed & 20m & 632 & 209 & 13.1 & 209 & 13.1 & 209 & 13.1 & 132088 & 8.3 \\
+Baseline fixed & 50m & 750 & 201 & 12.6 & 28 & 1.8 & 208 & 13.0 & 151320 & 9.5 \\
+Baseline fixed & 90m & 653 & 192 & 12.0 & 29 & 1.8 & 209 & 13.1 & 125677 & 7.9 \\
+Exponential & 20m & 745 & 1731 & 108.2 & 1726 & 107.9 & 1856 & 116.0 & 1290200 & 80.6 \\
+Exponential & 50m & 881 & 1733 & 108.3 & 1728 & 108.0 & 1861 & 116.3 & 1527637 & 95.5 \\
+Exponential & 90m & 775 & 1729 & 108.1 & 1722 & 107.6 & 1852 & 115.8 & 1340193 & 83.8 \\
+Linear-exponential & 20m & 742 & 1728 & 108.0 & 1723 & 107.7 & 1855 & 115.9 & 1282547 & 80.2 \\
+Linear-exponential & 50m & 651 & 1732 & 108.2 & 1725 & 107.8 & 1855 & 115.9 & 1127660 & 70.5 \\
+Linear-exponential & 90m & 818 & 1729 & 108.1 & 1722 & 107.6 & 1855 & 115.9 & 1414465 & 88.4 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Flash log rate-algorithm execution time across profiles and configurations}
+\label{tab:timing_flash_log_rate}
+\end{table}

@@ -12,6 +12,7 @@ Table families (structurally identical within each family):
 from __future__ import annotations
 
 import csv
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,13 +30,15 @@ CONFIG_LABELS = {
 DEPTHS = ["20m", "50m", "90m"]
 
 
-def read_timing_row(csv_path: Path, row_label: str) -> dict[str, str]:
+def read_timing_row(csv_path: Path, row_label: str) -> dict[str, str] | None:
+    if not csv_path.exists():
+        return None
     with csv_path.open(newline="", encoding="utf-8") as handle:
         rows = csv.DictReader(line for line in handle if not line.startswith("#"))
         for row in rows:
             if row["label"] == row_label:
                 return row
-    raise RuntimeError(f"{row_label!r} not found in {csv_path}")
+    return None
 
 
 def cycles_to_unit(cycles: int, unit: str) -> float:
@@ -105,7 +108,11 @@ def build_rate_table(row_label: str, caption: str, table_label: str,
         for depth in DEPTHS:
             csv_path = INPUT_ROOT / config_key / depth / "summary.csv"
             row = read_timing_row(csv_path, row_label)
-            lines.append(format_rate_row(config_label, depth, row, unit, precision, total_unit))
+            if row is None:
+                print(f"warning: {row_label!r} not found in {csv_path}", file=sys.stderr)
+                lines.append(f"{config_label} & {depth} & \\multicolumn{{9}}{{c}}{{--}} \\\\")
+            else:
+                lines.append(format_rate_row(config_label, depth, row, unit, precision, total_unit))
     lines.extend([
         "\\bottomrule",
         "\\end{tabular}%",
@@ -167,7 +174,11 @@ def build_computation_table(row_label: str, caption: str, table_label: str,
         for depth in DEPTHS:
             csv_path = INPUT_ROOT / config_key / depth / "summary.csv"
             row = read_timing_row(csv_path, row_label)
-            lines.append(format_computation_row(config_label, depth, row, unit, precision, total_unit))
+            if row is None:
+                print(f"warning: {row_label!r} not found in {csv_path}", file=sys.stderr)
+                lines.append(f"{config_label} & {depth} & \\multicolumn{{11}}{{c}}{{--}} \\\\")
+            else:
+                lines.append(format_computation_row(config_label, depth, row, unit, precision, total_unit))
     lines.extend([
         "\\bottomrule",
         "\\end{tabular}%",

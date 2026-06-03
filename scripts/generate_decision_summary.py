@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,13 +46,15 @@ SUMMARIES = [
 ]
 
 
-def read_summary_row(csv_path: Path, row_label: str) -> dict[str, str]:
+def read_summary_row(csv_path: Path, row_label: str) -> dict[str, str] | None:
+    if not csv_path.exists():
+        return None
     with csv_path.open(newline="", encoding="utf-8") as handle:
         rows = csv.DictReader(line for line in handle if not line.startswith("#"))
         for row in rows:
             if row["label"] == row_label:
                 return row
-    raise RuntimeError(f"{row_label} not found in {csv_path}")
+    return None
 
 
 def format_row(config: str, depth: str, row: dict[str, str]) -> str:
@@ -79,7 +82,11 @@ def build_table(row_label: str, caption: str, table_label: str) -> str:
         for depth in DEPTHS:
             csv_path = INPUT_ROOT / config_key / depth / "decision.csv"
             row = read_summary_row(csv_path, row_label)
-            lines.append(format_row(config_label, depth, row))
+            if row is None:
+                print(f"warning: {row_label} not found in {csv_path}", file=sys.stderr)
+                lines.append(f"{config_label} & {depth} & \\multicolumn{{5}}{{c}}{{--}} \\\\")
+            else:
+                lines.append(format_row(config_label, depth, row))
 
     lines.extend(
         [

@@ -8,6 +8,7 @@ on:
       - "figures/results/**/*.csv"
       - "scripts/generate_decision_summary.py"
       - "scripts/generate_timing_summary.py"
+      - "scripts/generate_flash_profile_diff_table.py"
       - ".github/workflows/update-result-tables.yml"
   workflow_dispatch:
 
@@ -33,6 +34,9 @@ jobs:
 
       - name: Generate timing summary tables
         run: python scripts/generate_timing_summary.py
+
+      - name: Generate flash profile diff table
+        run: python scripts/generate_flash_profile_diff_table.py
 
       - name: Commit updated tables
         run: |

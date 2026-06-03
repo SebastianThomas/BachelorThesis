@@ -5,8 +5,9 @@ on:
     branches:
       - main
     paths:
-      - "figures/results/*.csv"
+      - "figures/results/**/*.csv"
       - "scripts/generate_dive_profile_graphics.py"
+      - "scripts/generate_flash_profile_diff_figure.py"
       - ".github/workflows/update-dive-profile-graphics.yml"
   workflow_dispatch:
 
@@ -30,8 +31,11 @@ jobs:
       - name: Install plotting dependency
         run: python -m pip install --upgrade pip matplotlib
 
-      - name: Render graphics
+      - name: Render dive profile graphics
         run: python scripts/generate_dive_profile_graphics.py
+
+      - name: Render flash profile diff figures
+        run: python scripts/generate_flash_profile_diff_figure.py
 
       - name: Commit updated graphics
         run: |

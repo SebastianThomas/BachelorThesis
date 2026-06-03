@@ -12,13 +12,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter*{Abstract}
-\lipsum[1]
+% The \textbf{abstract} is the presentation card of your work, it is fundamental to describe your contribution and relevant results in few lines of text. 
+% It must fit in one page and should include:
+% \begin{itemize}
+%     \item Short description of your topic or use case;
+%     \item Short description of existing technology, work, product and the scientific research challenges still unsolved;
+%     \item Description of you work and your contribution;
+%     \item A short summary of the most relevant results of your work and the conclusions you draw from it.
+% \end{itemize}
 
-The \textbf{abstract} is the presentation card of your work, it is fundamental to describe your contribution and relevant results in few lines of text. 
-It must fit in one page and should include:
-\begin{itemize}
-    \item Short description of your topic or use case;
-    \item Short description of existing technology, work, product and the scientific research challenges still unsolved;
-    \item Description of you work and your contribution;
-    \item A short summary of the most relevant results of your work and the conclusions you draw from it.
-\end{itemize}
+Dive Computers have become a standard piece of scuba diving equipment in recent years, tracking inert gas loading and corresponding decompression obligation, as well as oxygen intake and the associated limits.
+These battery-powered and life support equipment systems are often developed in a commercial setting with not all research available to the public.
+To save energy in low-power devices, research has shown that instead of sampling and running algorithms at fixed rates, variable rate approaches can decrease battery usage or enable fully self-sufficient devices, while the results diverge, with the reduction in cycles for the computations or increase in samplings reaching from $2.06\times$ to $567\times$, based on the metric and application investigated in the specific article.
+Current dive computers are based on a few different algorithms, but only a US Navy proprietary dive computer uses a linear-exponential algorithm, which has been shown to lower DCS risk on deeper dives.
+
+This work presents an extendable Open Source hardware and software basis for the development of dive computers that is feasible to build and extend for non-professionals, while remaining small enough to be worn during a scuba dive.
+The diving-related algorithms for inert gas loading, decompression, and oxygen toxicity tracking are implemented in a separate Open Source module.
+Multiple algorithms are implemented and used for the variable rate scheduling of different tasks in dive mode.
+These algorithms show a reduction in executions from $1.17\times$ to $6\times$ for decompression calculations without significant difference in the resulting simulated dive profiles, while the oxygen toxicity calculation does not benefit from the current implementation of variable rate scheduling.
+The usage of the Thalmann-inspired linear-exponential algorithm leads to slightly deeper stops, but is not more expensive in terms of compute.

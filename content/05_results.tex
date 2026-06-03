@@ -11,16 +11,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Results}\label{section:results}
+\chapter{Results}\label{chapter:results}
 % First describe your measurement setup and settings (so it could be reproduced) and afterwards describe the results you got from your experiments. Putting results in perspective and interpretation do not belong in this chapter (put that into the discussion)
 
-Although cycle counting and timing are possible on external hardware, the most accurate results can be obtained by simulating fixed dive profiles to compare the different algorithms. 
+Although cycle counting and timing are possible on external hardware, the most accurate results can be obtained by simulating fixed dive profiles to compare the different algorithms.
 A fixed-voltage DC Power Supply that has been set to output $\SI{3.7}{\volt}$ is used to provide power to the \gls{pcb}.
 The software is programmed onto the MCU using the 6-pin JTAG connector \emph{J1} via a STLink V3SET.
 
-The software can be configured using the Rust Build System \lstinline{cargo}'s \lstinline{feature} flags, which can be used for conditional compilation. 
-To simplify interaction with different setups, a \lstinline{Justfile} is provided for the \lstinline{just} command runner. 
-The standard dive computer application can be flashed using \lstinline{just embed}, while live simulation and result extraction can be obtained by running \lstinline{just embed-live-sim-log-DEPTH(-FEATURE)}, where \lstinline{DEPTH} can be one of \lstinline{20m}, \lstinline{50m} and \lstinline{90m} and \lstinline{FEATURE} is optional, may be \lstinline{exp} or \lstinline{fixed-rate}.
+The \gls{mcu} runs at a fixed clock frequency of $\SI{16}{\mega\hertz}$ on the STM32L476, each main task execution scheduled at a rate of approximately $1 / \SI{200}{\milli\second}$.
+
+The software can be configured using the Rust Build System \lstinline{cargo}'s \lstinline{feature} flags, which are used for conditional compilation.
+To simplify interaction with the different setups and simulations, a \lstinline{Justfile} is provided for the \lstinline{just} command runner. 
+The standard dive computer application can be flashed using \lstinline{just embed}, to enable the display and bluetooth, run \lstinline{just features=display,bluetooth embed}, while live simulation and result extraction can be obtained by running \lstinline{just embed-live-sim-log-DEPTH(-FEATURE)}, where \lstinline{DEPTH} can be one of \lstinline{20m}, \lstinline{50m} and \lstinline{90m} and \lstinline{FEATURE} is optional, may be \lstinline{exp} or \lstinline{fixed-rate}.
 
 The following figures are generated from the \texttt{csv} files that are output from the \texttt{extract\_\-bench\_\-tables.py} script in the project repository.
 No preprocessing steps are performed except to clean up invalid characters in the exported log.
@@ -52,39 +54,40 @@ The fixed rate simulations serve as the baseline for comparison, while the \lsti
 \section{\gls{o2tox} Algorithm results}
 The implemented oxygen toxicity algorithm is only differential, runs on just one new measurement, and thus is comparatively cheap. 
 The cycle count per execution of the fixed-rate algorithm, $235 \pm 2$, is only $10\%$ smaller than the execution of \gls{o2tox} itself, which is $266 \pm 2$.
-This difference will become larger if more samples are used per-iteration.
-The variable rate algorithms are on average $12.16\times$ more expensive, $1858 \pm 32$.
+This difference will become larger if more samples are used per-iteration of the \gls{o2tox} algorithm to reduce the skew that the linear interpolation may occasionally introduce between previous and current measurement.
+
+The variable rate algorithms are on average $7.4\times$ more expensive, $1858 \pm 32$ than the fixed-rate algorithm and $6.98\times$ more expensive than a \gls{o2tox} calculation.
 
 \input{./content/generated/05_results_timing_o2tox}
 \input{./content/generated/05_results_timing_o2tox_rate}
 
-Compared to the fixed rate baseline, the \gls{o2tox} algorithm is executed $0.65\times$ and $0.82\times$ as often on the $\SI{50}{\meter}$ profile, $0.15\times$ and $0.25\times$ as often on the $\SI{90}{\meter}$ profile. For  the shallow dive to $\SI{20}{\meter}$, no execution is required following the variable rate algorithm.
+Compared to the fixed rate baseline, the \gls{o2tox} algorithm is executed $0.65\times$ and $0.82\times$ as often on the $\SI{50}{\meter}$ profile, $0.15\times$ and $0.25\times$ as often on the $\SI{90}{\meter}$ profile, depending on the specific decompression profile. For the shallow dive to $\SI{20}{\meter}$, no execution is required following the variable rate algorithm.
 
 \input{./content/generated/05_results_o2tox_decision_summary}
 
 \section{Exponential \& Linear-Exponential Decompression Algorithm results}
-The decompression obligation algorithms are significantly more expensive than the \gls{o2tox}, especially on dives with increased decompression obligation. 
+The decompression stop profile calculation algorithms are significantly more expensive than the \gls{o2tox} algorithms, especially on dives with increased decompression obligation.
 
-The difference between the exponential and linear-exponential is small for shallow dives, on deeper dives, the average and total cycle counts are larger for the linear-exponential algorithm, which is at least partially caused by the tendency to create more (thus deeper) stops, and with more depth changes during decompression, more executions are required.
+The difference between the exponential and linear-exponential is small for shallow dives, on deeper dives, the average and total cycle counts are up to $16\%$ larger for the linear-exponential algorithm, which is among others caused by the tendency to create more (thus deeper) stops, and with more depth changes during decompression, more executions are required.
 
-The decompression rate algorithm takes $1842 \pm^{34}_{32}$ cycles, while execution of the decompression schedule algorithm varies widely with the dive profile and current state, between $101'521$ and $886'860$ cycles, with the average close to the lower range of the spectrum on no-deco dives and $338614$ to $395242$ cycles.
-The average execution overhead of an additional rate calculation is between $\frac{1837}{395'242} = 0.0046 = 0.4\%$ and $\frac{1810}{101'521} = 0.018 = 1.8\%$.
+The decompression rate algorithm takes $1842 \pm^{34}_{32}$ cycles, while execution of the decompression schedule algorithm varies widely with the dive profile and current state, between $101'521$ and $886'860$ cycles, close to the lower range of the spectrum on no-deco dives, where no tissue reaches its M-Value, with average cycles between $338614$ to $395242$ cycles.
+The average execution overhead of an additional rate calculation is between $\frac{1837}{395'242} = 0.0046 = 0.5\%$ and $\frac{1810}{101'521} = 0.018 = 1.8\%$.
 
 \input{content/generated/05_results_timing_deco_rate}
 \input{content/generated/05_results_timing_deco_schedule}
 
-Compared to the baseline execution count, depending on the profile, the variable rate algorithm leads to a $ 1.17\times$ to $6\times$ decrease in the execution count, which is in an almost linear relationship to the total cycle count spent on the computation of the decompression schedule. 
-In the $\SI{50}{\meter}$ profile, the algorithms perform the worst, while in shallow and deep dives, the decrease in cycles is significant.
+\input{./content/generated/05_results_decompression_decision_summary}
 
-\input{./content/generated/05_results_exponential_decision_summary}
-\input{./content/generated/05_results_linear_exponential_decision_summary}
+Compared to the baseline execution count, depending on the profile, the variable rate algorithm leads to a $1.17\times$ to $6\times$ decrease in the execution count, which is in an almost linear relationship to the total cycle count spent on the computation of the decompression schedule, while only incurring a $0.5\%$ to $1.8\%$ overhead compared to the execution of a decompression schedule computation.
+Although this may slightly increase battery usage during the deep and descent phases of the dive due to running another algorithm, the \gls{mcu} will be inactive for more cycles during decompression.
+In the $\SI{50}{\meter}$ profile, which represents an average easy decompression dive, the benefit through the variable rate algorithm is smallest, as the \gls{deco} time does not significantly exceed the time at depth, while in shallow and deep dives, the decrease in cycles is significant, as no deco needs to be computed, or the execution count during decompression is significantly reduced, respectively.
 
- \section{Display Refresh results}
- The display refresh is the most expensive algorithm, partially due to current implementation using SPI over a Parallel Interface for simplicity in hardware and software. 
- Most executions update the internal state and skip the transfer to the display because the values on the display are unchanged.
- 
- These executions which skip the transfer use no more than a few thousand, while full runs use up to $3.5$ million cycles.
- The display rate calculation 
- 
- \input{./content/generated/05_results_display_refresh_decision_summary}
- \input{./content/generated/05_results_timing_display_refresh}
+ % \section{Display Refresh results}
+ % The display refresh is the most expensive algorithm, partially due to current implementation using SPI over a Parallel Interface for simplicity in hardware and software. 
+ % Most executions update the internal state and skip the transfer to the display because the values on the display are unchanged.
+ % 
+ % These executions which skip the transfer use no more than a few thousand, while full runs use up to $3.5$ million cycles.
+ % The display rate calculation 
+ % 
+ % \input{./content/generated/05_results_display_refresh_decision_summary}
+ % \input{./content/generated/05_results_timing_display_refresh}

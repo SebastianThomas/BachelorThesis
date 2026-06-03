@@ -11,53 +11,143 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Task Description}
-Include the task description \textbf{pdf} you got from your
-assistant(s) with the \shell{\textbackslash includepdf} command.
+\includepdf[pages=1, pagecommand={\chapter{Task Description}}, scale=0.8, offset=0 -5cm]{task/AufgabenstellungBachelorArbeitDINFK.pdf}
 % include the task description pdf!
-%\includepdf[pages=-, turn=false, scale=0.9]{../../task/TaskDescription.pdf}
+\includepdf[pages=2-, turn=false, scale=0.9]{task/AufgabenstellungBachelorArbeitDINFK.pdf}
 
-
+\begingroup
+\clearpage % Manually insert page break
+\let\clearpage\relax % Disable automatic clearpage for the next chapter
+\vspace*{-3cm} % Insert negative space
 \chapter{Declaration of Originality}\label{chap:originality}
-Include the declaration of authorship with the \shell{\textbackslash
-  includepdf} command (sign it and scan it). For more information
-about plagiarism, please visit
-\url{https://www.ethz.ch/students/en/studies/performance-assessments/plagiarism.html}
+\includepdf[pages=-, turn=false, scale=0.8, offset=0 -3cm]{./figures/declaration_of_originality}
+\endgroup
 
-\begin{itemize}
-\item \textbf{English version:}
-  \url{https://www.ethz.ch/content/dam/ethz/main/education/rechtliches-abschluesse/leistungskontrollen/declaration-originality.pdf}
-\item \textbf{German version:}
-  \url{https://www.ethz.ch/content/dam/ethz/main/education/rechtliches-abschluesse/leistungskontrollen/plagiat-eigenstaendigkeitserklaerung.pdf}
-\end{itemize}
-
-% include the signed declaration of authorship!
-\includepdf[pages=-, turn=false, scale=0.9]{./figures/declaration_of_originality}
-
-
-\chapter{(optional) File Structure}
-Describe how the project directories/files are organized, e.g.:
-
+\chapter{File Structure}
 \begin{flushleft}
 \dirtree{%
 .1 /.
-  .2 README \DTcomment{A README with some general information about the project.}.
-  .2 01\_report \DTcomment{The source files of the project report.}.
+  .2 README \DTcomment{README with general information about the project.}.
+  .2 KiCad \DTcomment{KiCad Source Files for PCB Schematic and Layout}.
+  .2 STDC-Ordering \DTcomment{Exported ordering information for the PCB V1}.
+  .2 STDC-Ordering.zip \DTcomment{Archive: Exported ordering information for the PCB V1}.
+  .2 STDC\_C \DTcomment{STM32CubeMX-configured project .ioc}.
+  .2 STDC-STM32-rs \DTcomment{Embedded Firmware implementation submodule}.
+  .2 STDC-thalmann \DTcomment{Dive Algorithm implementation submodule}.
+  .2 01\_report \DTcomment{Source files of the report submodule}.
   .2 02\_presentation \DTcomment{The source files of the presentation.}.
-  .2 03\_designflow \DTcomment{Some designflow-specific files.}.
 }
 \end{flushleft}
 
-What needs to be done to run an RTL simulation (stimuli generation,
-compilation...)?
+To flash an assembled PCB, use the \texttt{STDC-STM32-rs} submodule. 
+There is a \texttt{DEBUGGING.md} that explains how to flash and test the software.
+The command runner \lstinline{just} is recommended to easily run the predefined tasks, e.g. \lstinline{just features=bluetooth,display embed}, \lstinline{just embed-live-sim-log-DEPTH}.
 
+To view and update the diving algorithms, update the \texttt{STDC-thalmann} submodule and use the updated dependency version in the firmware crate's \texttt{Cargo.toml}.
 
-\chapter{(optional) Datasets}
-If you have a data set comprising several test images, you could
-depict and describe them here. Use a simple naming scheme such that
-you can easily refer to certain elements of this data set in the text.
+% \chapter{(optional) More Evaluation Results}
+% If you conducted an extensive evaluation you could move surplus
+% graphs/results to the appendix.
 
+\chapter{Additional Tables: Flash Log structure}
+\begin{table}[htbp]
+  \centering
+  \caption{Control Data Block}
+  \label{tab:log-control}
+  \begin{tabularx}{\textwidth}{|c|c|X|}
+    \hline
+    Name & Bytes & Description \\
+    \hline
+    \lstinline{firmware_version} & 2 & identifier, from firmware, incrementing \\
+    \hline
+    \lstinline{computer_serial_nr} & 1 & identifier, from firmware/hardware flashing \\
+    \hline
+    \lstinline{log_model_version} & 1 & identifier, from firmware, incrementing \\
+    \hline
+    \lstinline{time_offset} & 4 & \si{\second} since 1970 \\
+    \hline
+    \lstinline{surface_interval} & 4 & in \si{\second} \\
+    \hline
+    \lstinline{dive_number} & 2 & Dive Number (identifier, strictly incrementing) \\
+    \hline
+    \lstinline{surface_pressure} & 2 & in $\si{\hecto\Pa}$ \\
+    \hline
+    \lstinline{surface_temperature} & 1 & in $2 \cdot \si{\celsius}$ \\
+    \hline
+    \lstinline{ascent_rate_agg} & 1 & Ascent Rate Aggregation in \si{\second}, and $255$ indicates firmware-defined non-constant aggregation \\
+    \hline
+    \lstinline{salinity} & 1 & Salt ($1035 \si{\kg/\m^2}$), fresh ($1000 \si{\kg/\m^2}$), EN13319 ($1020 \si{\kg/\m^2}$) \\
+    \hline
+    \lstinline{dive_mode} & 1 & OC, CC \\
+    \hline
+    \lstinline{deco_algorithm} & 1 & Table in firmware for mapping algorithm to identifier \\
+    \hline
+    \lstinline{gf_low} & 1 & \gls{gflow} \\
+    \hline
+    \lstinline{gf_low} & 1 & \gls{gfhigh} \\
+    \hline
+    \lstinline{gas_nr} & 1 & Number of distinct gases or gas cylinders \\
+    \hline
+    \lstinline{gas_content} & $3 \cdot \lstinline{gas_nr}$ & Number of distinct gases or gas cylinders \\
+    \hline
+  \end{tabularx}
+\end{table}
 
-\chapter{(optional) More Evaluation Results}
-If you conducted an extensive evaluation you could move surplus
-graphs/results to the appendix.
+\begin{table}[htbp]
+  \centering
+  \caption{Log Data Point Metadata}
+  \label{tab:log-meta}
+  \begin{tabularx}{\textwidth}{|c|c|X|}
+    \hline
+    Name & Bits & Description \\
+    \hline
+    \lstinline{dive_mode_active} & 1 & Indicator, if dive mode is active. \\
+    \hline
+    \lstinline{deco_obligation} & 1 & Indicator, if there is a decompression obligation. \\
+    \hline
+    \lstinline{level_state} & 2 & 0 = level, 1 = ascending, 2 = descending, 3 = error in determining pressure or level \\
+    \hline
+    \lstinline{optional_param_pages} & 4 & Indicator for optional 8-byte pages of log information, at the moment, only MSB used, as there is only 8 bytes of optional parameters \\
+    \hline
+  \end{tabularx}
+\end{table}
+
+% 4 bytes with one parameter selection bit left
+\begin{table}[htbp]
+  \centering
+  \caption{Log Data Point Data}
+  \label{tab:log-data}
+  \begin{tabularx}{\textwidth}{|c|c|c|p{3.2cm}|X|}
+    \hline
+    Name & Required & Bytes & Unit & Description \\
+    \hline
+    \lstinline{time_delta} & Yes & 2 & \si{\second} since $t_0$ & real time of the measurement. \\
+    \hline
+    \lstinline{depth} & Yes & 2 & $\si{\meter}$ ($=0.1\si{bar}$) (DM)\newline $\si{\hecto\Pa}$ (SM) & 10.6-fixed-point \\
+    \hline
+    \lstinline{metadata} & Yes & 1 & n/a & as described in \ref{tab:log-meta} \\
+    \hline
+    \lstinline{battery} & Yes & 1 & $\%$ & Battery percent \\
+    \hline
+    \lstinline{temperature} & Yes & 1 & $2 \cdot \si{\celsius}$ & as signed 8-bit integer \\
+    \hline
+    \lstinline{ascent_rate} & Yes & 1 & $\si{\meter/\minute}$ & 5.3-fixed-point, aggregation interval may vary with the firmware version \\
+    \hline
+    \lstinline{ndl} & No & 1 & \si{\minute} & $[0,99]$, $99$ = overflow \\
+    \hline
+    \lstinline{ceiling} & No & 1 & \si{\meter} & absolute value \\
+    \hline
+    \lstinline{gf99} & No & 1 & n/a & current \gls{gf99} \\
+    \hline
+    \lstinline{leading_tissue_id} & No & 1 & n/a & if applicable, depending on algorithm, tissue index referenced by \gls{gf99} \\
+    \hline 
+    \lstinline{risk} & No & 1 & $\%$ & if applicable, depending on algorithm \\
+    \hline
+    \lstinline{gas_mix_id} & No & 1 & n/a & Index of the current Gas Mix, MSB 1 = \gls{cc}, MSB 0 = \gls{oc} \\
+    \hline
+    \lstinline{po2} & No & 1 & \SI{e3}{\Pa} & Inspired \gls{po2} \\
+    \hline
+    \lstinline{cns} & No & 1 & $\%$ & Percentage of the CNS clock, with $255$ indicating invalid \\
+    \hline
+  \end{tabularx}
+\end{table}

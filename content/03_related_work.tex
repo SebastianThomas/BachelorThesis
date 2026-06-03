@@ -12,24 +12,25 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Related Work}
-Describe relevant aspects of related work, make sure to have a good covering of your approach/design with others who did similar things. You will need to compare this related work with your results in the Discussion chapter.
+% Describe relevant aspects of related work, make sure to have a good covering of your approach/design with others who did similar things. You will need to compare this related work with your results in the Discussion chapter.
 % We expect a lot of citations ~\cite{WIKI:Newton} here. 
 
-Make sure to also give the results of the related work relevant to your thesis presented here, including numbers. Often, at the end of this section an overview table makes sense, where you compare related work for different aspects related to your own  thesis.
+% Make sure to also give the results of the related work relevant to your thesis presented here, including numbers. Often, at the end of this section an overview table makes sense, where you compare related work for different aspects related to your own  thesis.
 
-\section{Diving Algorithms and Dive Computer Hardware Implementation}
+\section{Diving Algorithms and Dive Computer Hardware}
 There are not many publications related to diving outside hyperbaric medicine, which serve only as a limited reference for the implementation of decompression and oxygen toxicity calculations developed in this project, especially for variable-rate research, as it is relevant for dive computers.
 The algorithms have been researched and compared both from a medical and computational perspective, notably the \gls{vpm} algorithm being more computationally complex than Bühlmann's ZHL and similar algorithms \cite{understanding-modern-dive-computers}.
 
-Furthermore, though diving has become a more mainstream hobby over the past 40 years, much research into wearable dive computer technology takes place in a commercial settings, which is not published, so the aim in this case is to provide an extendable Open Source hardware and software platform.
+Though diving has become a more mainstream hobby over the past 40 years, much research into wearable dive computer technology takes place in a commercial settings, which is not published, so the aim in this case is to provide an extendable Open Source hardware and software platform.
 
-From a medical perspective, Prof. Simon Mitchell confirmed that the recalculation rate of diving algorithms for scuba diving is on the order of seconds, not milliseconds or tenths of milliseconds, calling it "bucket science" \cite{2025-mitchell-personal-comm}.
+From a medical perspective, Prof. Simon Mitchell confirmed that the recalculation rate of diving algorithms for scuba diving is on the order of seconds, not milliseconds or tenths of milliseconds, calling it "bucket chemistry" \cite{2025-mitchell-personal-comm}. 
+No specific research on this topic has been published, which is the primary motivation for this work.
 
 \section{Low-Power Algorithms and Variable-Rate Research}
 For low-power hardware and firmware design, multiple approaches have been evaluated on different platforms, and these influence the development of this project.
 
 In \cite{survey-adaptive-sampling-filtering}, multiple approaches to Adaptive Sampling and Filtering in the context of IOT devices are discussed. 
-While not an IOT device, but a wearable, the context of this work resembles the Adaptive Filtering techniques insofar as a boolean decision (transmitting or processing data) is derived from the sampled data, but the algorithms are not filters in the signal processing sense.
+While not an IOT device, but a wearable, the context of this work resembles the Adaptive Filtering techniques insofar as a boolean decision (transmitting or processing data) is derived from the sampled data (as opposed to adaptive sampling, which would decide whether produce a new sample in the first place), but the algorithms are not filters in the signal processing sense.
 The behavior of the system reacts online to sensor samples.
 
 In the following, multiple algorithms are discussed that have been proposed to calculate the dynamic sampling or filtering rate.
@@ -42,14 +43,14 @@ In \cite{2020-dsra}, adaptive sampling based on changes in the data to sample ha
 Introduces \gls{tbm} (the name adapted in this work to \gls{tbe}), which is calculated using formula \ref{align:tbm-dsra} as the basis, with $E$ as the so-called exploratory value, the normal sampling rate, $y_i$ and $M_i$ sensor reading and measurement time at time $i$. 
 This work produces independent \gls{tbm} values, i.e., the sample rate does not depend on previous executions of the algorithm and can thus be calculated in a stateless fashion.
 They note that in some cases, the two current most recent samples do not provide sufficient and relevant data, but rather to use processing before calculating \gls{tbm}. 
-The technical results in this paper are not of interest in the context of this work.
+The technical results in this paper are not of interest in the context of this work as the resulting figures are not qualitatively comparable.
 
 \begin{align}\label{align:tbm-dsra}
     TBM = E - \left(S * \left|\frac{y_i - y_{i-1}}{M_i - M_{i - 1}}\right|\right)
 \end{align}
 
 In the Adaptive Selection Algorithm for ISP Adaptive Filtering proposed in \cite{QAISAR2019106462}, a window of samples that is passed into the filter is filled until the next run. Absolute limits on the sampling window size and maximum duration are used to avoid missing many samples or only receiving stale data. 
-Quantitative analysis yields a reduction of $6.1\times$ to $567\times$ in additions and multiplications compared to other algorithms in test datasets, but these results are combined from the entire processing pipeline and not only the ASA algorithm.
+Quantitative analysis yields a reduction of $6.1\times$ to $567\times$ in additions and multiplications, respectively, compared to other algorithms in test datasets, but these results are combined from the entire enhanced processing pipeline and not only from the ASA algorithm.
 
 In this work, pressure sampling is performed in regular intervals and variable algorithms use the results from this sampling. 
 Therefore, all the papers above provide limited reference and comparison as to the extent to which the adaptive rate processes in this project can benefit the energy consumption.

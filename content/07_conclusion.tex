@@ -12,4 +12,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Conclusion and Future Work}
-Short chapter on the conclusions you can draw from your work, and what is still to be done (and what contributions the students after you could make).
+% Short chapter on the conclusions you can draw from your work, and what is still to be done (and what contributions the students after you could make).
+
+This work has presented a functional Open Source hardware and software implementation of a personal dive computer for \gls{scuba} diving. 
+Two distinct tissue-loading-based decompression algorithms and oxygen toxicity calculation methods can be chosen, including a linear-exponential decompression algorithm.
+The hardware contains all required parts and costs no more than $\$60$ per fully-soldered PCB, excluding a suitable Li-ion $\SI{3.7}{\volt}$ battery (e.g., $\SI{2200}{\milli\ampere{}\hour}$, 3-pin JST-PH Connector with thermistor connected on the middle pin).
+The diving algorithms are implemented as a Rust library crate to allow users to use these algorithm implementations in custom projects.
+The embedded software is split into multiple modules to facilitate updating a component while keeping the remaining part running as given.
+
+The implemented diving algorithms should now be evaluated in diving for medical and physiological correctness, but this process could result in serious injury or death, so this would require a more extensive investigation in a larger team to verify and gather results.
+
+While the main task is scheduled at a fixed sub-second rate to ensure that the most recent depth measurement is up to date, decompression and oxygen toxicity algorithms, as well as display refresh and flash logging, are performed at variable rates to increase resolution in times where sufficient information gain leads to significant changes in the expected output, and to decrease battery usage when no significant changes are expected.
+This reduces the required average cycle count per task execution without compromising the useful accuracy of the resulting information, and the incurred overhead is a magnitude smaller than the cycle skipped executions.
+
+Provided the user designs a waterproof enclosure with only one extrusion to allow the pressure sensor contact with the water, the computer can be used for at least $\SI{6}{\hour}$ in dive mode and for more than a month in surface mode, which is sufficient to complete a deep technical dive and complete the following offgassing tracking in surface mode.
+
+Future work could improve the runtime of current algorithms by optimizing code paths or running these decision algorithms less often. 
+Another direction would involve taking into consideration more than just one older sample that the most recent one is compared to to be able to build a virtual trend line instead of relying on the accuracy of single measurements.
+The impact of the variable flash rate algorithm on the reconstructed dive profile should also be investigated in more detail.
+
+Although not all components have worked together in the V1 prototype, valuable data have been extracted and conclusions could be drawn that can impact dive computer development in the future, including but not limited to the STDC project.

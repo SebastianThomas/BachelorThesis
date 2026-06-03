@@ -66,7 +66,7 @@ def render_depth(depth: str) -> None:
         axis.plot(
             times,
             depths_data,
-            label=config_label,
+            label=f"{config_label} (n={len(times)})",
             color=CONFIG_COLORS[config_key],
             linewidth=1.8,
         )

@@ -14,6 +14,7 @@ copy_latest() {
     echo "SKIP (no match): $pattern" >&2
     return
   fi
+  echo "COPY: $pattern → $(basename "$src")" >&2
   mkdir -p "$dst"
   for f in $FILES; do
     [ -f "$src/$f" ] && cp "$src/$f" "$dst/$f" && echo "  $f → $dst"

@@ -39,10 +39,10 @@ The fixed rate simulations serve as the baseline for comparison, while the \lsti
 
 \section{\gls{o2tox} Algorithm results}
 The implemented oxygen toxicity algorithm is only differential, runs on just one new measurement, and thus is comparatively cheap. 
-The cycle count per execution of the fixed-rate algorithm can be extracted from Table \ref{tab:timing_o2tox_rate}, $235 \pm 2$, is only $10\%$ smaller than the execution of \gls{o2tox} itself, which is $266 \pm 2$ as can be seen in Table (\ref{tab:timing_o2tox}).
+The cycle count per execution of the fixed-rate algorithm can be extracted from Table \ref{tab:timing_o2tox_rate}, $235 \pm 2$, is only $10\%$ smaller than the execution of the \gls{o2tox} algorithm itself, which is $266 \pm 2$ as can be seen in Table (\ref{tab:timing_o2tox}).
 This difference will become larger if more samples are used per-iteration of the \gls{o2tox} algorithm to reduce the skew that the linear interpolation may occasionally introduce between previous and current measurement.
 
-The variable rate algorithms are on average $7.4\times$ more expensive, $1858 \pm 32$ (\ref{tab:timing_o2tox_rate}) than the fixed-rate algorithm and $6.98\times$ more expensive than a \gls{o2tox} calculation (\ref{tab:timing_o2tox}).
+The variable rate algorithms are on average $7.4\times$ more expensive, $1858 \pm 32$ (cf. Table \ref{tab:timing_o2tox_rate}) than the fixed-rate algorithm and $6.98\times$ more expensive than a \gls{o2tox} calculation (cf. Table \ref{tab:timing_o2tox}).
 
 \input{./content/generated/05_results_timing_o2tox}
 \input{./content/generated/05_results_timing_o2tox_rate}
@@ -85,11 +85,11 @@ The flash log rate algorithm (\lstinline{DiffAimdRateAlgorithm}) takes about $7.
 This additional execution time compared to logging in every iteration amounts to approximately $1/1850$ of the main loop rate (on average about $\SI{108.1}{\micro\second}$) compared to the $\SI{200}{\milli\second}$ rate), as can be derived from Table \ref{tab:timing_flash_log_rate}.
 \input{./content/generated/05_results_timing_flash_log_rate}
 
-Table \ref{tab:flash_log_decision_summary} and Figures \ref{fig:flash_profile_diff_20m}, \ref{fig:flash_profile_diff_50m}, \ref{fig:flash_profile_diff_90m} shows that the variable rate algorithm reduces the flash log points per dive by a factor of approximately $2.18\times$ to $2.63\times$.
-\input{./content/generated/05_results_flash_log_decision_summary}
+Figures \ref{fig:flash_profile_diff_20m}, \ref{fig:flash_profile_diff_50m}, \ref{fig:flash_profile_diff_90m} shows that the variable rate algorithm reduces the flash log points per dive by a factor of approximately $3.6\times$ to $4.1\times$. 
 
-Finally, compare the flash log with the actual sampled (or simulated) depth at the time; the difference is referred to as the error below.
+Finally, compare the flash log with the actual sampled or simulated depth at the time; the difference is referred to as the error below.
 
-The maximum signed error can be studied in Table \ref{tab:flash_profile_diff_summary}, it shows that the algorithms all limit the maximum error to a few centimeters: 
-the error in the fixed-rate algorithm tends to include individual errors up to $\SI{5.7}{\centi\meter}$, while the maximum error using the variable rate algorithms are smaller than $\SI{1}{\centi\meter}$.
+The maximum signed error can be studied in Table \ref{tab:flash_profile_diff_summary}, it shows that the algorithms all limit the maximum error to a few centimeters, except for the fixed-rate algorithm, which includes individual errors up to a few meters, most of which already recover on the next log point (cf. Figure \ref{fig:flash_profile_diff_50m}, \ref{fig:flash_profile_diff_90m} for a figure displaying the difference over time).
+
+The maximum error using the variable rate algorithms are smaller than $\SI{70}{\centi\meter}$, but similar to the errors produced by the fixed-rate logging, these always recover on the next log point and only up to two such errors occur per simulated dive profile.
 \input{content/generated/05_results_flash_profile_diff_summary}

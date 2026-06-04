@@ -56,11 +56,13 @@ From the data collected, the following conclusions can be drawn.
 \end{itemize}
 
 \section{Impact of variable rate algorithm for flash logging}
-The amount of flash logs was reduced by $2.18\times$ to $2.63\times$ when using a variable rate algorithm, while the error remains consistently smaller than $\SI{1}{\centi\meter}$, which is smaller than the accuracy of the pressure sensor is expected. 
+The amount of flash logs was reduced by $3.6\times$ to $4.1\times$ when using a variable rate algorithm, while the error remains consistently smaller than $\SI{1}{\centi\meter}$. Only up to two log points deviate more from the actual profile when using the variable rate algorithms, while the fixed rate algorithm flash log creates more such errors.
+
+Therefore, flash space required for profile logging can be significantly reduced by employing variable-rate algorithms, without compromising the accuracy of the logged profile.
 
 This is true for these ideal dive profiles, which do not include more quick depth changes and small variations, as real dive profiles and pressure measurements might produce. 
-Such changes, of a few decimeters, often do not occur at a rate greater than the fixed-rate log frequency of $\SI{5}{\second}$ selected for this work, but using a variable-rate algorithm may allow to capture or ignore exactly these small quick variations, depending on the settings. 
-The algorithm has though not been verified to produce equally good results under these conditions.
+Such changes, of a few decimeters, often do not occur at a rate greater than the fixed-rate log frequency of $\SI{5}{\second}$ selected for this work, but using a variable-rate algorithm may allow to capture or ignore exactly these small quick variations, depending on the settings.
+However, the algorithm has not been verified to produce equally good results under these conditions.
 
 \section{Linear-exponential algorithm}
 The difference in cycle count between the implementations of the linear and linear-exponential algorithm does not exceed $16\%$ during the simulated dive profiles, so the user can choose the algorithm that best suits their experience and planned dive without a major impact on the dive computer's performance.

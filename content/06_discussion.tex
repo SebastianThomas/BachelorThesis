@@ -18,15 +18,15 @@
 % be investigated further.
 
 \section{Open-source Dive Computer}
-The resulting PCB is small enough to be worn on a diver's wrist and includes all necessary components to serve as a dive computer, it is of a similar size as common dive computers, such as the Garmin Descent X50i or the Shearwater Perdix and Petrel series.
-It is solderable by hand, and only contains five components (two metric 0603 diodes and three \gls{bga} mount components) which are preferably mounted using a microscope for visual reference.
+The resulting PCB is small enough to be worn on a diver's wrist and includes all necessary components to serve as a dive computer; it is of a similar size as common dive computers, such as the Garmin Descent X50i or the Shearwater Perdix and Petrel series.
+It is solderable by hand and only contains five components (two metric 0603 diodes and three \gls{bga} mount components) which are preferably mounted using a microscope for visual reference.
 It could be placed in a watertight enclosure with a suitable battery and does not need to be opened again, since all the charging and communication methods are wireless. 
 Only one extrusion must be present in the enclosure to connect the pressure sensor to the water, which is ready to be sealed using a standard O-Ring ($\diameter\SI{1.8}{\milli\meter}$, height $\SI{0.8}{\milli\meter}$, such as the ones used on high pressure swivels).
 
 Not all components worked in V1, in a new version, the errors and shortcomings should be addressed as explained below.
 
 \begin{itemize}
-    \item The low voltage rail is pulled up by a missing resistor on an \gls{i2c} level shifter.
+    \item The low voltage rail is pulled up by a missing resistor on an \gls{i2c} level shifter, by adding this resistor, the voltage should drop from $\SI{2.3}{\volt}-\SI{2.5}{\volt}$ to $\SI{1.8}{\volt}$.
     \item The display connector is inverted, pins 34-1 instead of 1-34.
     \item There is no way to remove power from the Bluetooth module if not in use, which wastes significant current in surface mode when Bluetooth is inactive. 
     A similar Load Switch as already exists for the display should be added to cut power.
@@ -61,7 +61,7 @@ The amount of flash logs was reduced by $3.6\times$ to $4.1\times$ when using a 
 Therefore, flash space required for profile logging can be significantly reduced by employing variable-rate algorithms, without compromising the accuracy of the logged profile.
 
 This is true for these ideal dive profiles, which do not include more quick depth changes and small variations, as real dive profiles and pressure measurements might produce. 
-Such changes, of a few decimeters, often do not occur at a rate greater than the fixed-rate log frequency of $\SI{5}{\second}$ selected for this work, but using a variable-rate algorithm may allow to capture or ignore exactly these small quick variations, depending on the settings.
+Such changes of a few decimeters usually do not occur at a rate greater than the fixed-rate log frequency of $\SI{5}{\second}$ selected for this work, but using a variable-rate algorithm may allow to either capture or ignore exactly these small quick variations, depending on the settings.
 However, the algorithm has not been verified to produce equally good results under these conditions.
 
 \section{Linear-exponential algorithm}

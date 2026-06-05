@@ -55,18 +55,18 @@ Whilst these tables are still taught by agencies and used by divers to perform s
 
 Tissues in the body on-gas and off-gas different inert gasses at different rates, tissue-based algorithms model multiple tissues with halftimes of $\SI{5}{\min}$ up to multiple hours (e.g. $\SI{635}{\min}$ or $\SI{720}{\min}$ in Bühlmann ZHL-16A and -16C, respectively) to keep the modeled supersaturation within experimentally developed tissue-dependent limits, while bubble models aim to limit bubble growth \cite{overview-dci-2024}. 
 These algorithms cannot prevent \gls{dcs} from occurring, as exact physiological factors and processes are not fully determined nor can all required parameters be measured while diving (sleep, hydration, fitness, and other bodily factors play a role, which are not easily measurable), but adhering to the limits given by tables and computers, significantly reduces the incidence.
-Most decompression algorithms provide a maximum supersaturation values per tissue, which may be an absolute supersaturation or be depth-dependent (e.g., the Thalmann Algorithm's MPTT (Maximum Permissible Tissue Tension) tables\cite{thalmann-parameters-1.3-2020}\cite{thalmann-tables-software-2010}).
+Most decompression algorithms provide a maximum supersaturation values per tissue, which may be an absolute supersaturation or be depth-dependent (e.g., the Thalmann Algorithm's MPTT (Maximum Permissible Tissue Tension) tables \cite{thalmann-parameters-1.3-2020}\cite{thalmann-tables-software-2010}).
 
 \subsection{Oxygen at hyperbaric pressure}
 Oxygen is not an inert gas and is thus not ongassed in body tissues. 
 However, there are two risks when increasing and decreasing \gls{fo2} of a gas: hypoxia and hyperoxia. 
 The first term represents the lack of oxygen, which for humans occurs at a \gls{po2} of around $.10$ to $.16$, and divers are recommended to breathe gas with a \gls{po2} greater than $.16$ or $.18$ to avoid passing out. 
-Oxygen also becomes toxic at high \gls{po2} due to its chemical reactivity, and this effect has been experimentally shown to be more exposed when submerged in water than in dry hyperbaric chambers \cite{chamber-divers-2024}, which is why the upper \gls{po2} limits for diving are $1.6$ during decompression and $1.4$ or less while working, while hyperbaric oxygen treatments according to the US Navy Tables often surpass a \gls{po2} of $2.0$.
+Oxygen also becomes toxic at high \gls{po2} due to its chemical reactivity, and this effect has been experimentally shown to be more exposed when submerged in water than in dry hyperbaric chambers \cite{chamber-divers-2024}, which is why the upper \gls{po2} limits for diving are $1.6$ during decompression and $1.4$ or less while working, while hyperbaric oxygen treatments according to the US Navy Tables in dry chambers often surpass a \gls{po2} of $2.0$.
 
 The higher \gls{po2} and the longer the exposures, the higher both risks of \gls{cns} and pulmonary oxygen toxicity, and these conditions can cause serious short- and long-term medical complications, seizures, and death.
 Limits for multiple cases have been experimentally developed and published, among others, by the US Navy and NOAA, in tables and the so-called "\gls{cns} clock".
 
-Keeping track of oxygen intake and \gls{pp} is also a primary function of dive computers and will also be presented in this project. 
+Keeping track of oxygen exposure is also a primary function of dive computers and will also be presented in this project.
 Although CNS clock limits are more restrictive than the way most technical divers manage risk and new recommendations have recently been published \cite{RevisedO2Tox2025}, these well-established methods have been implemented in most modern dive computers and will serve as a starting point in this work's implementation.
 
 Dive computers do not only track single-dive exposures; divers are decompressing for hours after a dive is completed, and to complete repetitive dives (i.e. multiple dives within 48 hours) safely require the tracking of offgassing time even after the diver reached the surface.

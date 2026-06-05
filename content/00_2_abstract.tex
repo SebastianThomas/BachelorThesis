@@ -21,13 +21,15 @@
 %     \item A short summary of the most relevant results of your work and the conclusions you draw from it.
 % \end{itemize}
 
-Dive Computers have become a standard piece of scuba diving equipment in recent years, tracking inert gas loading and corresponding decompression obligation, as well as oxygen intake and the associated limits.
-These battery-powered and life support equipment systems are often developed in a commercial setting with not all research available to the public.
-To save energy in low-power devices, research has shown that instead of sampling and running algorithms at fixed rates, variable rate approaches can decrease battery usage or enable fully self-sufficient devices, while the results diverge, with the reduction in cycles for the computations or increase in samplings reaching from $2.06\times$ to $567\times$, based on the metric and application investigated in the specific article.
-Current dive computers are based on a few different algorithms, but only a US Navy proprietary dive computer uses a linear-exponential algorithm, which has been shown to lower \gls{dcs} risk on deeper dives.
+Dive Computers are now standard equipment for scuba diving, continuously tracking inert gas loading, the corresponding decompression obligation, and oxygen exposure.
+They also allow for more detailed dive logging by allowing users to view and export the recorded depth over time.
+As safety-critical, battery-powered life-support devices, commercial and military dive computers are frequently based on proprietary hardware and algorithms, limiting customization options, transparency, and reproducibility.
+Previous work has shown that adaptive or variable-rate scheduling can substantially reduce computational effort and energy consumption in low-power embedded systems.
+Among existing decompression models, the Thalmann-inspired linear-exponential approach has been associated with reduced decompression sickness risk on deeper dives but is rarely implemented, especially in publicly available dive computer software.
 
-This work presents an extendable open-source hardware and software basis for the development of dive computers that is feasible to build and extend for non-professionals, while remaining small enough to be worn during a scuba dive.
-The diving-related algorithms for inert gas loading, decompression, and oxygen toxicity tracking are implemented in a separate open-source module.
+This work presents an extendable open-source hardware and software basis for the development of dive computers that is feasible to build and extend for non-professional audiences, while remaining compact enough to be worn during a scuba dive.
+The diving-related algorithms for tracking inert gas loading, decompression, and oxygen toxicity are implemented in a separate open-source module.
 Multiple algorithms are implemented and used for the variable rate scheduling of different tasks in dive mode.
 These algorithms show a reduction in executions from $1.17\times$ to $6\times$ for decompression calculations without significant difference in the resulting simulated dive profiles, while the oxygen toxicity calculation does not benefit from the current implementation of variable rate scheduling.
-The usage of the Thalmann-inspired linear-exponential algorithm leads to slightly deeper stops, but is not more expensive in terms of compute.
+Flash logging to accurately reconstruct a dive profile has been reduced by a factor of $3.6\times$ to $4.1\times$ compared to the fixed-rate baseline while incurring no measurable accuracy loss on the simulated profiles.
+The usage of the Thalmann-inspired linear-exponential algorithm performs as expected, recommending slightly deeper stops on deep profiles without incurring significant computational overhead.

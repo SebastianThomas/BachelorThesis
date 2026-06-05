@@ -26,9 +26,9 @@ Their primary function is to display dive time and depth, as well as to calculat
 Furthermore, most computers show statistics about recent dives or allow downloading the dive logs for further analysis and accurate logging when on the surface.
 
 \section{Motivation}
-Dive Computers commonly sample depth and update the corresponding display multiple times per second, while log rate (the stored logs for later retrieval) is usually user-defined between 1 and 30 seconds. Recomputation of decompression schedules cannot be as simply observed; but by observing the information on the respective displays change, it can be assumed that to happen on a scale of at least every few seconds. 
+Dive Computers commonly sample depth and update the corresponding display multiple times per second, while the fixed log rate (the stored logs for later retrieval) is usually user-defined between 1 and 30 seconds. Recomputation of decompression schedules cannot be as simply observed; but by observing the information on the respective displays change, it can be assumed that to happen on a scale of at least every few seconds. 
 
-As Prof Dr Simon Mitchell explains, hyperbaric medicine and especially decompression science is "bucket chemistry" \cite{2025-mitchell-personal-comm}, meaning that the extent to which accurate O2 time and decompression tracking is useful is at most on the order of multiple seconds. However, this does not mean that more frequent depth sampling and display is useless for all applications, most divers rely on their dive computers to refresh the depth display in increments of $\SI{10}{\cm}$ with a sub-second delay. 
+As Prof Dr Simon Mitchell explains, hyperbaric medicine and especially decompression science is "bucket chemistry" \cite{2025-mitchell-personal-comm}, meaning that the extent to which accurate \gls{o2} exposure and decompression tracking is useful to divers is at most on the order of multiple seconds. However, this does not mean that more frequent depth sampling and display is useless for all applications, most divers rely on their dive computers to refresh the depth display in increments of $\SI{10}{\cm}$ with a sub-second delay. 
 
 However, there is no indication that knowledge about typical dive profiles influences these rates, i.e., there is no research in the public domain that investigates the feasibility of a variable refresh rate for the common components and algorithms of dive computers.
 
@@ -43,8 +43,8 @@ Assembly should be possible without the use of pick-and-place machines, to allow
 \end{enumerate}
 
 \subsection{Outline}
-Up next is an introduction to measurement-based embedded devices, energy-saving measures in battery-power devices, and basic hyperbaric medicine theory is presented, to the extent that it is relevant to divers and dive computer developers. 
+Up next is an introduction to measurement-based embedded devices, energy-saving measures in battery-power devices, and basic hyperbaric medicine theory, to the extent that it is relevant to understand fundamental principles behind the diving algorithms used in this work. 
 After this, related work to dive computer research and about saving energy in embedded devices, primarily by running at tasks variable rate, will be presented.
 Following this, the specific implementation of this project in hardware and software is described. 
 Chapter 5 will collect the methods and results received using different software.
-Finally, the results will be critically discussed and compared with those in the related work.
+Finally, the results will be critically discussed and compared with those in related work.

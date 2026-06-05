@@ -37,18 +37,24 @@ The figure generation scripts are available in the thesis repository and are als
 
 The fixed rate simulations serve as the baseline for comparison, while the \lstinline{exp} ones enable the exponential and the recipes without \lstinline{FEATURE} run the linear-exponential algorithm.
 
+In the following section, three types of tables are used to present the data, which are presented shortly. 
+
+\begin{itemize}
+    \item Algorithm Computation Time: These show a summary (average, median, minimum, maximum cycles and seconds) of all executions during the simulation of one dive profile (maximum depth $\SI{20}{\meter}$, $\SI{50}{\meter}$ and $\SI{90}{\meter}$) under a specific configuration (fixed-rate, variable-rate with exponential or variable-rate with linear-exponential algorithm).
+    \item Rate Algorithm Computation Time: These show a summary of all rate algorithm executions related to the scheduling of a specific algorithm (fixed over all rows, named in the table caption) during the simulation of one dive profile under a specific configuration.
+    \item Decision Summary: Detail decisions (due, not due, and avg/max skipped seconds) of the rate algorithm related to the scheduling of a specific algorithm during the simulation of one dive profile under a specific configuration.
+\end{itemize}
+
 \section{\gls{o2tox} Algorithm results}
 The implemented oxygen toxicity algorithm is only differential, runs on just one new measurement, and thus is comparatively cheap. 
 The cycle count per execution of the fixed-rate algorithm can be extracted from Table \ref{tab:timing_o2tox_rate}, $235 \pm 2$, is only $10\%$ smaller than the execution of the \gls{o2tox} algorithm itself, which is $266 \pm 2$ as can be seen in Table (\ref{tab:timing_o2tox}).
 This difference will become larger if more samples are used per-iteration of the \gls{o2tox} algorithm to reduce the skew that the linear interpolation may occasionally introduce between previous and current measurement.
+\input{./content/generated/05_results_timing_o2tox}
 
 The variable rate algorithms are on average $7.4\times$ more expensive, $1858 \pm 32$ (cf. Table \ref{tab:timing_o2tox_rate}) than the fixed-rate algorithm and $6.98\times$ more expensive than a \gls{o2tox} calculation (cf. Table \ref{tab:timing_o2tox}).
-
-\input{./content/generated/05_results_timing_o2tox}
 \input{./content/generated/05_results_timing_o2tox_rate}
 
 Following Table \ref{tab:o2tox_decision_summary}, compared to the fixed rate baseline, the \gls{o2tox} algorithm is executed $0.65\times$ and $0.82\times$ as often on the $\SI{50}{\meter}$ profile, $0.15\times$ and $0.25\times$ as often on the $\SI{90}{\meter}$ profile, depending on the specific decompression profile. For the shallow dive to $\SI{20}{\meter}$, no execution is required following the variable rate algorithm.
-
 \input{./content/generated/05_results_o2tox_decision_summary}
 
 \section{Exponential \& Linear-Exponential Decompression Algorithm results}

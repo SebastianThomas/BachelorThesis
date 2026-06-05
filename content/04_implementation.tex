@@ -41,7 +41,7 @@ The PCB has dimensions of $\SI{38}{\milli\meter}\times\SI{48}{\milli\meter}$, th
 
 All resistors and capacitors are of size 0402 (1005), LEDs 0603 (1608), two inductors 1210 (3225) and one inductor 1812 (4532), and most larger components are \gls{lqfp} packages, with the following exceptions. There are three \gls{bga}-mount (battery status and power MOSFET for display and Bluetooth), two \gls{qfn} (pressure sensor and battery charger), one \gls{dfn} (dual step-down converter) and one \gls{x2son} (I2C level shifter) components. Lastly, two Schottky diodes of Metric 0603 size are used. To connect external components, a 34-pin FFC connector for the display and a 3-pin JST PH connector for the battery are present on the board.
 
-All components have been soldered by hand using pneumatic solder paste dispensers, placed with a pair of tweezers, and reflowed using a $\SI{250}{\celsius}$ heating plate. This process is not difficult, except for the display connector and the non-\gls{lqfp} components, which require more concentration and time.
+All components have been soldered by hand using pneumatic solder paste dispensers, placed with a pair of tweezers, and reflowed using a heating plate at $\SI{250}{\celsius}$. This process is not difficult, except for the display connector and the non-\gls{lqfp} \gls{ic}s, which require more concentration and time.
 
 \section{Firmware}\label{section:firmware}
 The Firmware has been written in the Rust programming language, using the \lstinline{no-std} environment due to dynamically-allocated objects not being available without a heap and only uses the \lstinline{core} language features to reduce overheads introduced by the standard library, and to reduce firmware size. 
@@ -67,10 +67,10 @@ Tasks are scheduled by calling \lstinline{my_task::spawn} for each execution, wh
 \begin{itemize}
     \item \lstinline{init} to initialize peripherals, and calling the two main tasks \lstinline{task_mode_tick} and \lstinline{task_battery_update}
     \item \lstinline{idle} as an infinite loop waiting for interrupts or other running instructions, which is preempted by RTIC as soon as another task may be run
-    \item \lstinline{task_mode_tick} is the main loop that runs a procedure based on the current dive / surface mode
+    \item \lstinline{task_mode_tick} is the main loop that runs a procedure based on the current mode
     \item \lstinline{task_battery_update} running at a fixed rate ($\SI{30}{\second}$) to update the latest measurements with the current battery status
     \item \lstinline{task_bluetooth_mode} enables the Bluetooth module and handles incoming data and commands, and stops running when a timeout occurs
-    \item \lstinline{task_bluetooth_button} (unused in V1)
+    \item \lstinline{task_bluetooth_button} (unused in the V1 implementation discussed in this work)
 \end{itemize}
 
 Accessing external resources in RTIC is possible via locals and globals, which are passed as context to a task. Locals can only be used by a single task, whereas globals can be used by any task (and represent shared memory). 
@@ -89,8 +89,6 @@ After waking up from STOP2, registers, RAM and most peripherals keep their state
 The standard package to access abstracted peripherals on ARM Cortex-M \gls{mcu}s is the \href{https://github.com/rust-embedded/cortex-m}{\lstinline{cortex-m} (and \lstinline{cortex-m-rt})} crate, which provides wrappers around core peripherals, for example SysTick, registers like MSP and BSRR, and functionality around startup and interrupt handling, including the NVIC (Nested Vector Interrupt Controller).
 
 The \gls{hal} expanding the functionality of the general \lstinline{cortex-m}, which is specific to the \gls{mcu} family, used in this project are maintained and provided by the community project \href{https://github.com/stm32-rs}{\lstinline{stm32-rs}}, specifically the \href{https://github.com/stm32-rs/stm32l4xx-hal}{HAL crate for the STM32L4xx \gls{mcu}s} is used.
-
-\subsection{Low-Power Task Scheduling Algorithms}
 
 \section{Diving Algorithms}\label{section:algorithms}
 The algorithms described in this section are implemented in a Rust in a \hyperlink{https://github.com/SebastianThomas/STDC-thalmann}{dedicated repository}, available under the MIT License. 
@@ -149,7 +147,7 @@ The output in all current implementations is the \gls{tbe} in milliseconds, i.e.
 The most basic algorithm is the \lstinline{FixedRateAlgorithm}, which always returns a fixed number \gls{tbe}, i.e., the task should run at regular intervals.
 
 \subsection{\lstinline{AimdRateAlgorithm}}\label{subsection:aimd}
-All dynamic scheduling rate algorithms in this work are based on the \gls{aimd} principle, the basic \lstinline{AimdRateAlgorithm} has a number of milliseconds for additive increase, a fraction (numerator, denominator) for multiplicative decrease, and a maximum \gls{tbe} that should not be exceeded \ref{lst:aimd}.
+All dynamic scheduling rate algorithms in this work are based on the \gls{aimd} principle, the basic \lstinline{AimdRateAlgorithm} has a number of milliseconds for additive increase, a fraction (numerator, denominator) for multiplicative decrease, and a maximum \gls{tbe} that should not be exceeded (Listing \ref{lst:aimd}).
 
 \begin{lstlisting}[caption={AIMD algorithm}, label={lst:aimd}]
     fn next_iter(self.current: u32, change: bool) -> u32 {
@@ -172,10 +170,10 @@ The algorithm \lstinline{DiffAimdRateAlgorithm} works on a fixed-size window of 
 This means that the window cannot be too large or too small, a fixed window size of $5$ has been chosen in this case, this does not influence the working of the algorithm, only the sensitivity to change in measurements.
 
 Let $t_0$ be the first time the window and $t_n$ the last (in this example, $n = 5-1 = 4$), and $v_0$ and $v_n$ the corresponding values (\ref{align:diff_aimd_r}). 
-We first calculate the change rate per second $r$, then transform it into a number $f$ between $0$ and $1$ using a fixed reference speed $ref$ (\ref{align:diff_aimd_f}).
+We first calculate the change rate per second $r$, then transform it into a number $f$ between $0$ and $1$ using a fixed reference speed $r_{ref}$ (\ref{align:diff_aimd_f}).
 \begin{align}
     r &= (v_n - v_0) / (t_n - t_0) \label{align:diff_aimd_r} \\
-    f &= r / ref \label{align:diff_aimd_f}
+    f &= \min(r / r_{ref}, 1) \label{align:diff_aimd_f}
 \end{align}
 
 If the change $f$ is significant (assume $>= 1$), a change is triggered to invoke the MD branch, otherwise AI is used until the maximum is reached, as described in \ref{subsection:aimd}.

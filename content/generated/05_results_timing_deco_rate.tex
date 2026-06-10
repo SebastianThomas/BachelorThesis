@@ -5,7 +5,9 @@
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llrrrrrrrrr}
 \toprule
-Config. & Depth & N & Avg c. & Avg [\si{\micro\second}] & Min c. & Min [\si{\micro\second}] & Max c. & Max [\si{\micro\second}] & Tot. c. & Tot. [\si{\milli\second}] \\
+Config. & Depth & N & \multicolumn{2}{c}{Avg} & \multicolumn{2}{c}{Min} & \multicolumn{2}{c}{Max} & \multicolumn{2}{c}{Tot.} \\
+\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
+ & & & c. & [\si{\micro\second}] & c. & [\si{\micro\second}] & c. & [\si{\micro\second}] & c. & [\si{\milli\second}] \\
 \midrule
 Baseline & 20m & 757 & 219 & 13.7 & 219 & 13.7 & 219 & 13.7 & 165783 & 10.4 \\
 Baseline & 50m & 2935 & 218 & 13.6 & 218 & 13.6 & 218 & 13.6 & 639830 & 40.0 \\

@@ -98,10 +98,12 @@ def build_rate_table(row_label: str, caption: str, table_label: str,
         "\\begin{tabular}{llrrrrrrrrr}",
         "\\toprule",
         f"Config. & Depth & N"
-        f" & Avg c. & Avg {hdr}"
-        f" & Min c. & Min {hdr}"
-        f" & Max c. & Max {hdr}"
-        f" & Tot. c. & Tot. {thdr} \\\\",
+        f" & \\multicolumn{{2}}{{c}}{{Avg}}"
+        f" & \\multicolumn{{2}}{{c}}{{Min}}"
+        f" & \\multicolumn{{2}}{{c}}{{Max}}"
+        f" & \\multicolumn{{2}}{{c}}{{Tot.}} \\\\",
+        "\\cmidrule(lr){4-5}\\cmidrule(lr){6-7}\\cmidrule(lr){8-9}\\cmidrule(lr){10-11}",
+        f" & & & c. & {hdr} & c. & {hdr} & c. & {hdr} & c. & {thdr} \\\\",
         "\\midrule",
     ]
     for config_key, config_label in CONFIG_LABELS.items():
@@ -163,11 +165,13 @@ def build_computation_table(row_label: str, caption: str, table_label: str,
         "\\begin{tabular}{llrrrrrrrrrr}",
         "\\toprule",
         f"Config. & Depth & N"
-        f" & Avg c. & Avg {hdr}"
-        f" & Med. c. & Med. {hdr}"
-        f" & Min c. & Min {hdr}"
-        f" & Max c. & Max {hdr}"
-        f" & Tot. c. & Tot. {thdr} \\\\",
+        f" & \\multicolumn{{2}}{{c}}{{Avg}}"
+        f" & \\multicolumn{{2}}{{c}}{{Med.}}"
+        f" & \\multicolumn{{2}}{{c}}{{Min}}"
+        f" & \\multicolumn{{2}}{{c}}{{Max}}"
+        f" & \\multicolumn{{2}}{{c}}{{Tot.}} \\\\",
+        "\\cmidrule(lr){4-5}\\cmidrule(lr){6-7}\\cmidrule(lr){8-9}\\cmidrule(lr){10-11}\\cmidrule(lr){12-13}",
+        f" & & & c. & {hdr} & c. & {hdr} & c. & {hdr} & c. & {hdr} & c. & {thdr} \\\\",
         "\\midrule",
     ]
     for config_key, config_label in CONFIG_LABELS.items():

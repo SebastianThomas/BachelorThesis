@@ -90,10 +90,11 @@ def build_rate_table(row_label: str, caption: str, table_label: str,
     hdr   = unit_col_header(unit)
     thdr  = unit_col_header(total_unit)
     lines = [
-        "\\begin{sidewaystable}[htbp]",
+        "\\begin{table}[htbp]",
         "\\centering",
         "\\small",
         "\\renewcommand{\\arraystretch}{1.15}",
+        "\\resizebox{\\textwidth}{!}{%",
         "\\begin{tabular}{llrrrrrrrrr}",
         "\\toprule",
         f"Config. & Depth & N"
@@ -114,10 +115,11 @@ def build_rate_table(row_label: str, caption: str, table_label: str,
                 lines.append(format_rate_row(config_label, depth, row, unit, precision, total_unit))
     lines.extend([
         "\\bottomrule",
-        "\\end{tabular}",
+        "\\end{tabular}%",
+        "}",
         f"\\caption{{{caption}}}",
         f"\\label{{{table_label}}}",
-        "\\end{sidewaystable}",
+        "\\end{table}",
     ])
     return "\n".join(lines) + "\n"
 
@@ -153,7 +155,8 @@ def build_computation_table(row_label: str, caption: str, table_label: str,
     hdr   = unit_col_header(unit)
     thdr  = unit_col_header(total_unit)
     lines = [
-        "\\begin{sidewaystable}[htbp]",
+        "\\begin{landscape}",
+        "\\begin{table}[p]",
         "\\centering",
         "\\small",
         "\\renewcommand{\\arraystretch}{1.15}",
@@ -181,7 +184,8 @@ def build_computation_table(row_label: str, caption: str, table_label: str,
         "\\end{tabular}",
         f"\\caption{{{caption}}}",
         f"\\label{{{table_label}}}",
-        "\\end{sidewaystable}",
+        "\\end{table}",
+        "\\end{landscape}",
     ])
     return "\n".join(lines) + "\n"
 

@@ -1,7 +1,8 @@
-\begin{sidewaystable}[htbp]
+\begin{table}[htbp]
 \centering
 \small
 \renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{llrrrrrrrrr}
 \toprule
 Config. & Depth & N & Avg c. & Avg [\si{\micro\second}] & Min c. & Min [\si{\micro\second}] & Max c. & Max [\si{\micro\second}] & Tot. c. & Tot. [\si{\milli\second}] \\
@@ -16,7 +17,8 @@ Lin.-Exp. & 20m & 689 & 1801 & 112.6 & 1788 & 111.8 & 1928 & 120.5 & 1241483 & 7
 Lin.-Exp. & 50m & 2999 & 1878 & 117.4 & 1795 & 112.2 & 1934 & 120.9 & 5634143 & 352.1 \\
 Lin.-Exp. & 90m & 4814 & 1833 & 114.6 & 1225 & 76.6 & 1925 & 120.3 & 8826205 & 551.6 \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Decompression rate-algorithm execution time across profiles and configurations}
 \label{tab:timing_deco_rate}
-\end{sidewaystable}
+\end{table}

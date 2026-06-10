@@ -1,7 +1,8 @@
-\begin{sidewaystable}[htbp]
+\begin{table}[htbp]
 \centering
 \small
 \renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{llrrrrrrrrr}
 \toprule
 Config. & Depth & N & Avg c. & Avg [\si{\micro\second}] & Min c. & Min [\si{\micro\second}] & Max c. & Max [\si{\micro\second}] & Tot. c. & Tot. [\si{\milli\second}] \\
@@ -16,7 +17,8 @@ Lin.-Exp. & 20m & 742 & 1728 & 108.0 & 1723 & 107.7 & 1855 & 115.9 & 1282547 & 8
 Lin.-Exp. & 50m & 734 & 1734 & 108.4 & 1727 & 107.9 & 1857 & 116.1 & 1273067 & 79.6 \\
 Lin.-Exp. & 90m & 622 & 1727 & 107.9 & 1719 & 107.4 & 1850 & 115.6 & 1074446 & 67.2 \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Flash log rate-algorithm execution time across profiles and configurations}
 \label{tab:timing_flash_log_rate}
-\end{sidewaystable}
+\end{table}

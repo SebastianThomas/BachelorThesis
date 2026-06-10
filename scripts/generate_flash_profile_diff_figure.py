@@ -36,7 +36,7 @@ CONFIG_COLORS = {
     "exp":            "#2a9d2a",
 }
 
-DEPTHS = ["20m", "50m", "90m"]
+DEPTHS = ["20m", "50m", "90m", "200m"]
 
 
 def read_diff(csv_path: Path) -> tuple[list[float], list[float]]:

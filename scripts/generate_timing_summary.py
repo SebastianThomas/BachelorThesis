@@ -27,7 +27,7 @@ CONFIG_LABELS = {
     "lin-exp": "Linear-exponential",
 }
 
-DEPTHS = ["20m", "50m", "90m"]
+DEPTHS = ["20m", "50m", "90m", "200m"]
 
 
 def read_timing_row(csv_path: Path, row_label: str) -> dict[str, str] | None:

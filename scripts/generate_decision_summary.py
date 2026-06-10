@@ -16,7 +16,7 @@ CONFIG_LABELS = {
     "lin-exp": "Linear-exponential",
 }
 
-DEPTHS = ["20m", "50m", "90m"]
+DEPTHS = ["20m", "50m", "90m", "200m"]
 
 SUMMARIES = [
     {

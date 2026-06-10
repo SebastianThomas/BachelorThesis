@@ -24,7 +24,7 @@ CONFIG_LABELS = {
     "lin-exp":        "Linear-exponential",
 }
 
-DEPTHS = ["20m", "50m", "90m"]
+DEPTHS = ["20m", "50m", "90m", "200m"]
 
 OUTPUT_NAME = "05_results_flash_profile_diff_summary.tex"
 CAPTION = "Flash log depth accuracy: signed error between logged and interpolated dive profile depth"

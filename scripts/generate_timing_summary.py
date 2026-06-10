@@ -68,13 +68,13 @@ def total_precision(unit: str) -> int:
 
 def format_rate_row(config: str, depth: str, row: dict[str, str],
                     unit: str, precision: int, total_unit: str) -> str:
-    count     = int(row["count"])
-    avg_cyc   = int(row["avg_cycles"])
-    min_cyc   = int(row["min_cycles"])
-    max_cyc   = int(row["max_cycles"])
-    sum_cyc   = int(row["sum_cycles"])
-    fmt       = f".{precision}f"
-    tfmt      = f".{total_precision(total_unit)}f"
+    count   = int(row["count"])
+    avg_cyc = int(row["avg_cycles"])
+    min_cyc = int(row["min_cycles"])
+    max_cyc = int(row["max_cycles"])
+    sum_cyc = int(row["sum_cycles"])
+    fmt     = f".{precision}f"
+    tfmt    = f".{total_precision(total_unit)}f"
     return (
         f"{config} & {depth} & {count} & "
         f"{avg_cyc} & {cycles_to_unit(avg_cyc, unit):{fmt}} & "
@@ -90,20 +90,17 @@ def build_rate_table(row_label: str, caption: str, table_label: str,
     hdr   = unit_col_header(unit)
     thdr  = unit_col_header(total_unit)
     lines = [
-        "\\begin{table}[htbp]",
+        "\\begin{sidewaystable}[htbp]",
         "\\centering",
         "\\small",
         "\\renewcommand{\\arraystretch}{1.15}",
-        "\\resizebox{\\textwidth}{!}{%",
         "\\begin{tabular}{llrrrrrrrrr}",
         "\\toprule",
         f"Config. & Depth & N"
-        f" & \\multicolumn{{2}}{{c}}{{Avg}}"
-        f" & \\multicolumn{{2}}{{c}}{{Min}}"
-        f" & \\multicolumn{{2}}{{c}}{{Max}}"
-        f" & \\multicolumn{{2}}{{c}}{{Tot.}} \\\\",
-        "\\cmidrule(lr){4-5}\\cmidrule(lr){6-7}\\cmidrule(lr){8-9}\\cmidrule(lr){10-11}",
-        f" & & & c. & {hdr} & c. & {hdr} & c. & {hdr} & c. & {thdr} \\\\",
+        f" & Avg c. & Avg {hdr}"
+        f" & Min c. & Min {hdr}"
+        f" & Max c. & Max {hdr}"
+        f" & Tot. c. & Tot. {thdr} \\\\",
         "\\midrule",
     ]
     for config_key, config_label in CONFIG_LABELS.items():
@@ -117,11 +114,10 @@ def build_rate_table(row_label: str, caption: str, table_label: str,
                 lines.append(format_rate_row(config_label, depth, row, unit, precision, total_unit))
     lines.extend([
         "\\bottomrule",
-        "\\end{tabular}%",
-        "}",
+        "\\end{tabular}",
         f"\\caption{{{caption}}}",
         f"\\label{{{table_label}}}",
-        "\\end{table}",
+        "\\end{sidewaystable}",
     ])
     return "\n".join(lines) + "\n"
 
@@ -157,21 +153,18 @@ def build_computation_table(row_label: str, caption: str, table_label: str,
     hdr   = unit_col_header(unit)
     thdr  = unit_col_header(total_unit)
     lines = [
-        "\\begin{table}[htbp]",
+        "\\begin{sidewaystable}[htbp]",
         "\\centering",
         "\\small",
         "\\renewcommand{\\arraystretch}{1.15}",
-        "\\resizebox{\\textwidth}{!}{%",
         "\\begin{tabular}{llrrrrrrrrrr}",
         "\\toprule",
         f"Config. & Depth & N"
-        f" & \\multicolumn{{2}}{{c}}{{Avg}}"
-        f" & \\multicolumn{{2}}{{c}}{{Med.}}"
-        f" & \\multicolumn{{2}}{{c}}{{Min}}"
-        f" & \\multicolumn{{2}}{{c}}{{Max}}"
-        f" & \\multicolumn{{2}}{{c}}{{Tot.}} \\\\",
-        "\\cmidrule(lr){4-5}\\cmidrule(lr){6-7}\\cmidrule(lr){8-9}\\cmidrule(lr){10-11}\\cmidrule(lr){12-13}",
-        f" & & & c. & {hdr} & c. & {hdr} & c. & {hdr} & c. & {hdr} & c. & {thdr} \\\\",
+        f" & Avg c. & Avg {hdr}"
+        f" & Med. c. & Med. {hdr}"
+        f" & Min c. & Min {hdr}"
+        f" & Max c. & Max {hdr}"
+        f" & Tot. c. & Tot. {thdr} \\\\",
         "\\midrule",
     ]
     for config_key, config_label in CONFIG_LABELS.items():
@@ -185,11 +178,10 @@ def build_computation_table(row_label: str, caption: str, table_label: str,
                 lines.append(format_computation_row(config_label, depth, row, unit, precision, total_unit))
     lines.extend([
         "\\bottomrule",
-        "\\end{tabular}%",
-        "}",
+        "\\end{tabular}",
         f"\\caption{{{caption}}}",
         f"\\label{{{table_label}}}",
-        "\\end{table}",
+        "\\end{sidewaystable}",
     ])
     return "\n".join(lines) + "\n"
 

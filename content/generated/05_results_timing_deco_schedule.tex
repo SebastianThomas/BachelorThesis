@@ -1,13 +1,10 @@
-\begin{table}[htbp]
+\begin{sidewaystable}[htbp]
 \centering
 \small
 \renewcommand{\arraystretch}{1.15}
-\resizebox{\textwidth}{!}{%
 \begin{tabular}{llrrrrrrrrrr}
 \toprule
-Config. & Depth & N & \multicolumn{2}{c}{Avg} & \multicolumn{2}{c}{Med.} & \multicolumn{2}{c}{Min} & \multicolumn{2}{c}{Max} & \multicolumn{2}{c}{Tot.} \\
-\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}\cmidrule(lr){12-13}
- & & & c. & [\si{\milli\second}] & c. & [\si{\milli\second}] & c. & [\si{\milli\second}] & c. & [\si{\milli\second}] & c. & [\si{\milli\second}] \\
+Config. & Depth & N & Avg c. & Avg [\si{\milli\second}] & Med. c. & Med. [\si{\milli\second}] & Min c. & Min [\si{\milli\second}] & Max c. & Max [\si{\milli\second}] & Tot. c. & Tot. [\si{\milli\second}] \\
 \midrule
 Baseline & 20m & 36 & 101811 & 6.36 & 101811 & 6.36 & 101811 & 6.36 & 101811 & 6.36 & 3665196 & 229.1 \\
 Baseline & 50m & 137 & 189820 & 11.86 & 136057 & 8.50 & 101069 & 6.32 & 347567 & 21.72 & 26005350 & 1625.3 \\
@@ -19,8 +16,7 @@ Lin.-Exp. & 20m & 9 & 101360 & 6.33 & 101360 & 6.33 & 101360 & 6.33 & 101360 & 6
 Lin.-Exp. & 50m & 76 & 177419 & 11.09 & 134329 & 8.40 & 101523 & 6.35 & 349066 & 21.82 & 13483846 & 842.7 \\
 Lin.-Exp. & 90m & 85 & 328362 & 20.52 & 256207 & 16.01 & 101521 & 6.35 & 885463 & 55.34 & 27910819 & 1744.4 \\
 \bottomrule
-\end{tabular}%
-}
+\end{tabular}
 \caption{Decompression schedule computation time across profiles and configurations}
 \label{tab:timing_deco_schedule}
-\end{table}
+\end{sidewaystable}

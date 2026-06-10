@@ -20,30 +20,30 @@
 
 % If you work with many acronyms we recommend the use of an acronym library. You can define acronyms in the lower part of the glossaries.tex file. When first using the acronym it will be introduced \gls{pbl}, after that the shortform will be displayed \gls{pbl}.
 
-\gls{scuba} diving is a recreational activity that involves breathing one or more gas mixes at ambient (hyperbaric) pressure.
+\gls{scuba} diving is a recreational activity that involves breathing one or more gas mixes at hyperbaric (so greater than surface) pressure \cite{physics-of-diving-1984}.
 Dive computers in their most basic form consist of a depth sensor, a real-time clock, processing unit, and a display. 
-Their primary function is to display dive time and depth, as well as to calculate and display decompression obligation and \gls{otu}s during the dive. 
-Furthermore, most computers show statistics about recent dives or allow downloading the dive logs for further analysis and accurate logging when on the surface.
+Their primary function is to display dive time and depth, as well as to calculate and display decompression obligation and \gls{otu}s during the dive \cite{history-of-dive-computer}. 
+Furthermore, most computers show statistics about recent dives or allow downloading the dive logs for further analysis and accurate logging when on the surface \cite{review-technical-specs-dive-computer-2010}\cite{silent-witness-dive-computer-2014}.
 
 \section{Motivation}
-Dive Computers commonly sample depth and update the corresponding display multiple times per second, while the fixed log rate (the stored logs for later retrieval) is usually user-defined between 1 and 30 seconds. Recomputation of decompression schedules cannot be as simply observed; but by observing the information on the respective displays change, it can be assumed that to happen on a scale of at least every few seconds. 
+Dive Computers commonly sample depth and update the corresponding display multiple times per second, while the fixed log rate (the stored logs for later retrieval) is usually user-defined between 1 and 30 seconds. Recomputation of decompression schedules cannot be as simply observed; but by observing the information on the respective displays change, it can be assumed that to happen on a scale of at least every few seconds.
 
-As Prof Dr Simon Mitchell explains, hyperbaric medicine and especially decompression science is "bucket chemistry" \cite{2025-mitchell-personal-comm}, meaning that the extent to which accurate \gls{o2} exposure and decompression tracking is useful to divers is at most on the order of multiple seconds. However, this does not mean that more frequent depth sampling and display is useless for all applications, most divers rely on their dive computers to refresh the depth display in increments of $\SI{10}{\cm}$ with a sub-second delay. 
+As Prof Dr Simon Mitchell explains, hyperbaric medicine and especially decompression science is "bucket chemistry" \cite{2025-mitchell-personal-comm}, meaning that the extent to which accurate \gls{o2} exposure and decompression tracking is useful to divers is at most on the order of multiple seconds. However, this does not mean that more frequent depth sampling and display is useless for all applications, most divers rely on their dive computers to refresh the depth display in increments of \SI{10}{\cm} with a sub-second delay. 
 
 However, there is no indication that knowledge about typical dive profiles influences these rates, i.e., there is no research in the public domain that investigates the feasibility of a variable refresh rate for the common components and algorithms of dive computers.
 
 \section{Objective}
-The primary objective was to create a fully open-source dive computer which can use both an exponential and linear-exponential algorithms, without incurring a significant performance overhead. 
+The primary objective of this thesis is to create a fully open-source dive computer hardware and software which can use both an exponential and linear-exponential algorithms, without incurring a significant performance overhead. 
 Assembly should be possible without the use of pick-and-place machines, to allow other divers to extend the project and tailor it to their own needs.
 
 \subsection{Research Questions}
 \begin{enumerate}
-\item Can an appropriately-sized \gls{pcb} be designed and still be hand-soldered?
-\item Can sufficiently much energy and log space be saved by employing task variable-rate task scheduling / procedure running to offset the incurred overhead by the variable-rate algorithms?
+\item Can variable-rate task scheduling algorithms be deployed without compromising accuracy?
+\item Can sufficiently much energy and log space be saved by employing variable-rate task scheduling to offset the incurred overhead by the variable-rate algorithms?
 \end{enumerate}
 
 \subsection{Outline}
-Up next is an introduction to measurement-based embedded devices, energy-saving measures in battery-power devices, and basic hyperbaric medicine theory, to the extent that it is relevant to understand fundamental principles behind the diving algorithms used in this work. 
+The following chapter is an introduction to measurement-based embedded devices, energy-saving measures in battery-power devices, and basic hyperbaric medicine theory, to the extent that it is relevant to understand fundamental principles behind the diving algorithms used in this work. 
 After this, related work to dive computer research and about saving energy in embedded devices, primarily by running at tasks variable rate, will be presented.
 Following this, the specific implementation of this project in hardware and software is described. 
 Chapter 5 will collect the methods and results received using different software.

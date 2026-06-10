@@ -1,47 +1,47 @@
 \chapter{Implementation in Hardware, Firmware and Algorithms}
 
 \section{System Requirements}
-The Dive Computer should be able to accurately measure ambient pressure, compute and display depth, decompression, and \gls{o2} toxicity while diving and also on surface breaks, log events to flash, and allow for log download. The display must be large, bright and clear enough to be readable in the sun, as well as in low-light and low-visibility conditions. The device should be waterproof and resistant to absolute pressures greater than $\SI{4}{\Bar}$ to allow diving to $\SI{30}{\meter}$, though this should be increased in upcoming prototypes to allow deeper diving.
+The Dive Computer should be able to accurately measure ambient pressure, compute and display depth, decompression, and \gls{o2} toxicity while diving and also on surface breaks, log events to flash, and allow for log download. The display must be large, bright and clear enough to be readable in the sun, as well as in low-light and low-visibility conditions. The device should be waterproof and resistant to absolute pressures greater than \SI{4}{\Bar} to allow diving to \SI{30}{\meter}, though this should be increased in upcoming prototypes to allow deeper diving.
 
-The battery should last for at least two dives with on average $\SI{90}{\min}$ per dive without charging, including the download of the dive log, and a sufficient surface interval to track the entire offgassing process.
+The battery should last for at least two dives with on average \SI{90}{\min} per dive without charging, including the download of the dive log, and a sufficient surface interval to track the entire offgassing process.
 
 To fulfill these requirements, a wireless approach has been chosen, induction is used for wireless battery charging, while \gls{dfu} and dive log download are performed by \gls{ble}.
 
 In order to save power, two distinct modes are implemented, dive and surface mode, where the first measures depth and tracks \gls{deco} and \gls{o2} toxicity on a sub-second scale, while the latter only measure ambient pressure every few seconds and enables the Bluetooth task for surface communication when necessary.
 
-The screen has been determined to be at least $\SI{1.8}{''}$ large and full-color to be well-visible even in low-light and low-visibility conditions underwater, and to fit the low-power requirements and since most of the display will be black during operation, an OLED screen is appropriate.
+The screen has been determined to be at least \SI{1.8}{''} large and full-color to be well-visible even in low-light and low-visibility conditions underwater, and to fit the low-power requirements and since most of the display will be black during operation, an OLED screen is appropriate.
 
 \section{Hardware}\label{section:hardware}
 \subsection{Component Definition}\label{subsection:definition}
 The STM32L476 MCU is used as the computational center of this project, providing protocol support for \gls{i2c}, \gls{spi}, \gls{swd} and \gls{uart}. It has low power consumption, supports multiple sleep modes, and there are plenty software and help resources available on the internet.
 
-The MS5849-30BA is used as a pressure sensor, it is rated to a depth of $\SI{290}{\m}$ ($\SI{30}{\Bar}$) and provides a base accuracy of a few centimeters, provided optimal conditions. 
-To reduce pressure drift, a supply voltage of $\SI{3.3}{\volt}$ has been chosen, although the sensor would be able to run with $\SI{1.8}{\volt}$. 
-The total error at extreme temperatures and pressures is, according to the datasheet, less than $\SI{0.04}{\bar}$, which is approximately $\SI{0.4}{\text{msw}}$, though these exterme temperatures and pressures are not commonly reached.
+The MS5849-30BA is used as a pressure sensor, it is rated to a depth of \SI{290}{\m} (\SI{30}{\Bar}) and provides a base accuracy of a few centimeters, provided optimal conditions. 
+To reduce pressure drift, a supply voltage of \SI{3.3}{\volt} has been chosen, although the sensor would be able to run with \SI{1.8}{\volt}. 
+The total error at extreme temperatures and pressures is, according to the datasheet, less than \SI{0.04}{\bar}, which is approximately \SI{0.4}{\text{msw}}, though these extreme temperatures and pressures are not commonly reached.
 It includes an ADC, has direct SPI and I2C pinouts to make it easy to interface with, and development boards compatible with the Click boards\texttrademark\ standard are available and have been used for quick integration testing. 
 
-The STM32's LSI is not accurate enough for the timekeeping requirements of this project, therefore an external oscillator with a standard frequency of $\SI{32768}{\Hz}$ is used.
+The STM32's LSI is not accurate enough for the timekeeping requirements of this project, therefore an external oscillator with a standard frequency of \SI{32768}{\Hz} is used.
 
 To verify power and active dive mode, Bluetooth active and Battery Charging, four LED have been added, a red LED to confirm power on \SI{3.3}{V}, a blue LED that is turned from a GPIO pin on the MCU while in dive mode, an orange LED on the charging IC to show charging status, and a green LED on the $P0\_2$ output of the Bluetooth Transmitter IC, which turns on while transmitting.
 
-For debugging purposes, 4 test-points for a UART connection to read live logs and a 6-pin pad-header for SWD are exposed, both including $\SI{1.8}{\volt}$ and GND header for reference.
+For debugging purposes, 4 test-points for a UART connection to read live logs and a 6-pin pad-header for SWD are exposed, both including \SI{1.8}{\volt} and GND header for reference.
 
-To meet the power requirements, an SMD JST-PH Connector is provided on the PCB, which may be connected to a Li-ion battery with a nominal voltage of $\SI{3.7}{\volt}$ and a capacity of a recommended minimum of $\SI{2200}{\milli\ampere{}\hour}$.
+To meet the power requirements, an SMD JST-PH Connector is provided on the PCB, which may be connected to a Li-ion battery with a nominal voltage of \SI{3.7}{\volt} and a capacity of a recommended minimum of \SI{2200}{\milli\ampere{}\hour}.
 This also requires dedicated battery protection and charging \gls{ic}s, which are chosen to provide sufficient protection to the board from external components (battery and charging coil).
-The effective battery output voltage is referred to as $V_{BATT}$ and ranges from $\SI{3}{\volt}$ to $\SI{4.2}{\volt}$.
-Most components require $\SI{1.8}{\volt}$ (\gls{mcu}, flash) or $\SI{3.3}{\volt}$ (Pressure Sensor, LEDs, Bluetooth Module), which are generated using a fixed-voltage Dual Step-Down Converter.
+The effective battery output voltage is referred to as $V_{BATT}$ and ranges from \SI{3}{\volt} to \SI{4.2}{\volt}.
+Most components require \SI{1.8}{\volt} (\gls{mcu}, flash) or \SI{3.3}{\volt} (Pressure Sensor, LEDs, Bluetooth Module), which are generated using a fixed-voltage Dual Step-Down Converter.
 
-A Newhaven Display $\SI{1.8}{''}$ full-color 160x128 OLED display (160128B) and a Microchip RN4871 \gls{ble} module for Bluetooth communication are connected to the \gls{mcu} with \gls{spi} on separate buses. 
-The display requires multiple reference voltages, defined in this project (within the constraints given by the datasheet) as $V_{DDIO} = \SI{1.8}{\volt}$, $V_{DD} = \SI{2.5}{\volt}$, and $V_{CC} = \SI{17}{\volt}$. $V_{DDIO}$ is already available on the PCB, $V_{DD}$ and $V_{CC}$ are generated using an LDO from $\SI{3.3}{\volt}$ and a step-up DC-DC PWM converter from $V_{BATT}$, respectively.
+A Newhaven Display \SI{1.8}{''} full-color 160x128 OLED display (160128B) and a Microchip RN4871 \gls{ble} module for Bluetooth communication are connected to the \gls{mcu} with \gls{spi} on separate buses. 
+The display requires multiple reference voltages, defined in this project (within the constraints given by the datasheet) as $V_{DDIO} = \SI{1.8}{\volt}$, $V_{DD} = \SI{2.5}{\volt}$, and $V_{CC} = \SI{17}{\volt}$. $V_{DDIO}$ is already available on the PCB, $V_{DD}$ and $V_{CC}$ are generated using an LDO from \SI{3.3}{\volt} and a step-up DC-DC PWM converter from $V_{BATT}$, respectively.
 
 \section{PCB Design}\label{section:pcb}
-To reduce production cost, a layer count of 4 has been chosen for the PCB, including two ground plane layers to provide a stable reference to the signals on the remaining two layers. The ground planes are on layers 2 and 4 to reduce the impact of the inductive charging coil, which is placed adjacent to layer 4, instead of the typical layers 2 and 3. All Power is routed using traces and filled zones on layers 1 and 3 of the PCB, the latter are used in dedicated places like the battery connector, DC-DC converters, and power supply for components with higher current draw such as the display $V_{CC}$ and the pressure sensor.
+To reduce production cost, a layer count of 4 has been chosen for the PCB, including two ground plane layers to provide a stable reference to the signals on the remaining two layers. The ground planes are on layers 2 and 4 to reduce the impact of the inductive charging coil, which is placed adjacent to layer 4, instead of the typical layers 2 and 3. All Power is routed using traces and filled zones on layers 1 and 3 of the PCB, zones are used in dedicated places like the battery connector, DC-DC converters, and power supply for components with higher current draw such as the display $V_{CC}$ and the pressure sensor.
 
-The PCB has dimensions of $\SI{38}{\milli\meter}\times\SI{48}{\milli\meter}$, the 64-pin \gls{mcu} \gls{lqfp} is located in the center, the battery connector, charging, status \gls{ic}s and converters are in the upper left quadrant, display \gls{io} and power converter in the lower left quadrant, while the right side holds, starting in the lower right corner, the Bluetooth module, flash, debug connector, debug LEDs, pressure sensor and UART test pads. 
+The PCB has dimensions of \SI{38}{\milli\meter}\,$\times$\,\SI{48}{\milli\meter}, the 64-pin \gls{mcu} \gls{lqfp} is located in the center, the battery connector, charging, status \gls{ic}s and converters are in the upper left quadrant, display \gls{io} and power converter in the lower left quadrant, while the right side holds, starting in the lower right corner, the Bluetooth module, flash, debug connector, debug LEDs, pressure sensor and UART test pads. 
 
 All resistors and capacitors are of size 0402 (1005), LEDs 0603 (1608), two inductors 1210 (3225) and one inductor 1812 (4532), and most larger components are \gls{lqfp} packages, with the following exceptions. There are three \gls{bga}-mount (battery status and power MOSFET for display and Bluetooth), two \gls{qfn} (pressure sensor and battery charger), one \gls{dfn} (dual step-down converter) and one \gls{x2son} (I2C level shifter) components. Lastly, two Schottky diodes of Metric 0603 size are used. To connect external components, a 34-pin FFC connector for the display and a 3-pin JST PH connector for the battery are present on the board.
 
-All components have been soldered by hand using pneumatic solder paste dispensers, placed with a pair of tweezers, and reflowed using a heating plate at $\SI{250}{\celsius}$. This process is not difficult, except for the display connector and the non-\gls{lqfp} \gls{ic}s, which require more concentration and time.
+All components have been soldered by hand using pneumatic solder paste dispensers, placed with a pair of tweezers, and reflowed using a heating plate at \SI{250}{\celsius}. This process is not difficult, except for the display connector and the non-\gls{lqfp} \gls{ic}s, which require more concentration and time.
 
 \section{Firmware}\label{section:firmware}
 The Firmware has been written in the Rust programming language, using the \lstinline{no-std} environment due to dynamically-allocated objects not being available without a heap and only uses the \lstinline{core} language features to reduce overheads introduced by the standard library, and to reduce firmware size. 
@@ -68,7 +68,7 @@ Tasks are scheduled by calling \lstinline{my_task::spawn} for each execution, wh
     \item \lstinline{init} to initialize peripherals, and calling the two main tasks \lstinline{task_mode_tick} and \lstinline{task_battery_update}
     \item \lstinline{idle} as an infinite loop waiting for interrupts or other running instructions, which is preempted by RTIC as soon as another task may be run
     \item \lstinline{task_mode_tick} is the main loop that runs a procedure based on the current mode
-    \item \lstinline{task_battery_update} running at a fixed rate ($\SI{30}{\second}$) to update the latest measurements with the current battery status
+    \item \lstinline{task_battery_update} running at a fixed rate (\SI{30}{\second}) to update the latest measurements with the current battery status
     \item \lstinline{task_bluetooth_mode} enables the Bluetooth module and handles incoming data and commands, and stops running when a timeout occurs
     \item \lstinline{task_bluetooth_button} (unused in the V1 implementation discussed in this work)
 \end{itemize}
@@ -80,7 +80,7 @@ The main task \lstinline{task_mode_tick} multiplexes between two different modes
 It is an infinite loop inside an \lstinline{async} function, which \lstinline{await}s the delay between two executions asynchronously, allowing RTIC to schedule another task.
 
 In surface mode, the main task runs less often than in dive mode, and it is useful to utilize a low-power mode built into the STM32 \gls{mcu}s.
-Since the chosen sleep time of $\SI{5}{\second}$ is many magnitudes higher than wakeup time from any mode, STOP2 is chosen, the lowest sleep mode in which all peripherals (except clock configuration, which is quickly reinitialized upon wakeup) and RAM are saved.
+Since the chosen sleep time of \SI{5}{\second} is many magnitudes higher than wakeup time from any mode, STOP2 is chosen, the lowest sleep mode in which all peripherals (except clock configuration, which is quickly reinitialized upon wakeup) and RAM are saved.
 
 After waking up from STOP2, registers, RAM and most peripherals keep their state, but it is required to reinitialize the clocks because STOP2 mode might reset the clock tree, PLL, SYSCLK and associated timers and delays. 
 % To implement this, the \lstinline{unsafe} \lstinline{Peripherals::steal} functions of the \lstinline{cortex_m} and \lstinline{stm32l4xx_hal::pac} need to be used to access the hardware peripheral registers, this is safe because only \lstinline{init} uses these, which exits before \lstinline{task_mode_tick} can ever be called.
@@ -90,58 +90,29 @@ The standard package to access abstracted peripherals on ARM Cortex-M \gls{mcu}s
 
 The \gls{hal} expanding the functionality of the general \lstinline{cortex-m}, which is specific to the \gls{mcu} family, used in this project are maintained and provided by the community project \href{https://github.com/stm32-rs}{\lstinline{stm32-rs}}, specifically the \href{https://github.com/stm32-rs/stm32l4xx-hal}{HAL crate for the STM32L4xx \gls{mcu}s} is used.
 
+These three packages are purely written in Rust and do not depend on an underlying C implementation. 
+The build chain uses Rust's Cargo build system, which uses \lstinline{probe-rs} for flashing, debugging and log collecting.
+
 \section{Diving Algorithms}\label{section:algorithms}
-The algorithms described in this section are implemented in a Rust in a \hyperlink{https://github.com/SebastianThomas/STDC-thalmann}{dedicated repository}, available under the MIT License. 
+The algorithms described in this section are implemented in Rust in a \hyperlink{https://github.com/SebastianThomas/STDC-thalmann}{dedicated repository}, available under the MIT License. 
 The repository is provided only for research and educational purposes. 
 No warranty or guaranty is provided regarding the correctness, reliability, or suitability of the implementation for diving or other safety-critical applications, and the author assumes no liability for any damages, injuries, or losses resulting from its use.
 
 \subsection{Exponential Decompression Algorithm}
-The most common decompression algorithms used for recreational and technical diving within the limits of most diving agencies are the Bühlmann-16 family (B, C) and RGBM models. 
-The first implemented algorithm is close to the Bühlmann-16C algorithm, an exponential tissue-based algorithm that considers an M-Value (the maximum allowed supersaturation) per tissue, and whenever this value is reached, a decompression stop is added, until the next stop depth can be reached without going beyond the M-Value. 
-The M-Value is calculated using the Bühlmann formulas and the $a$ and $b$ values \cite{tauchmedizin-2002} (pp. 129f).
-
-This experimentally determined M-Value line is often considered too aggressive, so two parameters, \gls{gflow} and \gls{gfhigh}, influence the percentage of M-value the tissues are allowed to reach at the start of decompression (\gls{gflow}) and at the end of decompression, when ascending to the surface (\gls{gfhigh}), between which a linear interpolation of these two points is followed. 
-The parameter \gls{gf99} tracks the minimum distance to the M-Value over all tissues, it is controlled not to exceed the interpolated line in the Bühlmann Algorithm, as in the exponential implemented algorithm in this work.
+The first algorithm implemented is the Bühlmann ZHL-16C algorithm, including the ZHL-16C halftimes and using an M-Value calculated using the Bühlmann formulas and the $a$ and $b$ values \cite{tauchmedizin-2002} (pp. 129f), as described in \ref{subsection:buehlmann-decompression-algorithm}.
+It can be tuned by altering the parameters \gls{gflow} and \gls{gfhigh}, which reduce the calculated M-Value.
 
 \subsection{Linear-Exponential Decompression Algorithm}
+The linear-exponential decompression algorithm in this project is based primarily on the factors mentioned above, and uses the Thalmann Algorithm \cite{thalmann-tables-software-2010} \cite{thalmann-parameters-1.3-2020}, as a reference for the parameters (specifically, the XVAL\_HE9\_040\_F32 parameter set).
 
-\subsubsection{Violations of Henry's Law} 
-Usually, gas exchange between tissues is limited by Henry's Law, and follows an exponential relationship.
-In \cite{diff-lim-deco-2003}, the authors claim that due to physiological limitations related to the fixed size of the diffusion region in which gas exchange takes place, there may be a limit to the maximum decompression that can occur at a specific depth that does not depend on the \gls{pp}-gradient between neighboring tissues. 
-Deeper diving is statistically related to a higher incidence of DCS \cite{dan-understanding-dcs-2022}, therefore, taking precautions such as limiting the \gls{deco} in the sense that the amount of molecules that pass through the lungs to be off-gassed is limited (and, with this, also incurring reduced decompression stress), which appears to be beneficial.
-This is the theoretical basis for transitioning to another type of function to model decompression in these cases, and only comes into effect on deep technical dives, where the physical exchange limit is smaller than the calculated diffusion allowed by the supersaturation gradient. 
-When this point is reached, the modeled change in decompression achieved through an in- or decrease in pressure in the diffusion region only is exactly this change, yielding a linear relationship.
-
-\subsubsection{Iso-\gls{dcs} risk algorithms} 
-Bühlmann-16 and RGBM are deterministic \cite{dev-iso-risk-1996}, they consider the safety of a dive profile binary; safe or unsafe, although this is not a realistic model, as these dives still have some remaining risk of DCS based on the physiology of divers that differ between individuals or even the same individual on multiple days. 
-These algorithms also fail to take into account the already accumulated and total decompression stress, which can increase the risk of \gls{dcs}, and is often generated by deep dives requiring a long decompression.
-The US Navy and similar large organized entities often require a more predictable risk management strategy, and the \gls{dcs} risk should not increase with the parameters of a specific dive.
-Iso-probabilistic \gls{dcs} risk algorithms have been developed to model and execute dives with similar risk at varying depths and bottom times by integrating cumulative decompression stress into a continuous probability function \cite{likelihood-dcs-1984}.
-
-\subsubsection{Thalmann and implemented Linear-Exponential Algorithm}
-The linear-exponential decompression algorithm in this project is based primarily on the factors mentioned above. The Thalmann Algorithm \cite{thalmann-tables-software-2010} \cite{thalmann-parameters-1.3-2020}, designed by Capt. Edward D. Thalmann, MD, US Navy, also follows these principles and is used as a reference for the parameters.  
-
-In general, it should not be assumed that the implemented algorithm is equivalent to the Thalmann algorithm, as it is only a theoretical algorithm proposition and has been implemented multiple times, though none of which serve as a reference implementation, and the original design paper describes the whole dive computer, not only the decompression algorithm. 
-Instead, it builds on the most important ideas and results from the paper and provides a simple, extendable implementation of a linear-exponential decompression algorithm that can easily be exchanged for other algorithms and provides reasonable results for the tested profiles and can be compared with the more common purely exponential algorithms.
-
-\subsection{\gls{o2} toxicity calculation}
-NOAA limits, which combine both CNS and pulmonary limits in more , are implemented using table 15-3 published in the NOAA diving manual \cite{noaa-diving-manual}. An option of extending these limits to a \gls{po2} of $1.3$ and lower is implemented after new research as suggested in \cite{RevisedO2Tox2025}.
-
-Furthermore, \gls{otu}s for pulmonary and CNS oxygen toxicity are calculated separately using the \gls{oti} method \ref{align:oti-calc} according to \cite{calculated-risk-pulmonary-cns}, using the suggested constants $c=6.8$ with $t$ in $\SI{}{\min}$ for CNS oxygen toxicity and $c=4.57$ with $t$ in $\SI{}{\hour}$ for pulmonary oxygen toxicity. $P_{O2}$ is given in absolute atmospheres.
-
-\begin{quote}
-The pulmonary \gls{oti} should not exceed 250. The CNS \gls{oti} should not exceed 26,108 for a 1\% risk.\hfill\cite{calculated-risk-pulmonary-cns}
-\end{quote}
-
-\begin{align}
-    TI(t, P_{O2}, c) &= t^2 * (P_{O2})^c \label{align:oti-calc}
-\end{align}
+\subsection{\gls{o2tox} calculation}
+\gls{o2tox} is calculated using the \gls{oti} equations outlined in \ref{subsubsection:theory_o2tox_calc}.
 
 \section{Scheduling of Diving Algorithms}
 As the primary research topic in this thesis, multiple approaches have been used for variable- and fixed-rate task scheduling. 
 
 To be able to compare them easily, a Rust trait \lstinline{RateAlgorithm} is implemented for all concrete algorithms, which may hold some state and has a single function \lstinline{next_iter}, taking two parameters (information about previous runs or a previous instance and a current instance) and returning an output, or an error.
-The output in all current implementations is the \gls{tbe} in milliseconds, i.e., an output of \lstinline{5000} signifies that the task in question should be run if the time since the last execution is greater than or equal to $\SI{5}{\second}$.
+The output in all current implementations is the \gls{tbe} in milliseconds, i.e., an output of \lstinline{5000} signifies that the task in question should be run if the time since the last execution is greater than or equal to \SI{5}{\second}.
 
 \subsection{\lstinline{FixedRateAlgorithm}}
 The most basic algorithm is the \lstinline{FixedRateAlgorithm}, which always returns a fixed number \gls{tbe}, i.e., the task should run at regular intervals.
@@ -186,9 +157,9 @@ The window is used as a circular buffer to save memory and prevent shifting afte
 This algorithm adds one more component compared to the previous implementation, which is an absolute threshold. 
 If this threshold is exceeded for one measurement, a change in the \gls{aimd} algorithm is triggered, i.e., once this threshold is crossed for a small to medium period of time (depending on the MD factor), the algorithm will quickly converge to the minimum value while the threshold is exceeded and can only recover once the threshold is passed.
 
-The idea behind this addition is that in "deep diving"\footnote{This term is commonly used in different contexts, but there is no absolute definition; in this case, it will be assumed that "deep diving" refers to situations in which \gls{o2tox} and \gls{ndl} are easily reached and need to be taken into consideration while planning and diving.}, limits are reached much faster than during shallow dives, so especially during bottom phases of the dive, seeing the most recent data is critical for decision-making, as for every period on the bottom, the ascent may become longer by a multiple (e.g., around $\SI{100}{\meter}$, a minute of bottom time incurs additional decompression of at least $\SI{5}{\minute}$ provided optimal decompression gases are enabled, or more otherwise).
+The idea behind this addition is that in "deep diving"\footnote{This term is commonly used in different contexts, but there is no absolute definition; in this case, it will be assumed that "deep diving" refers to situations in which \gls{o2tox} and \gls{ndl} are easily reached and need to be taken into consideration while planning and diving.}, limits are reached much faster than during shallow dives, so especially during bottom phases of the dive, seeing the most recent data is critical for decision-making, as for every period on the bottom, the ascent may become longer by a multiple (e.g., around \SI{100}{\meter}, a minute of bottom time incurs additional decompression of at least \SI{5}{\minute} provided optimal decompression gases are enabled, or more otherwise).
 
-This does not mean that the minimum rate is used for the whole dive; as soon as the bottom phase is completed, (depending on the dive, this may be more than half or only a small fraction of the total dive time, the deepest dives to date require more than $\SI{15}{\hour}$ of decompression time for less than an hour of bottom time \cite{hydrogen-dive-2024}), and when decompression stops shallower than this absolute threshold are reached, the rate algorithm will recover to a slower result again, as less changes can be expected in this phase of a normal dive.
+This does not mean that the minimum rate is used for the whole dive; as soon as the bottom phase is completed, (depending on the dive, this may be more than half or only a small fraction of the total dive time, the deepest dives to date require more than \SI{15}{\hour} of decompression time for less than an hour of bottom time \cite{hydrogen-dive-2024}), and when decompression stops shallower than this absolute threshold are reached, the rate algorithm will recover to a slower result again, as less changes can be expected in this phase of a normal dive.
 
 This algorithm, using different constants for the minimum and maximum rate, change detection, and absolute thresholds, is used for \gls{o2tox} and decompression algorithm rate calculation.
 
@@ -197,7 +168,7 @@ The primary goal of data logging here is to log enough information to accurately
 To save on energy consumption and space requirements, an adaptive logging rate has been implemented, compared to most existing dive computers, which log a data point at a fixed rate. 
 Furthermore, to save space on the chip, not all data points contain all parameters, which we call the log parameter selection. 
 
-The selected flash chip has $4\si{\mega\byte}$ storage space, of which $2\si{\mega\byte}$ are reserved for firmware updates and static storage, so $2\si{\mega\byte}$ storage remain to store dive logs. Assuming a log width of $\SI{16}{\byte}$, $125000$ records can fit in this space, assuming a fixed log rate of one log in $5\si{\second}$, these are more than seven days of continuous logging. Since the computer will not log more than once per minute on the surface, this is a practical configuration. Using parameter selection, we halve the space required for some log entries, but we are not dependent on reducing the log size this way, as the flash chip has enough space for the constraints of this project.
+The selected flash chip has \SI{4}{\mega\byte} storage space, of which \SI{2}{\mega\byte} are reserved for firmware updates and static storage, so \SI{2}{\mega\byte} storage remain to store dive logs. Assuming a log width of \SI{16}{\byte}, $125000$ records can fit in this space, assuming a fixed log rate of one log in \SI{5}{\second}, these are more than seven days of continuous logging. Since the computer will not log more than once per minute on the surface, this is a practical configuration. Using parameter selection, we halve the space required for some log entries, but we are not dependent on reducing the log size this way, as the flash chip has enough space for the constraints of this project.
 
 A control data block for each dive is saved; it contains information that is unchanged during the dive.
 To reconstruct the logged dive data, there is one byte that contains metadata associated with each data point \ref{tab:log-meta}, the other 7 or 15 bytes hold measured or calculated data \ref{tab:log-data}.

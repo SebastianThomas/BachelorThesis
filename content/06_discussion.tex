@@ -21,12 +21,12 @@
 The resulting PCB is small enough to be worn on a diver's wrist and includes all necessary components to serve as a dive computer; it is of a similar size as common dive computers, such as the Garmin Descent X50i or the Shearwater Perdix and Petrel series.
 It is solderable by hand and only contains five components (two metric 0603 diodes and three \gls{bga} mount components) which are preferably mounted using a microscope for visual reference.
 It could be placed in a watertight enclosure with a suitable battery and does not need to be opened again, since all the charging and communication methods are wireless. 
-Only one extrusion must be present in the enclosure to connect the pressure sensor to the water, which is ready to be sealed using a standard O-Ring ($\diameter\SI{1.8}{\milli\meter}$, height $\SI{0.8}{\milli\meter}$, such as the ones used on high pressure swivels).
+Only one extrusion must be present in the enclosure to connect the pressure sensor to the water, which is ready to be sealed using a standard O-Ring ($\diameter\SI{1.8}{\milli\meter}$, height \SI{0.8}{\milli\meter}, such as the ones used on high pressure swivels).
 
 Not all components worked in V1, in a new version, the errors and shortcomings should be addressed as explained below.
 
 \begin{itemize}
-    \item The low voltage rail is pulled up by a missing resistor on an \gls{i2c} level shifter, by adding this resistor, the voltage should drop from $\SI{2.3}{\volt}-\SI{2.5}{\volt}$ to $\SI{1.8}{\volt}$.
+    \item The low voltage rail is pulled up by a missing resistor on an \gls{i2c} level shifter, by adding this resistor, the voltage should drop from \SI{2.3}{\volt}--\SI{2.5}{\volt} to \SI{1.8}{\volt}.
     \item The display connector is inverted, pins 34-1 instead of 1-34.
     \item There is no way to remove power from the Bluetooth module if not in use, which wastes significant current in surface mode when Bluetooth is inactive. 
     A similar Load Switch as already exists for the display should be added to cut power.
@@ -40,28 +40,34 @@ Not all components worked in V1, in a new version, the errors and shortcomings s
 The software is modular; it is split into diving algorithms and embedded firmware that includes peripheral management. 
 This provides divers with knowledge in software/embedded development the flexibility to use new developed algorithms on the tested platform, or to make small adjustments to the hardware without the need to rewrite the entire software.
 
-The output of the decompression algorithms was compared with the output of the Subsurface software, which is a common dive planning application, and a Shearwater computer, and the exponential algorithm stop depth and length matches approximately (both Subsurface and Shearwater apply custom safety factors, as does this software, thus, a perfect match will never occur). The linear-exponential algorithm provides a stop schedule that tends to start deeper on the $\SI{90}{\meter}$-dive, as expected, the implementation is similar to the relevant procedures from the Thalmann algorithm design document \cite{thalmann-tables-software-2010}. 
+The output of the decompression algorithms was compared with the output of the Subsurface software, which is a common dive planning application, and a Shearwater computer, and the exponential algorithm stop depth and length matches approximately (both Subsurface and Shearwater apply custom safety factors, as does this software, thus, a perfect match will never occur). The linear-exponential algorithm provides a stop schedule that tends to start deeper on the \SI{90}{\meter}-dive, as expected, the implementation is similar to the relevant procedures from the Thalmann algorithm design document \cite{thalmann-tables-software-2010}. 
 The performance difference between the two implemented decompression algorithms does not exceed $16\%$, thus the linear-exponential algorithm is still less computationally complex than bubble models (e.g. the \gls{vpm} algorithm, \cite{diff-lim-deco-2003}\cite{understanding-modern-dive-computers}).
 
 Recreational dive computers are commonly less feature-rich than full technical diving computers. The implementation in this work offers the most common features of technical diving computers, including the consideration of \gls{icd} and the gas density for predicted gas switching in decompression calculations, and even has the option to use the most recent recommendations to prevent oxygen toxicity presented in 2025 for \gls{otu} computations \cite{RevisedO2Tox2025}.
 
+Although the battery life in the dive mode has been calculated to reach \SI{15}{\hour}, which lasts a typical diver for at least 5 to 15 dives, the battery life in the surface mode is only up to \SI{18}{\day}, which does not completely meet the requirements set forth by the goals section. 
+Since tissues are fully saturated to surface pressure after a surface interval of at most \SI{72}{\hour}, this does not limit the usefulness of the dive computer, although it means that charging is required at least twice per month for continuous operation even when not diving.
+
 \section{Impact of variable rate algorithms for \gls{deco} and \gls{o2tox} scheduling}
-The implemented variable rate algorithms use Reno's \gls{aimd}, which has already been tested in existing works, e.g. \cite{2023-eth-energy-aware}.
+The implemented variable rate algorithms use the \gls{aimd} mechanism used prominently by TCP Reno \cite{aimd-1989}, which has already been tested in this context in existing works, e.g. \cite{2023-eth-energy-aware}.
 From the data collected, the following conclusions can be drawn.
 
 \begin{itemize}
-    \item After reviewing the differences in actual decompression schedules, no significant differences, more than a few seconds, can be observed during up to $\SI{80}{\minute}$-long decompression dives, compared to running the same decompression algorithm at a fixed rate, with a decrease of up to $6\times$ in the execution count of the decompression algorithm.
+    \item After reviewing the differences in actual decompression schedules, no significant differences, more than a few seconds, can be observed during up to \SI{80}{\minute}-long decompression dives, compared to running the same decompression algorithm at a fixed rate, with a decrease of up to $6\times$ in the execution count of the decompression algorithm.
     This decrease is comparable to the $2.06\times$-$8.68\times$ increase in localizations achieved by \cite{2023-eth-energy-aware} and $6.1\times$ decrease of additions in \cite{2020-dsra}, although the underlying reasons are very different and no more similar research has been found.
-    \item For less expensive algorithms such as the \gls{o2tox} algorithm, the cost of running a more complex scheduling algorithm outweighs the fewer cycles spent running the algorithm less often, thus simple decision algorithms should be chosen for these.
+    The energy decrease in the deepest simulated dive profile is \SI{13.12}{\joule}, $3.1\times$ taking into consideration the additional rate algorithm executions.
+    In the simulated deep dive, the decompression calculation only requires $0.25\%$ of a \SI{2200}{\milli\ampere{}\hour} battery, instead of $0.73\%$ when running the algorithm at a fixed rate.
+    \item The \gls{o2tox} computation is always within the given requirement. 
+    However, for less expensive algorithms such as the \gls{o2tox} algorithm, the cost of running a more complex scheduling algorithm outweighs the fewer cycles spent running the algorithm less often, thus simple decision algorithms should be chosen for these. 
 \end{itemize}
 
 \section{Impact of variable rate algorithm for flash logging}
-The amount of flash logs was reduced by $3.6\times$ to $4.1\times$ when using a variable rate algorithm, while the error remains consistently smaller than $\SI{1}{\centi\meter}$. Only up to two log points deviate more from the actual profile when using the variable rate algorithms, while the fixed rate algorithm flash log creates more such errors.
+The amount of flash logs was reduced by $3.6\times$ to $4.1\times$ when using a variable rate algorithm, while the error remains consistently smaller than \SI{1}{\centi\meter}. Only up to two log points deviate more from the actual profile when using the variable rate algorithms, while the fixed rate algorithm flash log creates more such errors.
 
 Therefore, flash space required for profile logging can be significantly reduced by employing variable-rate algorithms, without compromising the accuracy of the logged profile.
 
 This is true for these ideal dive profiles, which do not include more quick depth changes and small variations, as real dive profiles and pressure measurements might produce. 
-Such changes of a few decimeters usually do not occur at a rate greater than the fixed-rate log frequency of $\SI{5}{\second}$ selected for this work, but using a variable-rate algorithm may allow to either capture or ignore exactly these small quick variations, depending on the settings.
+Such changes of a few decimeters usually do not occur at a rate greater than the fixed-rate log frequency of \SI{5}{\second} selected for this work, but using a variable-rate algorithm may allow to either capture or ignore exactly these small quick variations, depending on the settings.
 However, the algorithm has not been verified to produce equally good results under these conditions.
 
 \section{Linear-exponential algorithm}
@@ -70,17 +76,13 @@ The difference in cycle count between the implementations of the linear and line
 \section{Limitations}
 \subsection{Data Collection}
 The data collected come only from simulated dives, using a fixed clock frequency and power supply, so it may not match perfectly the conditions of a real dive. 
-The clock frequency should not affect the cycle count, which was the metric used in the previous comparisons.
+Changing the clock frequency should not affect the cycle count, which was the metric used in the previous comparisons.
 
-The energy consumption has not been measured or calculated, as the difference between the \gls{mcu} running and idle/sleeping is dominated by the display and LED energy usage, which is magnitudes higher. 
+The difference between the \gls{mcu} running and idle/sleeping is dominated by the display, and even if it is off, the status LEDs and \gls{ble} module energy usage, which are magnitudes higher.
 Since the display has such high energy usage and is required to be on in dive mode, the energy saving through running the decompression algorithm less often is marginal.
+
 The variable-rate algorithm has also been used for flash logging, as the dive can still be reconstructed using non-uniformly samples, and this reduces the storage required.
 More research is required to evaluate this under real diving conditions.
-
-\subsection{Hardware}
-Not all parts of the hardware have been tested yet, as the \gls{pcb} has been run only from a fixed power supply, and no battery charging has been attempted.
-
-The \gls{mcu} and all other low-voltage components are running at a voltage that does not exactly match $\SI{1.8}{\volt}$ because the $\SI{3.3}{\volt}$ line leaks onto it through an \gls{i2c} Level Shifter due to a missing resistor on its high voltage power input.
 
 \subsection{Software and Algorithms}
 The current implementation of the algorithms is not yet perfectly optimized for performance, so there may be opportunities to decrease the time/cycles required per iteration of the algorithms. 
@@ -90,6 +92,6 @@ Furthermore, most implemented algorithms differ significantly from standard or c
 To fully understand and extend the software, one must not only be comfortable with Rust and \gls{rtic}, but also read this write-up or the code.
 This is acceptable to the author as making substantial changes to potential life-support equipment, a deep understanding of the technology, and a full understanding of the given implementation are prerequisites.
 
-The bluetooth module is not yet functional, thus the JTAG pads are used for \gls{dfu} in this V1 prototype.
+The bluetooth module is not yet completely functional thus the JTAG pads are used for \gls{dfu} in this V1 prototype.
 
-Although some divers started to experiment with hydrogen for dives below $\SI{200}{\m}$, as is done in saturation diving, to further reduce the gas density and prevent \gls{hpns} \cite{hydrogen-dive-2024}, the number of scuba divers who deploy hydrogen-based mixtures and research documents on this topic pertaining to scuba diving remains negligible, and the currently available scientific literature is too limited to justify including hydrogen in the scope of this work.
+Although some divers started to experiment with hydrogen for dives below \SI{200}{\m}, as is done in saturation diving, to further reduce the gas density and prevent \gls{hpns} \cite{hydrogen-dive-2024}, the number of scuba divers who deploy hydrogen-based mixtures and research documents on this topic pertaining to scuba diving remains negligible, and the currently available scientific literature is too limited to justify including hydrogen in the scope of this work.

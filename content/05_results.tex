@@ -14,21 +14,44 @@
 \chapter{Results}\label{chapter:results}
 % First describe your measurement setup and settings (so it could be reproduced) and afterwards describe the results you got from your experiments. Putting results in perspective and interpretation do not belong in this chapter (put that into the discussion)
 
-\section{Experimental Setup}
+\section{Hardware Verification and Testing}
+A fixed-voltage DC Power Supply that has been set to output \SI{3.7}{\volt} is used to provide power to the \gls{pcb}.
 
+The \SI{3.3}{\volt} rail has the correct voltage, as do the \SI{2.5}{\volt} and \SI{17}{\volt} rails for the display.
+The display rails can be shut off by the MCU to reduce idle power consumption when the display is off.
+The \SI{1.8}{\volt} rail is close to \SI{2.5}{\volt} and voltage is reduced under load to approximately \SI{2.3}{\volt}.
+
+The MCU is running and a debug connection with the host computer can be established, the pressure sensor and \gls{ble} module are responding, though a Bluetooth connection with a separate device could not be fully established.
+Data can be stored to the flash and is retained after a reboot.
+
+The display connector is flipped, thus the display cannot be connected without potentially breaking it.
+
+\subsection{Power Consumption}
+At \SI{3.7}{\volt}, when everything off except for the Bluetooth module (the latter always runs, including the transmit status LED and cannot be shut off on the V1 PCB), current draw is \SI{5}{\milli\ampere}.
+When the \gls{mcu} is also active, compared to the STOP2 mode, the current difference is not accurately measurable, according to the datasheet it should be \SI{1.6}{\milli\ampere} at \SI{16}{\mega\hertz}.
+
+When the \gls{mcu} is active and both status LEDs are continuously active, current draw rises to \SI{12.5}{\milli\ampere}.
+With only the dive mode status LED, current draw drops to close to \SI{9}{\milli\ampere}.
+
+In surface mode, every tick is very brief and only uses \SI{0.0185}{\watt} (approximated over a longer time). 
+The battery lifetime of a \SI{2200}{\milli\ampere{}\hour} battery in surface mode thus equals \SI{18.33}{\day}.
+
+In dive mode with the display inactive, this shortens to \SI{9.64}{\day} (\SI{0.035}{\watt}). 
+The display draws significantly more power, with it on, the power consumption rises to up to $\SI{0.51}{\watt} + \SI{0.035}{\watt} = \SI{0.545}{\watt}$, battery life with a full battery in dive mode is thus \SI{14.93}{\hour}.
+
+\section{Experimental Setup}
 Although cycle counting and timing are possible on external hardware, the most accurate results can be obtained by simulating fixed dive profiles to compare the different algorithms.
-A fixed-voltage DC Power Supply that has been set to output $\SI{3.7}{\volt}$ is used to provide power to the \gls{pcb}.
 The software is programmed onto the MCU using the 6-pin JTAG connector \emph{J1} via a STLink-V3SET.
 
-The \gls{mcu} runs at a fixed clock frequency of $\SI{16}{\mega\hertz}$ on the STM32L476, each main task execution scheduled at a rate of approximately $1 / \SI{200}{\milli\second}$.
+The \gls{mcu} runs at a fixed clock frequency of \SI{16}{\mega\hertz} on the STM32L476, each main task execution scheduled at a rate of approximately $1 / \SI{200}{\milli\second}$.
 
 The software can be configured using the Rust Build System \lstinline{cargo}'s \lstinline{feature} flags, which are used for conditional compilation.
-To simplify interaction with the different setups and simulations, a \lstinline{Justfile} is provided for the \lstinline{just} command runner. 
+To simplify interaction with different setups and simulations, a \lstinline{Justfile} is provided for the \lstinline{just} command runner. 
 The standard dive computer application can be flashed using \lstinline{just embed}, to enable the display and bluetooth, run \lstinline{just features=display,bluetooth embed}, while live simulation and result extraction can be obtained by running \lstinline{just embed-live-sim-log-DEPTH(-FEATURE)}, where \lstinline{DEPTH} can be one of \lstinline{20m}, \lstinline{50m} and \lstinline{90m} and \lstinline{FEATURE} is optional, may be \lstinline{exp} or \lstinline{fixed-rate}.
 
-Data were extracted using \lstinline{tee} to pipe the output of the VT100 RTT terminal UI created by \lstinline{cargo embed} to a file.
-This output is particularly unreliable, but the log lines have been reduced and made as machine-readable as possible to increase reliability.
-The numbers do not match exactly (e.g., see decisions due count is smaller than algorithm / flash log execution) due to missing spaces, newlines, carriage returns and other escape sequences as well as additional VT100 escape sequences that are not properly parsed when the stream is written to the file on disk.
+Data were extracted using the logs from the MCU, by accumulating the logs in a file.
+This output has shown to be particularly unreliable, but the log lines have been reduced and made as machine-readable as possible to increase reliability.
+The numbers do not match exactly (e.g., see decisions due count is smaller than algorithm / flash log execution) due to missing spaces, newlines, carriage returns and other escape sequences that are not properly parsed when the stream is written to the file on disk and result in corrupt data.
 However, after multiple iterations yielding results with only insignificant differences, the relations between the numbers of multiple executions are considered to be preserved.
 
 The following figures and tables are generated from the \texttt{csv} files that are output from the \texttt{extract\_\-bench\_\-tables.py} script in the project repository.
@@ -37,10 +60,10 @@ The figure generation scripts are available in the thesis repository and are als
 
 The fixed rate simulations serve as the baseline for comparison, while the \lstinline{exp} ones enable the exponential and the recipes without \lstinline{FEATURE} run the linear-exponential algorithm.
 
-In the following section, three types of tables are used to present the data, which are presented shortly. 
+In the following section, three types of table are used to present the data.
 
 \begin{itemize}
-    \item Algorithm Computation Time: These show a summary (average, median, minimum, maximum cycles and seconds) of all executions during the simulation of one dive profile (maximum depth $\SI{20}{\meter}$, $\SI{50}{\meter}$ and $\SI{90}{\meter}$) under a specific configuration (fixed-rate, variable-rate with exponential or variable-rate with linear-exponential algorithm).
+    \item Algorithm Computation Time: These show a summary (average, median, minimum, maximum cycles and seconds) of all executions during the simulation of one dive profile (maximum depth \SI{20}{\meter}, \SI{50}{\meter} and \SI{90}{\meter}) under a specific configuration (fixed-rate, variable-rate with exponential or variable-rate with linear-exponential algorithm).
     \item Rate Algorithm Computation Time: These show a summary of all rate algorithm executions related to the scheduling of a specific algorithm (fixed over all rows, named in the table caption) during the simulation of one dive profile under a specific configuration.
     \item Decision Summary: Detail decisions (due, not due, and avg/max skipped seconds) of the rate algorithm related to the scheduling of a specific algorithm during the simulation of one dive profile under a specific configuration.
 \end{itemize}
@@ -54,25 +77,28 @@ This difference will become larger if more samples are used per-iteration of the
 The variable rate algorithms are on average $7.4\times$ more expensive, $1858 \pm 32$ (cf. Table \ref{tab:timing_o2tox_rate}) than the fixed-rate algorithm and $6.98\times$ more expensive than a \gls{o2tox} calculation (cf. Table \ref{tab:timing_o2tox}).
 \input{./content/generated/05_results_timing_o2tox_rate}
 
-Following Table \ref{tab:o2tox_decision_summary}, compared to the fixed rate baseline, the \gls{o2tox} algorithm is executed $0.65\times$ and $0.82\times$ as often on the $\SI{50}{\meter}$ profile, $0.15\times$ and $0.25\times$ as often on the $\SI{90}{\meter}$ profile, depending on the specific decompression profile. For the shallow dive to $\SI{20}{\meter}$, no execution is required following the variable rate algorithm.
+Following Table \ref{tab:o2tox_decision_summary}, compared to the fixed rate baseline, the \gls{o2tox} algorithm is executed $0.65\times$ and $0.82\times$ as often on the \SI{50}{\meter} profile, $0.15\times$ and $0.25\times$ as often on the \SI{90}{\meter} profile, depending on the specific decompression profile. For the shallow dive to \SI{20}{\meter}, no execution is required following the variable rate algorithm.
 \input{./content/generated/05_results_o2tox_decision_summary}
 
 \section{Exponential \& Linear-Exponential Decompression Algorithm results}
 The decompression stop profile calculation algorithms are significantly more expensive than the \gls{o2tox} algorithms, especially on dives with increased decompression obligation.
 
 The difference between the exponential and linear-exponential algorithms is small for shallow dives, while on deeper dives, the average and total cycle counts are up to $16\%$ larger (Table \ref{tab:timing_deco_schedule}) for the linear-exponential algorithm, which is caused, among others, by the tendency to create more (thus deeper) stops, and with more depth changes during decompression, more executions are required.
+Using the STM32L476 datasheet current draw, this difference is between \SI{0.0007}{\joule} and \SI{0.017}{\joule} per execution.
 \input{content/generated/05_results_timing_deco_rate}
 
 The decompression rate algorithm takes $1842 \pm^{34}_{32}$ cycles as can be seen in Table \ref{tab:timing_deco_rate}, while execution of the decompression schedule algorithm varies widely with the dive profile and current state, between $101'521$ and $886'860$ cycles, close to the lower range of the spectrum on no-deco dives, where no tissue reaches its M-Value, with average cycles between $338614$ to $395242$ cycles.
 The average execution overhead of an additional rate calculation is between $\frac{1837}{395'242} = 0.0046 = 0.5\%$ and $\frac{1810}{101'521} = 0.018 = 1.8\%$.
 \input{content/generated/05_results_timing_deco_schedule}
+The energy required for execution of deco calculations in the longest profile is \SI{0.0854496}{\joule} on average and in total \SI{6.41}{\joule} for the variable-rate executions and \SI{21.27}{\joule} for the execution at a fixed rate. The difference is $3.5\times$ on the deepest profile, \SI{14.86}{\joule}.
 
-Table \ref{tab:decision_summary} summarizes the decisions whether a recomputation of the decompression schedule is due or not. 
 \input{./content/generated/05_results_decompression_decision_summary}
+Table \ref{tab:decision_summary} summarizes the decisions whether a recomputation of the decompression schedule is due or not. 
+Analyzing it, compared to the baseline execution count and depending on the profile, the variable rate algorithm leads to a $1.17\times$ to $6\times$ decrease in the execution count, which translates in an almost linear relationship to the total cycle count spent on the computation of the decompression schedule, while only incurring a $0.5\%$ to $1.8\%$ overhead compared to the execution of a decompression schedule computation.
+Although this may slightly increase battery usage during the deep and descent phases of the dive due to running the additional variable-rate algorithm, the \gls{mcu} will be inactive for more cycles during decompression. 
+For the additional variable-rate algorithm execution, the overhead for the whole \SI{90}{\meter} amounts to \SI{1.74}{\joule}, thus the saving compared to the fixed-rate exeuction is $\SI{14.86}{\joule} - \SI{1.74}{\joule} = \SI{13.12}{\joule}$.
 
-Analyzing Table \ref{tab:decision_summary}, compared to the baseline execution count and depending on the profile, the variable rate algorithm leads to a $1.17\times$ to $6\times$ decrease in the execution count, which translates in an almost linear relationship to the total cycle count spent on the computation of the decompression schedule, while only incurring a $0.5\%$ to $1.8\%$ overhead compared to the execution of a decompression schedule computation.
-Although this may slightly increase battery usage during the deep and descent phases of the dive due to running another algorithm, the \gls{mcu} will be inactive for more cycles during decompression.
-In the $\SI{50}{\meter}$ profile, which represents an average easy decompression dive, the benefit through the variable rate algorithm is smallest, as the \gls{deco} time does not significantly exceed the time at depth, while in shallow and deep dives, the decrease in cycles is significant, as no deco needs to be computed, or the execution count during decompression is significantly reduced, respectively.
+In the \SI{50}{\meter} profile, which represents an average easy decompression dive, the benefit through the variable rate algorithm is smallest, as the \gls{deco} time does not significantly exceed the time at depth, while in shallow and deep dives, the decrease in cycles is significant, as no deco needs to be computed, or the execution count during decompression is significantly reduced, respectively.
 
  % \section{Display Refresh results}
  % The display refresh is the most expensive algorithm, partially due to current implementation using SPI over a Parallel Interface for simplicity in hardware and software. 
@@ -88,7 +114,7 @@ In the $\SI{50}{\meter}$ profile, which represents an average easy decompression
 The primary reason for using a variable rate algorithm for flash logging in this work is not to save cycles and energy by logging less often but to save space on the flash chip.
 
 The flash log rate algorithm (\lstinline{DiffAimdRateAlgorithm}) takes about $7.1\%$ less cycles than the \lstinline{DynamicDiffAimdRateAlgorithm} used for \gls{deco} and \gls{o2tox} calculation. 
-This additional execution time compared to logging in every iteration amounts to approximately $1/1850$ of the main loop rate (on average about $\SI{108.1}{\micro\second}$) compared to the $\SI{200}{\milli\second}$ rate), as can be derived from Table \ref{tab:timing_flash_log_rate}.
+This additional execution time compared to logging in every iteration amounts to approximately $1/1850$ of the main loop rate (on average about \SI{108.1}{\micro\second}) compared to the \SI{200}{\milli\second} rate), as can be derived from Table \ref{tab:timing_flash_log_rate}.
 \input{./content/generated/05_results_timing_flash_log_rate}
 
 Figures \ref{fig:flash_profile_diff_20m}, \ref{fig:flash_profile_diff_50m}, \ref{fig:flash_profile_diff_90m} shows that the variable rate algorithm reduces the flash log points per dive by a factor of approximately $3.6\times$ to $4.1\times$. 
@@ -97,5 +123,5 @@ Finally, compare the flash log with the actual sampled or simulated depth at the
 
 The maximum signed error can be studied in Table \ref{tab:flash_profile_diff_summary}, it shows that the algorithms all limit the maximum error to a few centimeters, except for the fixed-rate algorithm, which includes individual errors up to a few meters, most of which already recover on the next log point (cf. Figure \ref{fig:flash_profile_diff_50m}, \ref{fig:flash_profile_diff_90m} for a figure displaying the difference over time).
 
-The maximum error using the variable rate algorithms are smaller than $\SI{70}{\centi\meter}$, but similar to the errors produced by the fixed-rate logging, these always recover on the next log point and only up to two such errors occur per simulated dive profile.
+The maximum error using the variable rate algorithms are smaller than \SI{70}{\centi\meter}, but similar to the errors produced by the fixed-rate logging, these always recover on the next log point and only up to two such errors occur per simulated dive profile.
 \input{content/generated/05_results_flash_profile_diff_summary}

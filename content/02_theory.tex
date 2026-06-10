@@ -45,17 +45,83 @@ As noted above, some embedded systems only react to external events and interrup
 To reduce power consumption when considering a system with periodic tasks, it has been shown that it may be beneficial to schedule tasks at varying rates rather than relying on fixed-rate scheduling \cite{survey-adaptive-sampling-filtering} \cite{2020-dsra} \cite{2023-eth-energy-aware}.
 The variable rate may be computed using information about the system, such as battery charge, recharge, or external conditions, such as sensor readings.
 
+The objective for the variable-rate scheduling of tasks is to reduce the CPU active time while adhering to the given requirements; the exact requirements in this project include the following, which have been derived from the experience gathered with multiple dive computers.
+
+\begin{itemize}
+    \item The decompression calculation \gls{tts} must be accurate to at least \SI{60}{\second} compared to a high-rate reference implementation, as this number is representative for the decompression schedule and is usually shown in a resolution of \SI{1}{\minute}.
+    \item Oxygen Toxicity calculation must be accurate to $\pm 1$ \gls{otu}s, which accumulate at a rate of no more than \SI{1.93}{\per\minute}, which equates to a maximum accepted delay of \SI{31}{\second} at high \gls{po2}. This is assuming the recommended \gls{po2} limit of \SI{162}{\kPa} \cite{calculated-risk-pulmonary-cns}\cite{RevisedO2Tox2025}.
+    \item The resulting dive log must be accurate to less than \SI{1}{\meter} in depth at all times and \SI{0.1}{\meter} on in the mean over all samples compared to the true simulated depth.
+    \item The depth display with a resolution of \SI{10}{\centi\meter} should have a sub-second perceived latency.
+\end{itemize}
+
+While there is no publicly available data on recalculation rates for decompression obligation and oxygen toxicity, they are assumed to be on the order of seconds. 
+Thus, the fixed-rate scheduling baseline in this project is one calculation in \SI{5}{\second} for decompression and profile logging and \SI{10}{\second} for oxygen toxicity, which closely matches typical settings and observed behavior in dive computers.
+For the oxygen toxicity, it is intentionally conservative to approximate frequent recalculation.
+
+To compare the baseline to the variable-rate algorithms, the cycle count will provide an accurate measurement, and this is converted to energy spent on these tasks, under a fixed clock frequency.
+
 \section{Diving and Humans in Hyperbaric Environments}
 \subsection{Inert gas loading and \gls{deco}}
-Due to the increase in pressure of $\SI{1}{\bar}$ for every $10$ meters of seawater, the total pressure of the inhaled gas also increases with depth. The gas mixtures used in scuba diving consist of oxygen, nitrogen, optionally helium, and traces of other gasses, which are present only in negligible quantities. Oxygen is the only of these gasses actively used in chemical reactions in the body; the other gasses are referred to as inert. When breathed at a \gls{pp} exceeding current saturation, body tissues begin to saturate ("on-gas") with that inert gas until they reach equilibrium with inhaled \gls{pp} and desaturate ("off-gas") when the inhaled \gls{pp} is less than the tissue's pressure of that gas. This is not an instant process; it takes some time for a tissue to saturate and desaturate to the inhaled \gls{pp}, which is dependent on the specific body tissue.
+Due to the increase in pressure of \SI{1}{\bar} for every $10$ meters of seawater, the total pressure of the inhaled gas also increases with depth. The gas mixtures used in scuba diving consist of oxygen, nitrogen, optionally helium, and traces of other gasses, which are present only in negligible quantities. Oxygen is the only of these gasses actively used in chemical reactions in the body; the other gasses are referred to as inert. When breathed at a \gls{pp} exceeding current saturation, body tissues begin to saturate ("on-gas") with that inert gas until they reach equilibrium with inhaled \gls{pp} and desaturate ("off-gas") when the inhaled \gls{pp} is less than the tissue's pressure of that gas. This is not an instant process; it takes some time for a tissue to saturate and desaturate to the inhaled \gls{pp}, which is dependent on the specific body tissue.
 
 While working in mines and on bridges starting in the 1840s, workers started reporting symptoms, some becoming paralyzed, that were later classified as \gls{dcs}, and air embolisms were determined to be the cause. Later, symptoms were significantly reduced by gradually reducing the surrounding pressure over some time instead of immediately ascending to surface pressure \cite{prev-dci-1908}. 
 During the second world war, the German, British, and American Armies simultaneously, but independently in secret, reproduced the observed symptoms using hyperbaric chambers and developed tables for saturation pressure and time and the corresponding required decompression time and pressure/depth schedule \cite{chamber-divers-2024}. 
 Whilst these tables are still taught by agencies and used by divers to perform safe dives, requiring only a timer and a depth gauge to track exposure time and maximum depth, dive computers have become mainstream diving equipment, allowing for multi-level profiles, by knowing not only the maximum depth and total dive time, but exact time spent at each depth, which is used to model tissue pressure (or bubble size in other algorithms, which are not discussed in this work), increasing allowed dive time within the \gls{ndl}, the maximum time that can be spent at hyperbaric pressure without incurring mandatory \gls{deco} stops, dynamically based on the actual dive profile.
 
-Tissues in the body on-gas and off-gas different inert gasses at different rates, tissue-based algorithms model multiple tissues with halftimes of $\SI{5}{\min}$ up to multiple hours (e.g. $\SI{635}{\min}$ or $\SI{720}{\min}$ in Bühlmann ZHL-16A and -16C, respectively) to keep the modeled supersaturation within experimentally developed tissue-dependent limits, while bubble models aim to limit bubble growth \cite{overview-dci-2024}. 
+Tissues in the body on-gas and off-gas different inert gasses at different rates, tissue-based algorithms model multiple tissues with halftimes of \SI{5}{\min} up to multiple hours (e.g. \SI{635}{\min} or \SI{720}{\min} in Bühlmann ZHL-16A and -16C, respectively) to keep the modeled supersaturation within experimentally developed tissue-dependent limits, while bubble models aim to limit bubble growth \cite{overview-dci-2024}. 
 These algorithms cannot prevent \gls{dcs} from occurring, as exact physiological factors and processes are not fully determined nor can all required parameters be measured while diving (sleep, hydration, fitness, and other bodily factors play a role, which are not easily measurable), but adhering to the limits given by tables and computers, significantly reduces the incidence.
 Most decompression algorithms provide a maximum supersaturation values per tissue, which may be an absolute supersaturation or be depth-dependent (e.g., the Thalmann Algorithm's MPTT (Maximum Permissible Tissue Tension) tables \cite{thalmann-parameters-1.3-2020}\cite{thalmann-tables-software-2010}).
+
+\subsection{Bühlmann ZHL-16 Decompression Algorithms}\label{subsection:buehlmann-decompression-algorithm}
+The most common tissue-based decompression algorithms used for recreational and technical diving within the limits of most \gls{scuba} diving agencies are the Bühlmann ZHL-16 family (B, C) models.
+The Bühlmann-16C algorithm is an exponential tissue-based algorithm that considers the so-called M-Value (the maximum allowed supersaturation) per tissue, and whenever this value is reached, a decompression stop is added, until the next stop depth can be reached without going beyond the M-Value.
+
+The on- and offgassing is exponential as it is modeled using halftimes, so in a time $t_{1/2}$, a tissue equalizes as given in \ref{align:buehlmann-onoffgas}, where $p_t\mathrm{i.g.} (x)$ is the partial pressure of the considered inert gas in the tissue $t$ at time $x$ and $p_I\mathrm{i.g.}$ is the partial pressure of the considered inert gas in the inspired gas.
+
+\begin{align}
+    p_t\mathrm{i.g.}(t_{1/2}) &= p_t\mathrm{i.g.}(t_0) + \frac{1}{2}\cdot \left(p_I\mathrm{i.g.} - p_t\mathrm{i.g.}(t_0)\right) \label{align:buehlmann-onoffgas}
+\end{align}
+
+The halftimes of the ZHL-16 algorithm's tissues are a set of 16 (17 for ZHL-16C) times from \SI{4}{\minute} (ZHL-16A) or \SI{5}{\minute} (ZHL-16B/C) to \SI{635}{\minute} \cite{tauchmedizin-2002}.
+
+The M-Value for an inert gas at an ambient pressure is calculated using the Bühlmann formulas and the $a$ and $b$ values \cite{tauchmedizin-2002} (pp. 129f), see \ref{align:buehlmann-m}, it is in a linear relation to the ambient pressure.
+
+\begin{align}
+    P_{I\mathrm{tol}} \mathrm{i.g.} = \frac{P_{\mathrm{amb}}}{b} + a \label{align:buehlmann-m}
+\end{align}
+
+This experimentally determined and then extrapolated M-Value line is often considered too aggressive, so two parameters, \gls{gflow} and \gls{gfhigh}, influence the percentage of M-value the tissues are allowed to reach at the start of decompression (\gls{gflow}) and at the end of decompression, when ascending to the surface (\gls{gfhigh}), between which a linear interpolation of these two points is followed for any stop depth $d_i$, where $i \in 1..\mathrm{stop\_count}/3$ (\ref{align:gf-lerp}), as stops are built in \SI{3}{\meter} increments.
+Common values range from $0.3$ to $0.65$ for \gls{gflow} and $0.75$ to $0.99$ for \gls{gfhigh}.
+
+\begin{align}
+    gf_{d_i} = \mathrm{lerp}(gf_{\mathrm{low}}, gf_{\mathrm{high}}, \frac{i}{\mathrm{stop\_count}}) \label{align:gf-lerp}
+\end{align}
+
+The parameter \gls{gf99} tracks the minimum distance to the M-Value over all tissues, it is controlled not to exceed the interpolated line in the Bühlmann Algorithm, as in the exponential implemented algorithm in this work.
+
+\subsection{Linear-Exponential Decompression Algorithm}
+
+\subsubsection{Violations of Henry's Law} 
+Usually, gas exchange between tissues is limited by Henry's Law, and follows an exponential relationship.
+In \cite{diff-lim-deco-2003}, the authors claim that due to physiological limitations related to the fixed size of the diffusion region in which gas exchange takes place, there may be a limit to the maximum decompression that can occur at a specific depth that does not depend on the \gls{pp}-gradient between neighboring tissues. 
+Deeper diving is statistically related to a higher incidence of DCS \cite{dan-understanding-dcs-2022}, therefore, taking precautions such as limiting the \gls{deco} stress by limiting the amount of molecules that pass through the lungs to be off-gassed, appears to be beneficial.
+This is the theoretical basis for transitioning to another type of function to model decompression in these cases, and only comes into effect on deep technical dives, where the physical exchange limit is smaller than the calculated diffusion allowed by the supersaturation gradient. 
+When this point is reached, the modeled change in decompression achieved through an in- or decrease in pressure in the diffusion region only is exactly this change, yielding a linear relationship.
+
+\subsubsection{Iso-\gls{dcs} risk algorithms} 
+Bühlmann-16 and RGBM are deterministic \cite{dev-iso-risk-1996}, they consider the safety of a dive profile binary; safe or unsafe, although this is not a realistic model, as these dives still have some remaining risk of DCS based on the physiology of divers that differ between individuals or even the same individual on multiple days. 
+These algorithms also fail to take into account the already accumulated and total decompression stress, which can increase the risk of \gls{dcs}, and is often generated by deep dives requiring a long decompression.
+The US Navy and similar large organized entities often require a more predictable risk management strategy, and the \gls{dcs} risk should not increase with the parameters of a specific dive.
+Iso-probabilistic \gls{dcs} risk algorithms have been developed to model and execute dives with similar risk at varying depths and bottom times by integrating cumulative decompression stress into a continuous probability function \cite{likelihood-dcs-1984}.
+
+\subsubsection{Thalmann Algorithm}
+The Thalmann Algorithm VVAL 18 was developed by Capt. Edward D. Thalmann for the US Navy in the 1980s \cite{thalmann-tables-software-2010}. 
+It uses the Haldanian exponential model for ongassing, while offgassing is only assumed to be exponential below a "crossover" supersaturation per tissue.
+Once the gradient is larger than this crossover, a linear function is used instead to model offgassing until the exponential has the same slope as the linear function, from which point, the exponential function is used to model the remaining decompression.
+
+The Thalmann Algorithm has been statistically tested by the US Navy and yields iso-risk results for \gls{dcs}.
+This risk (e.g., 3\%, 4\%) can be calibrated by changing the parameters of the algorithm \cite{dial-dcs-risk-thalmann-2024}.
+
 
 \subsection{Oxygen at hyperbaric pressure}
 Oxygen is not an inert gas and is thus not ongassed in body tissues. 
@@ -72,6 +138,19 @@ Although CNS clock limits are more restrictive than the way most technical diver
 Dive computers do not only track single-dive exposures; divers are decompressing for hours after a dive is completed, and to complete repetitive dives (i.e. multiple dives within 48 hours) safely require the tracking of offgassing time even after the diver reached the surface.
 This is why dive computers are almost never completely shut down, as the real-time clock has to run to track inert gas offgassing and \gls{o2} toxicity reduction at surface pressure over time.
 
+\subsubsection{\gls{o2} toxicity calculation}\label{subsubsection:theory_o2tox_calc}
+NOAA limits, which combine both CNS and pulmonary limits in more , are implemented using table 15-3 published in the NOAA diving manual \cite{noaa-diving-manual}. An option of extending these limits to a \gls{po2} of $1.3$ and lower is implemented after new research as suggested in \cite{RevisedO2Tox2025}.
+
+Furthermore, \gls{otu}s for pulmonary and CNS oxygen toxicity can be calculated separately using the \gls{oti} method \ref{align:oti-calc} according to \cite{calculated-risk-pulmonary-cns}, using the suggested constants $c=6.8$ with $t$ in \SI{}{\min} for CNS oxygen toxicity and $c=4.57$ with $t$ in \SI{}{\hour} for pulmonary oxygen toxicity. $P_{O2}$ is given in absolute atmospheres.
+
+\begin{quote}
+The pulmonary \gls{oti} should not exceed 250. The CNS \gls{oti} should not exceed 26,108 for a 1\% risk.\hfill\cite{calculated-risk-pulmonary-cns}
+\end{quote}
+
+\begin{align}
+    TI(t, P_{O2}, c) &= t^2 * (P_{O2})^c \label{align:oti-calc}
+\end{align}
+
 \subsection{Further considerations}
 There are more considerations to planning dives and conditions that may occur particularly on deeper dives that should be taken into consideration by dive computers, although research on these is not yet conclusive. 
 The following list is not complete, but is presented as an introduction to the many more topics that are researched in hyperbaric medicine.
@@ -80,8 +159,8 @@ The following list is not complete, but is presented as an introduction to the m
     \item \gls{icd} is a state in which a tissue is ongassing one gas while offgassing another, which is caused by inverted \gls{pp} gradients between tissues and inhaled gas, between two inert gasses (i.e., Nitrogen and Helium). 
     In most cases caused by gas switching on ascent, it may lead to temporary over- or under-saturation of tissues exceeding the M-Values, even though the decompression stops were followed according to the tissue loading at the start of the stop. \cite{icd-2011}
     \item Gas density affects the ability of the lungs to recycle the gas and exhale CO2 \cite{respiratory-physiology-ccr-2015} by increasing the so-called \gls{wob}. 
-    It is suggested to limit the gas density to $\SI{5.2}{\gram\per\liter}$, with an absolute recommended maximum of $\SI{6.3}{\gram\per\liter}$.
-    Together with Inert Gas Narcosis \cite{inert-gas-narcosis}, these are the primary reasons for using Helium-based gas mixtures for dives below $\SI{30}{\meter}$.
+    It is suggested to limit the gas density to \SI{5.2}{\gram\per\liter}, with an absolute recommended maximum of \SI{6.3}{\gram\per\liter}.
+    Together with Inert Gas Narcosis \cite{inert-gas-narcosis}, these are the primary reasons for using Helium-based gas mixtures for dives below \SI{30}{\meter}.
     \item \gls{hpns} \cite{hpns-susceptibility-1983} is a condition triggered by the rapid compression phase in the beginning of a deep dive. 
     Except for a slower descent or ascending when the condition arises, no prevention or cure has been found, except for a single trial dive with hydrogen \cite{hydrogen-dive-2024}.
 \end{itemize}

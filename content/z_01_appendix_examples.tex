@@ -56,40 +56,40 @@ To view and update the diving algorithms, update the \texttt{STDC-thalmann} subm
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/results/profile_20m.pdf}
-\caption[Simulated Depth of 20m profile]{The dive profile of the simulated shallow dive with a maximum depth of $\SI{20}{\meter}$. The descent and ascent rate are the only limiting factors.}
+\caption[Simulated Depth of 20m profile]{The dive profile of the simulated shallow dive with a maximum depth of \SI{20}{\meter}. The descent and ascent rate are the only limiting factors.}
 \label{fig:profile_20m}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/results/profile_50m.pdf}
-\caption[Simulated Depth of 50m profile using the lin-exp decompression algorithm]{The dive profile of the simulated light decompression dive with a maximum depth of $\SI{50}{\meter}$. The descent rate limits the descent, after $\SI{15}{\minute}$ bottom time, the linear-exponential or exponential decompression schedule is followed.}
+\caption[Simulated Depth of 50m profile using the lin-exp decompression algorithm]{The dive profile of the simulated light decompression dive with a maximum depth of \SI{50}{\meter}. The descent rate limits the descent, after \SI{15}{\minute} bottom time, the linear-exponential or exponential decompression schedule is followed.}
 \label{fig:profile_50m}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/results/profile_90m.pdf}
-\caption[Simulated Depth of 90m profile using the lin-exp decompression algorithm]{The dive profile of the simulated light decompression dive with a maximum depth of $\SI{90}{\meter}$. The descent rate limits the descent, after $\SI{10}{\minute}$ bottom time, the linear-exponential or exponential decompression schedule is followed. Small spikes in depth using the fixed-rate algorithms occur because the simulation software changes depth once the previously approximated time ran out, even if the stop has not been cleared yet, after recalculation (which happens quickly after the ascent starting due to the variable rate algorithm's sensitivity to depth changes) the deeper stop is reached again.}
+\caption[Simulated Depth of 90m profile using the lin-exp decompression algorithm]{The dive profile of the simulated light decompression dive with a maximum depth of \SI{90}{\meter}. The descent rate limits the descent, after \SI{10}{\minute} bottom time, the linear-exponential or exponential decompression schedule is followed. Small spikes in depth using the fixed-rate algorithms occur because the simulation software changes depth once the previously approximated time ran out, even if the stop has not been cleared yet, after recalculation (which happens quickly after the ascent starting due to the variable rate algorithm's sensitivity to depth changes) the deeper stop is reached again.}
 \label{fig:profile_90m}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/results/flash_profile_diff_20m.pdf}
-  \caption{Simulated $\SI{20}{\meter}$ dive profile: Difference between Flash log and actual depth using the variable rate algorithms}
+  \caption{Simulated \SI{20}{\meter} dive profile: Difference between Flash log and actual depth using the variable rate algorithms}
   \label{fig:flash_profile_diff_20m}
 \end{figure}
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/results/flash_profile_diff_50m.pdf}
-  \caption{Simulated $\SI{50}{\meter}$ dive profile: Difference between Flash log and actual depth using the variable rate algorithms}
+  \caption{Simulated \SI{50}{\meter} dive profile: Difference between Flash log and actual depth using the variable rate algorithms}
   \label{fig:flash_profile_diff_50m}
 \end{figure}
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/results/flash_profile_diff_90m.pdf}
-  \caption{Simulated $\SI{90}{\meter}$ dive profile: Difference between Flash log and actual depth using the variable rate algorithms}
+  \caption{Simulated \SI{90}{\meter} dive profile: Difference between Flash log and actual depth using the variable rate algorithms}
   \label{fig:flash_profile_diff_90m}
 \end{figure}
 

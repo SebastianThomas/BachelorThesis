@@ -101,7 +101,7 @@ def build_rate_table(row_label: str, caption: str, table_label: str,
         f" & Avg c. & Avg {hdr}"
         f" & Min c. & Min {hdr}"
         f" & Max c. & Max {hdr}"
-        f" & Tot. c. & Total {thdr} \\\\",
+        f" & Tot. c. & Tot. {thdr} \\\\",
         "\\midrule",
     ]
     for config_key, config_label in CONFIG_LABELS.items():
@@ -167,7 +167,7 @@ def build_computation_table(row_label: str, caption: str, table_label: str,
         f" & Med. c. & Med. {hdr}"
         f" & Min c. & Min {hdr}"
         f" & Max c. & Max {hdr}"
-        f" & Tot. c. & Total {thdr} \\\\",
+        f" & Tot. c. & Tot. {thdr} \\\\",
         "\\midrule",
     ]
     for config_key, config_label in CONFIG_LABELS.items():

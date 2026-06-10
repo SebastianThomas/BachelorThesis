@@ -11,9 +11,9 @@ OUTPUT_DIR = ROOT / "content" / "generated"
 INPUT_ROOT = ROOT / "figures" / "results"
 
 CONFIG_LABELS = {
-    "baseline-fixed": "Baseline fixed",
-    "exp": "Exponential",
-    "lin-exp": "Linear-exponential",
+    "baseline-fixed": "Baseline",
+    "exp": "Exp.",
+    "lin-exp": "Lin.-Exp.",
 }
 
 DEPTHS = ["20m", "50m", "90m"]
@@ -74,7 +74,7 @@ def build_table(row_label: str, caption: str, table_label: str) -> str:
         "\\resizebox{\\textwidth}{!}{%",
         "\\begin{tabular}{llrrrrr}",
         "\\toprule",
-        "Configuration & Profile & Decisions & Due & Not due & Avg skipped [s] & Max skipped [s] \\\\",
+        "Config. & Depth & Dec. & Due & Not due & Avg skip. [s] & Max skip. [s] \\\\",
         "\\midrule",
     ]
 

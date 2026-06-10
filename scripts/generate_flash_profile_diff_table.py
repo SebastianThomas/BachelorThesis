@@ -19,9 +19,9 @@ OUTPUT_DIR = ROOT / "content" / "generated"
 INPUT_ROOT = ROOT / "figures" / "results"
 
 CONFIG_LABELS = {
-    "baseline-fixed": "Baseline fixed",
-    "exp":            "Exponential",
-    "lin-exp":        "Linear-exponential",
+    "baseline-fixed": "Baseline",
+    "exp":            "Exp.",
+    "lin-exp":        "Lin.-Exp.",
 }
 
 DEPTHS = ["20m", "50m", "90m"]
@@ -59,7 +59,7 @@ def build_table() -> str:
         "\\renewcommand{\\arraystretch}{1.15}",
         "\\begin{tabular}{llrrrrr}",
         "\\toprule",
-        "Configuration & Profile & Points & Min [m] & Max [m] & Avg [m] & Median [m] \\\\",
+        "Config. & Depth & N & Min [m] & Max [m] & Avg [m] & Med. [m] \\\\",
         "\\midrule",
     ]
 

@@ -22,9 +22,9 @@ INPUT_ROOT = ROOT / "figures" / "results"
 CLOCK_HZ = 16_000_000  # STM32L476 configured at 16 MHz
 
 CONFIG_LABELS = {
-    "baseline-fixed": "Baseline fixed",
-    "exp": "Exponential",
-    "lin-exp": "Linear-exponential",
+    "baseline-fixed": "Baseline",
+    "exp": "Exp.",
+    "lin-exp": "Lin.-Exp.",
 }
 
 DEPTHS = ["20m", "50m", "90m"]
@@ -97,11 +97,11 @@ def build_rate_table(row_label: str, caption: str, table_label: str,
         "\\resizebox{\\textwidth}{!}{%",
         "\\begin{tabular}{llrrrrrrrrr}",
         "\\toprule",
-        f"Configuration & Profile & Samples"
-        f" & Avg cycles & Avg {hdr}"
-        f" & Min cycles & Min {hdr}"
-        f" & Max cycles & Max {hdr}"
-        f" & Total cycles & Total {thdr} \\\\",
+        f"Config. & Depth & N"
+        f" & Avg cyc. & Avg {hdr}"
+        f" & Min cyc. & Min {hdr}"
+        f" & Max cyc. & Max {hdr}"
+        f" & Tot. cyc. & Total {thdr} \\\\",
         "\\midrule",
     ]
     for config_key, config_label in CONFIG_LABELS.items():
@@ -162,12 +162,12 @@ def build_computation_table(row_label: str, caption: str, table_label: str,
         "\\resizebox{\\textwidth}{!}{%",
         "\\begin{tabular}{llrrrrrrrrrr}",
         "\\toprule",
-        f"Configuration & Profile & Samples"
-        f" & Avg cycles & Avg {hdr}"
-        f" & Median cycles & Median {hdr}"
-        f" & Min cycles & Min {hdr}"
-        f" & Max cycles & Max {hdr}"
-        f" & Total cycles & Total {thdr} \\\\",
+        f"Config. & Depth & N"
+        f" & Avg cyc. & Avg {hdr}"
+        f" & Med. cyc. & Med. {hdr}"
+        f" & Min cyc. & Min {hdr}"
+        f" & Max cyc. & Max {hdr}"
+        f" & Tot. cyc. & Total {thdr} \\\\",
         "\\midrule",
     ]
     for config_key, config_label in CONFIG_LABELS.items():

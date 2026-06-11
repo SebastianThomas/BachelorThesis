@@ -160,7 +160,7 @@ def build_computation_table(row_label: str, caption: str, table_label: str,
         "\\centering",
         "\\small",
         "\\renewcommand{\\arraystretch}{1.15}",
-        "\\begin{tabular}{llrrrrrrrrrr}",
+        "\\begin{tabular}{llrrrrrrrrrrr}",
         "\\toprule",
         f"Config. & Depth & N"
         f" & Avg c. & Avg {hdr}"

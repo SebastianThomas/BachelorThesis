@@ -121,7 +121,6 @@ The table Table \ref{tab:flash_log_decision_summary} is expected to show similar
 \chapter{Additional Tables: Flash Log structure}
 \begin{table}[htbp]
   \centering
-  \caption{Control Data Block}
   \label{tab:log-control}
   \begin{tabularx}{\textwidth}{|c|c|X|}
     \hline
@@ -160,11 +159,11 @@ The table Table \ref{tab:flash_log_decision_summary} is expected to show similar
     \lstinline{gas_content} & $3 \cdot \lstinline{gas_nr}$ & Number of distinct gases or gas cylinders \\
     \hline
   \end{tabularx}
+  \caption{Flash Log: Control Data Block}
 \end{table}
 
 \begin{table}[htbp]
   \centering
-  \caption{Log Data Point Metadata}
   \label{tab:log-meta}
   \begin{tabularx}{\textwidth}{|c|c|X|}
     \hline
@@ -179,12 +178,12 @@ The table Table \ref{tab:flash_log_decision_summary} is expected to show similar
     \lstinline{optional_param_pages} & 4 & Indicator for optional 8-byte pages of log information, at the moment, only MSB used, as there is only 8 bytes of optional parameters \\
     \hline
   \end{tabularx}
+  \caption{Flash Log: Log Data Point Metadata}
 \end{table}
 
 % 4 bytes with one parameter selection bit left
 \begin{table}[htbp]
   \centering
-  \caption{Log Data Point Data}
   \label{tab:log-data}
   \begin{tabularx}{\textwidth}{|c|c|c|p{3.2cm}|X|}
     \hline
@@ -219,4 +218,5 @@ The table Table \ref{tab:flash_log_decision_summary} is expected to show similar
     \lstinline{cns} & No & 1 & $\%$ & Percentage of the CNS clock, with $255$ indicating invalid \\
     \hline
   \end{tabularx}
+  \caption{Flash Log: Log Data Point Data}
 \end{table}

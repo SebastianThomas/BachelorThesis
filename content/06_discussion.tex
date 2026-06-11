@@ -49,13 +49,13 @@ Although the battery life in the dive mode has been calculated to reach \SI{15}{
 Since tissues are fully saturated to surface pressure after a surface interval of at most \SI{72}{\hour}, this does not limit the usefulness of the dive computer, although it means that charging is required at least twice per month for continuous operation even when not diving.
 
 \section{Impact of variable rate algorithms for \gls{deco} and \gls{o2tox} scheduling}
-The implemented variable rate algorithms use the \gls{aimd} mechanism used prominently by TCP Reno \cite{aimd-1989}, which has already been tested in this context in existing works, e.g. \cite{2023-eth-energy-aware}.
+The implemented variable rate algorithms use the \gls{aimd} mechanism prominently used by TCP Reno \cite{aimd-1989}, which has already been tested in this context in existing works, e.g. \cite{2023-eth-energy-aware}.
 From the data collected, the following conclusions can be drawn.
 
 \begin{itemize}
     \item After reviewing the differences in actual decompression schedules, no significant differences, more than a few seconds, can be observed during up to \SI{80}{\minute}-long decompression dives, compared to running the same decompression algorithm at a fixed rate, with a decrease of up to $6\times$ in the execution count of the decompression algorithm.
     This decrease is comparable to the $2.06\times$-$8.68\times$ increase in localizations achieved by \cite{2023-eth-energy-aware} and $6.1\times$ decrease of additions in \cite{2020-dsra}, although the underlying reasons are very different and no more similar research has been found.
-    The energy decrease in the deepest simulated dive profile is \SI{13.12}{\joule}, $3.1\times$ taking into consideration the additional rate algorithm executions.
+    The energy decrease in the deepest simulated dive profile is \SI{13.12}{\joule}, which equals a reduction to $1/3.1\times$ taking into consideration the additional rate algorithm execution time.
     In the simulated deep dive, the decompression calculation only requires $0.25\%$ of a \SI{2200}{\milli\ampere{}\hour} battery, instead of $0.73\%$ when running the algorithm at a fixed rate.
     \item The \gls{o2tox} computation is always within the given requirement. 
     However, for less expensive algorithms such as the \gls{o2tox} algorithm, the cost of running a more complex scheduling algorithm outweighs the fewer cycles spent running the algorithm less often, thus simple decision algorithms should be chosen for these. 

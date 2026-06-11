@@ -27,7 +27,7 @@ Data can be stored to the flash and is retained after a reboot.
 The display connector is flipped, thus the display cannot be connected without potentially breaking it.
 
 \subsection{Power Consumption}
-At \SI{3.7}{\volt}, when everything off except for the Bluetooth module (the latter always runs, including the transmit status LED and cannot be shut off on the V1 PCB), current draw is \SI{5}{\milli\ampere}.
+At \SI{3.7}{\volt}, with everything in the lowest possible power state except for the Bluetooth module (which always runs, including the transmit status LED and cannot be shut off on the V1 PCB), current draw is \SI{5}{\milli\ampere}, so power is \SI{18.5}{\milli\watt}.
 When the \gls{mcu} is also active, compared to the STOP2 mode, the current difference is not accurately measurable, according to the datasheet it should be \SI{1.6}{\milli\ampere} at \SI{16}{\mega\hertz}.
 
 When the \gls{mcu} is active and both status LEDs are continuously active, current draw rises to \SI{12.5}{\milli\ampere}.

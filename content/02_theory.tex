@@ -139,7 +139,8 @@ Dive computers do not only track single-dive exposures; divers are decompressing
 This is why dive computers are almost never completely shut down, as the real-time clock has to run to track inert gas offgassing and \gls{o2} toxicity reduction at surface pressure over time.
 
 \subsubsection{\gls{o2} toxicity calculation}\label{subsubsection:theory_o2tox_calc}
-NOAA limits, which combine both CNS and pulmonary limits in more , are implemented using table 15-3 published in the NOAA diving manual \cite{noaa-diving-manual}. An option of extending these limits to a \gls{po2} of $1.3$ and lower is implemented after new research as suggested in \cite{RevisedO2Tox2025}.
+NOAA limits, which combine both the CNS and the pulmonary limits, are set out by Table 15-3 published in the NOAA diving manual \cite{noaa-diving-manual}. 
+More recent statistical research taking into account a large number of dives by recreational Rebreather divers has proposed an extension of the limit for the exact \gls{po2} of \SI{1.3}{\Bar} from \SI{180}{\minute} to \SI{240}{\minute} at work and additional \SI{240}{\minute} at rest, i.e. during decompression \cite{RevisedO2Tox2025}.
 
 Furthermore, \gls{otu}s for pulmonary and CNS oxygen toxicity can be calculated separately using the \gls{oti} method \ref{align:oti-calc} according to \cite{calculated-risk-pulmonary-cns}, using the suggested constants $c=6.8$ with $t$ in \SI{}{\min} for CNS oxygen toxicity and $c=4.57$ with $t$ in \SI{}{\hour} for pulmonary oxygen toxicity. $P_{O2}$ is given in absolute atmospheres.
 
@@ -150,6 +151,8 @@ The pulmonary \gls{oti} should not exceed 250. The CNS \gls{oti} should not exce
 \begin{align}
     TI(t, P_{O2}, c) &= t^2 * (P_{O2})^c \label{align:oti-calc}
 \end{align}
+
+As long as none of the limits listed above is reached, a dive is considered safe under these theoretical models.
 
 \subsection{Further considerations}
 There are more considerations to planning dives and conditions that may occur particularly on deeper dives that should be taken into consideration by dive computers, although research on these is not yet conclusive. 

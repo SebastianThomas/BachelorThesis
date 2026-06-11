@@ -35,13 +35,13 @@ A Newhaven Display \SI{1.8}{''} full-color 160x128 OLED display (160128B) and a 
 The display requires multiple reference voltages, defined in this project (within the constraints given by the datasheet) as $V_{DDIO} = \SI{1.8}{\volt}$, $V_{DD} = \SI{2.5}{\volt}$, and $V_{CC} = \SI{17}{\volt}$. $V_{DDIO}$ is already available on the PCB, $V_{DD}$ and $V_{CC}$ are generated using an LDO from \SI{3.3}{\volt} and a step-up DC-DC PWM converter from $V_{BATT}$, respectively.
 
 \section{PCB Design}\label{section:pcb}
-To reduce production cost, a layer count of 4 has been chosen for the PCB, including two ground plane layers to provide a stable reference to the signals on the remaining two layers. The ground planes are on layers 2 and 4 to reduce the impact of the inductive charging coil, which is placed adjacent to layer 4, instead of the typical layers 2 and 3. All Power is routed using traces and filled zones on layers 1 and 3 of the PCB, zones are used in dedicated places like the battery connector, DC-DC converters, and power supply for components with higher current draw such as the display $V_{CC}$ and the pressure sensor.
+To reduce production cost, a layer count of 4 has been chosen for the PCB, including two ground plane layers to provide a stable reference to the signals on the remaining two layers. The ground planes are on layers 2 and 4 to reduce the impact of the inductive charging coil, which is placed adjacent to layer 4, instead of the typical layers 2 and 3. All Power is routed using traces and filled zones on layers 1 and 3 of the PCB, zones are used in dedicated places with higher expected current such as the battery connector, the DC-DC converters (which are laid out as suggested by the respective datasheets), and power supply for components with higher instantaneous current draw such as the display $V_{CC}$ and the pressure sensor.
 
-The PCB has dimensions of \SI{38}{\milli\meter}\,$\times$\,\SI{48}{\milli\meter}, the 64-pin \gls{mcu} \gls{lqfp} is located in the center, the battery connector, charging, status \gls{ic}s and converters are in the upper left quadrant, display \gls{io} and power converter in the lower left quadrant, while the right side holds, starting in the lower right corner, the Bluetooth module, flash, debug connector, debug LEDs, pressure sensor and UART test pads. 
+The PCB has dimensions of \SI{38}{\milli\meter}\,$\times$\,\SI{48}{\milli\meter}, the 64-pin \gls{mcu} \gls{lqfp} is located in the center, the battery connector, charging, status \gls{ic}s and converters are in the upper left quadrant, display \gls{io} and power converter in the lower left quadrant, while the right side holds, starting in the lower right corner, the Bluetooth module, flash \gls{ic}, debug connector, debug LEDs, pressure sensor, and UART test pads.
 
 All resistors and capacitors are of size 0402 (1005), LEDs 0603 (1608), two inductors 1210 (3225) and one inductor 1812 (4532), and most larger components are \gls{lqfp} packages, with the following exceptions. There are three \gls{bga}-mount (battery status and power MOSFET for display and Bluetooth), two \gls{qfn} (pressure sensor and battery charger), one \gls{dfn} (dual step-down converter) and one \gls{x2son} (I2C level shifter) components. Lastly, two Schottky diodes of Metric 0603 size are used. To connect external components, a 34-pin FFC connector for the display and a 3-pin JST PH connector for the battery are present on the board.
 
-The routing layers from the \gls{pcb} design can be found in \ref{fig:pcb_layer1} and \ref{fig:pcb_layer3}.
+A figure of the routing layers in the \gls{pcb} design can be found in \ref{fig:pcb_layer1} and \ref{fig:pcb_layer3}.
 
 All components have been soldered by hand using pneumatic solder paste dispensers, placed with a pair of tweezers, and reflowed using a heating plate at \SI{250}{\celsius}. This process is not difficult, except for the display connector and the non-\gls{lqfp} \gls{ic}s, which require more concentration and time.
 
@@ -108,7 +108,7 @@ It can be tuned by altering the parameters \gls{gflow} and \gls{gfhigh}, which r
 The linear-exponential decompression algorithm in this project is based primarily on the factors mentioned above, and uses the Thalmann Algorithm \cite{thalmann-tables-software-2010} \cite{thalmann-parameters-1.3-2020}, as a reference for the parameters (specifically, the XVAL\_HE9\_040\_F32 parameter set).
 
 \subsection{\gls{o2tox} calculation}
-\gls{o2tox} is calculated using the \gls{oti} equations outlined in \ref{subsubsection:theory_o2tox_calc}.
+\gls{o2tox} is calculated using the \gls{oti} equations outlined in \ref{subsubsection:theory_o2tox_calc}, both the original NOAA tables and the revised recommendations published in \cite{RevisedO2Tox2025} are implemented.
 
 \section{Scheduling of Diving Algorithms}
 As the primary research topic in this thesis, multiple approaches have been used for variable- and fixed-rate task scheduling. 

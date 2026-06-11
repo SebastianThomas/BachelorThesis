@@ -116,6 +116,7 @@ The primary reason for using a variable rate algorithm for flash logging in this
 
 The flash log rate algorithm (\lstinline{DiffAimdRateAlgorithm}) takes about $7.1\%$ less cycles than the \lstinline{DynamicDiffAimdRateAlgorithm} used for \gls{deco} and \gls{o2tox} calculation. 
 This additional execution time compared to logging in every iteration amounts to approximately $1/1850$ of the main loop rate (on average about \SI{108.1}{\micro\second}) compared to the \SI{200}{\milli\second} rate), as can be derived from Table \ref{tab:timing_flash_log_rate}.
+This additional execution requires \SI{0.00039744}{\joule} per execution and \SI{0.297}{\joule} per dive, 0.0018\% of the \SI{2200}{\milli\ampere} battery per dive.
 \input{./content/generated/05_results_timing_flash_log_rate}
 
 Figures \ref{fig:flash_profile_diff_20m}, \ref{fig:flash_profile_diff_50m}, \ref{fig:flash_profile_diff_90m} shows that the variable rate algorithm reduces the flash log points per dive by a factor of approximately $3.6\times$ to $4.1\times$. 
@@ -124,5 +125,5 @@ Finally, compare the flash log with the actual sampled or simulated depth at the
 The maximum error can be studied in Table \ref{tab:flash_profile_diff_summary}, it shows that the algorithms all limit the maximum error to a few centimeters, except for the fixed-rate algorithm, which includes individual errors up to a few meters, most of which already recover on the next log point (cf. Figure \ref{fig:flash_profile_diff_50m}, \ref{fig:flash_profile_diff_90m} for a figure showing the difference over time).
 
 The maximum error using the variable rate algorithms are smaller than \SI{70}{\centi\meter}, but similar to the errors produced by the fixed-rate logging, these always recover on the next log point and only up to two such errors occur per simulated dive profile.
-The average error is \SI{0}{\centi\meter} both for the fixed- and variable-rate scheduled flash logs.
+The average error is \SI{0}{\centi\meter} for both scheduled flash logs at fixed and variable-rates.
 \input{content/generated/05_results_flash_profile_diff_summary}

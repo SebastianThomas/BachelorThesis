@@ -121,8 +121,8 @@ This additional execution time compared to logging in every iteration amounts to
 Figures \ref{fig:flash_profile_diff_20m}, \ref{fig:flash_profile_diff_50m}, \ref{fig:flash_profile_diff_90m} shows that the variable rate algorithm reduces the flash log points per dive by a factor of approximately $3.6\times$ to $4.1\times$. 
 
 Finally, compare the flash log with the actual sampled or simulated depth at the time; the difference is referred to as the error below.
-
-The maximum signed error can be studied in Table \ref{tab:flash_profile_diff_summary}, it shows that the algorithms all limit the maximum error to a few centimeters, except for the fixed-rate algorithm, which includes individual errors up to a few meters, most of which already recover on the next log point (cf. Figure \ref{fig:flash_profile_diff_50m}, \ref{fig:flash_profile_diff_90m} for a figure displaying the difference over time).
+The maximum error can be studied in Table \ref{tab:flash_profile_diff_summary}, it shows that the algorithms all limit the maximum error to a few centimeters, except for the fixed-rate algorithm, which includes individual errors up to a few meters, most of which already recover on the next log point (cf. Figure \ref{fig:flash_profile_diff_50m}, \ref{fig:flash_profile_diff_90m} for a figure showing the difference over time).
 
 The maximum error using the variable rate algorithms are smaller than \SI{70}{\centi\meter}, but similar to the errors produced by the fixed-rate logging, these always recover on the next log point and only up to two such errors occur per simulated dive profile.
+The average error is \SI{0}{\centi\meter} both for the fixed- and variable-rate scheduled flash logs.
 \input{content/generated/05_results_flash_profile_diff_summary}

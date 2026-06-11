@@ -52,6 +52,28 @@ To view and update the diving algorithms, update the \texttt{STDC-thalmann} subm
 % If you conducted an extensive evaluation you could move surplus
 % graphs/results to the appendix.
 
+\chapter{Additional Figures: \gls{pcb} Design}
+The following figures are screenshots from the KiCad software, which has been used for the \gls{pcb} design.
+The first and third layer are displayed here, the second and fourth layers only provide a ground reference, which is cut where VIAs are used to travel other signals than ground between layers 1 and 3.
+
+The \gls{mcu} is the \gls{lqfp}-component with 64 leads in the center of the \gls{pcb}, in the top left corner, the battery connector and power management section can be seen. 
+In the lower left hand corner is the display connector and required DC-DC converters, capacitors and \gls{mcu} \gls{gpio} connections.
+
+On the right side, from the top to the bottom, there are the UART pads, the pressure sensor, debug LEDs next to SWD pads, flash chip and the Bluetooth module.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{./figures/pcb/layer1.png}
+    \caption{STDC PCB Layer 1 (Primary Routing \& Component Placement Layer)}
+    \label{fig:pcb_layer1}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{./figures/pcb/layer3.png}
+    \caption{STDC PCB Layer 1 (Secondary Routing Layer)}
+    \label{fig:pcb_layer3}
+\end{figure}
+
 \chapter{Additional Results}
 \begin{figure}[htbp]
 \centering

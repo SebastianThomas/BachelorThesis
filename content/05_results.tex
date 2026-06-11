@@ -61,9 +61,10 @@ The figure generation scripts are available in the thesis repository and are als
 The fixed rate simulations serve as the baseline for comparison, while the \lstinline{exp} ones enable the exponential and the recipes without \lstinline{FEATURE} run the linear-exponential algorithm.
 
 In the following section, three types of table are used to present the data; in all tables \textbf{N} denotes the number of samples or data points.
+The fixed-rate scheduling algorithm is referred to as Baseline configuration, while the Exp. and Lin.-Exp. results refer to variable-rate scheduling decisions under the respective decompression algorithm. The Baseline configuration always uses the linear-exponential algorithm.
 
 \begin{itemize}
-    \item Algorithm Computation Time: These show a summary (average, median, minimum, maximum cycles and seconds) of all executions during the simulation of one dive profile (maximum depth \SI{20}{\meter}, \SI{50}{\meter} and \SI{90}{\meter}) under a specific configuration (fixed-rate, variable-rate with exponential or variable-rate with linear-exponential algorithm).
+    \item Algorithm Computation Time: These show a summary (average, median, minimum, maximum cycles and seconds) of all executions during the simulation of one dive profile (maximum depth \SI{20}{\meter}, \SI{50}{\meter} and \SI{90}{\meter}) under a specific configuration (Baseline fixed-rate, variable-rate with exponential or variable-rate with linear-exponential algorithm).
     \item Rate Algorithm Computation Time: These show a summary of all rate algorithm executions related to the scheduling of a specific algorithm (fixed over all rows, named in the table caption) during the simulation of one dive profile under a specific configuration.
     \item Decision Summary: Detail decisions (due, not due, and avg/max skipped seconds) of the rate algorithm related to the scheduling of a specific algorithm during the simulation of one dive profile under a specific configuration.
 \end{itemize}
@@ -93,7 +94,7 @@ The average execution overhead of an additional rate calculation is between $\fr
 The energy required for execution of deco calculations in the longest profile is \SI{0.0854496}{\joule} on average and in total \SI{6.41}{\joule} for the variable-rate executions and \SI{21.27}{\joule} for the execution at a fixed rate. The difference is $3.5\times$ on the deepest profile, \SI{14.86}{\joule}.
 
 \input{./content/generated/05_results_decompression_decision_summary}
-Table \ref{tab:decision_summary} summarizes the decisions whether a recomputation of the decompression schedule is due or not. 
+Table \ref{tab:decision_summary} summarizes the decisions whether a recomputation of the decompression schedule is due or not based on the respective fixed- or variable-rate algorithm. 
 Analyzing it, compared to the baseline execution count and depending on the profile, the variable rate algorithm leads to a $1.17\times$ to $6\times$ decrease in the execution count, which translates in an almost linear relationship to the total cycle count spent on the computation of the decompression schedule, while only incurring a $0.5\%$ to $1.8\%$ overhead compared to the execution of a decompression schedule computation.
 Although this may slightly increase battery usage during the deep and descent phases of the dive due to running the additional variable-rate algorithm, the \gls{mcu} will be inactive for more cycles during decompression. 
 For the additional variable-rate algorithm execution, the overhead for the whole \SI{90}{\meter} amounts to \SI{1.74}{\joule}, thus the saving compared to the fixed-rate exeuction is $\SI{14.86}{\joule} - \SI{1.74}{\joule} = \SI{13.12}{\joule}$.

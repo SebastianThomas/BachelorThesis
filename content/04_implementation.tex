@@ -41,6 +41,8 @@ The PCB has dimensions of \SI{38}{\milli\meter}\,$\times$\,\SI{48}{\milli\meter}
 
 All resistors and capacitors are of size 0402 (1005), LEDs 0603 (1608), two inductors 1210 (3225) and one inductor 1812 (4532), and most larger components are \gls{lqfp} packages, with the following exceptions. There are three \gls{bga}-mount (battery status and power MOSFET for display and Bluetooth), two \gls{qfn} (pressure sensor and battery charger), one \gls{dfn} (dual step-down converter) and one \gls{x2son} (I2C level shifter) components. Lastly, two Schottky diodes of Metric 0603 size are used. To connect external components, a 34-pin FFC connector for the display and a 3-pin JST PH connector for the battery are present on the board.
 
+The routing layers from the \gls{pcb} design can be found in \ref{fig:pcb_layer1} and \ref{fig:pcb_layer3}.
+
 All components have been soldered by hand using pneumatic solder paste dispensers, placed with a pair of tweezers, and reflowed using a heating plate at \SI{250}{\celsius}. This process is not difficult, except for the display connector and the non-\gls{lqfp} \gls{ic}s, which require more concentration and time.
 
 \section{Firmware}\label{section:firmware}

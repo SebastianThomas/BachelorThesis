@@ -18,26 +18,27 @@
 A fixed-voltage DC Power Supply that has been set to output \SI{3.7}{\volt} is used to provide power to the \gls{pcb}.
 
 The \SI{3.3}{\volt} rail has the correct voltage, as do the \SI{2.5}{\volt} and \SI{17}{\volt} rails for the display.
-The display rails can be shut off by the MCU to reduce idle power consumption when the display is off.
-The \SI{1.8}{\volt} rail is close to \SI{2.5}{\volt} and voltage is reduced under load to approximately \SI{2.3}{\volt}.
+The MCU shuts off the display rails to reduce idle power consumption when the display is off by opening the gate to the \SI{3.3}{\volt} line which feeds the \SI{2.5}{\volt} and \SI{17}{\volt} converters.
+The \SI{1.8}{\volt} rail is close to \SI{2.5}{\volt} and the voltage is reduced under load to approximately \SI{2.3}{\volt}.
 
-The MCU is running and a debug connection with the host computer can be established, the pressure sensor and \gls{ble} module are responding, though a Bluetooth connection with a separate device could not be fully established.
-Data can be stored to the flash and is retained after a reboot.
+A debug connection with the host computer via the SWD pads can be established and code can be executed on the MCU; the pressure sensor and the \gls{ble} module respond, although a Bluetooth connection with an external device could not be fully established.
+Data can be stored to the external flash \gls{ic} and is retained after a reboot.
 
-The display connector is flipped, thus the display cannot be connected without potentially breaking it.
+The display connector is flipped, and thus the display cannot be correctly connected without potentially breaking it.
 
 \subsection{Power Consumption}
-At \SI{3.7}{\volt}, with everything in the lowest possible power state except for the Bluetooth module (which always runs, including the transmit status LED and cannot be shut off on the V1 PCB), current draw is \SI{5}{\milli\ampere}, so power is \SI{18.5}{\milli\watt}.
-When the \gls{mcu} is also active, compared to the STOP2 mode, the current difference is not accurately measurable, according to the datasheet it should be \SI{1.6}{\milli\ampere} at \SI{16}{\mega\hertz}.
+At \SI{3.7}{\volt}, with all components in the lowest possible power state except for the Bluetooth module (which always runs, including the transmit status LED and cannot be shut off on the V1 PCB), current draw is \SI{5}{\milli\ampere}, so power is \SI{18.5}{\milli\watt}.
+When the \gls{mcu} is also active, compared to the STOP2 mode, the current difference is not accurately measurable; according to the datasheet it should be \SI{1.6}{\milli\ampere} at \SI{16}{\mega\hertz}. 
+This figure is used in all subsequent calculations in which the \gls{mcu} energy is computed.
 
 When the \gls{mcu} is active and both status LEDs are continuously active, current draw rises to \SI{12.5}{\milli\ampere}.
 With only the dive mode status LED, current draw drops to close to \SI{9}{\milli\ampere}.
 
 In surface mode, every tick is very brief and only uses \SI{0.0185}{\watt} (approximated over a longer time). 
-The battery lifetime of a \SI{2200}{\milli\ampere{}\hour} battery in surface mode thus equals \SI{18.33}{\day}.
+The battery lifetime of a \SI{2200}{\milli\ampere{}\hour} battery in surface mode is therefore equal to \SI{18.33}{\day}.
 
 In dive mode with the display inactive, this shortens to \SI{9.64}{\day} (\SI{0.035}{\watt}). 
-The display draws significantly more power, with it on, the power consumption rises to up to $\SI{0.51}{\watt} + \SI{0.035}{\watt} = \SI{0.545}{\watt}$, battery life with a full battery in dive mode is thus \SI{14.93}{\hour}.
+The display draws significantly more power, with it on, the power consumption increases to $\SI{0.51}{\watt} + \SI{0.035}{\watt} = \SI{0.545}{\watt}$, the battery life with a full battery in dive mode is thus \SI{14.93}{\hour}.
 
 \section{Experimental Setup}
 Although cycle counting and timing are possible on external hardware, the most accurate results can be obtained by simulating fixed dive profiles to compare the different algorithms.
@@ -94,10 +95,10 @@ The average execution overhead of an additional rate calculation is between $\fr
 The energy required for execution of deco calculations in the longest profile is \SI{0.0854496}{\joule} on average and in total \SI{6.41}{\joule} for the variable-rate executions and \SI{21.27}{\joule} for the execution at a fixed rate. The difference is $3.5\times$ on the deepest profile, \SI{14.86}{\joule}.
 
 \input{./content/generated/05_results_decompression_decision_summary}
-Table \ref{tab:decision_summary} summarizes the decisions whether a recomputation of the decompression schedule is due or not based on the respective fixed- or variable-rate algorithm. 
+Table \ref{tab:decision_summary} summarizes the decisions as to whether a recomputation of the decompression schedule is due or not based on the respective fixed or variable-rate algorithm. 
 Analyzing it, compared to the baseline execution count and depending on the profile, the variable rate algorithm leads to a $1.17\times$ to $6\times$ decrease in the execution count, which translates in an almost linear relationship to the total cycle count spent on the computation of the decompression schedule, while only incurring a $0.5\%$ to $1.8\%$ overhead compared to the execution of a decompression schedule computation.
 Although this may slightly increase battery usage during the deep and descent phases of the dive due to running the additional variable-rate algorithm, the \gls{mcu} will be inactive for more cycles during decompression. 
-For the additional variable-rate algorithm execution, the overhead for the whole \SI{90}{\meter} amounts to \SI{1.74}{\joule}, thus the saving compared to the fixed-rate exeuction is $\SI{14.86}{\joule} - \SI{1.74}{\joule} = \SI{13.12}{\joule}$.
+For the additional execution of the variable-rate algorithm, the overhead for the whole \SI{90}{\meter} sums up to \SI{1.74}{\joule}, thus saving compared to the execution at a fixed rate is $\SI{14.86}{\joule} - \SI{1.74}{\joule} = \SI{13.12}{\joule}$.
 
 In the \SI{50}{\meter} profile, which represents an average easy decompression dive, the benefit through the variable rate algorithm is smallest, as the \gls{deco} time does not significantly exceed the time at depth, while in shallow and deep dives, the decrease in cycles is significant, as no deco needs to be computed, or the execution count during decompression is significantly reduced, respectively.
 

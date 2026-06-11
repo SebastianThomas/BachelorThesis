@@ -85,15 +85,17 @@ In surface mode, the main task runs less often than in dive mode, and it is usef
 Since the chosen sleep time of \SI{5}{\second} is many magnitudes higher than wakeup time from any mode, STOP2 is chosen, the lowest sleep mode in which all peripherals (except clock configuration, which is quickly reinitialized upon wakeup) and RAM are saved.
 
 After waking up from STOP2, registers, RAM and most peripherals keep their state, but it is required to reinitialize the clocks because STOP2 mode might reset the clock tree, PLL, SYSCLK and associated timers and delays. 
-% To implement this, the \lstinline{unsafe} \lstinline{Peripherals::steal} functions of the \lstinline{cortex_m} and \lstinline{stm32l4xx_hal::pac} need to be used to access the hardware peripheral registers, this is safe because only \lstinline{init} uses these, which exits before \lstinline{task_mode_tick} can ever be called.
 
 \subsection{\gls{hal}}\label{section:hal}
 The standard package to access abstracted peripherals on ARM Cortex-M \gls{mcu}s is the \href{https://github.com/rust-embedded/cortex-m}{\lstinline{cortex-m} (and \lstinline{cortex-m-rt})} crate, which provides wrappers around core peripherals, for example SysTick, registers like MSP and BSRR, and functionality around startup and interrupt handling, including the NVIC (Nested Vector Interrupt Controller).
 
-The \gls{hal} expanding the functionality of the general \lstinline{cortex-m}, which is specific to the \gls{mcu} family, used in this project are maintained and provided by the community project \href{https://github.com/stm32-rs}{\lstinline{stm32-rs}}, specifically the \href{https://github.com/stm32-rs/stm32l4xx-hal}{HAL crate for the STM32L4xx \gls{mcu}s} is used.
+The \gls{hal} used in this project, which expands the functionality of the general \lstinline{cortex-m}, specific to the \gls{mcu} family, are maintained and provided by the community project \href{https://github.com/stm32-rs}{\lstinline{stm32-rs}}, specifically the \href{https://github.com/stm32-rs/stm32l4xx-hal}{HAL crate for the STM32L4xx \gls{mcu}s} is used.
 
 These three packages are purely written in Rust and do not depend on an underlying C implementation. 
 The build chain uses Rust's Cargo build system, which uses \lstinline{probe-rs} for flashing, debugging and log collecting.
+
+Example drivers provided by manufacturers are often written in C, the drivers for all used \gls{ic}s have been rewritten in Rust and are also included in the project source code. 
+These include Display, \gls{ble}, pressure sensor, flash, and battery status \gls{ic}s.
 
 \section{Diving Algorithms}\label{section:algorithms}
 The algorithms described in this section are implemented in Rust in a \hyperlink{https://github.com/SebastianThomas/STDC-thalmann}{dedicated repository}, available under the MIT License. 
